@@ -1,0 +1,78 @@
+.virtualDeviceBackground {
+	background-color:#333333;
+}
+
+.buttonMargin {
+	margin-right:10px;
+}
+
+#virtualDevice--redButton-inner {
+	background-color: #BB0000 !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--greenButton-inner {
+	background-color: #2B7D2B !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--blueButton-inner {
+	background-color: #427CAC !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--blackButton-inner {
+	background-color: black !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+.sequencePressColorList2 {
+	display:inline-block;
+	float:left;
+	height:50px;
+	width:200px;
+	margin-top:20px;
+	outline-style: solid;
+	outline-color: black;
+}
+
+.sequenceButton2 {
+	display : inline-block !important;
+	float: left;
+    width: 25px;
+    margin: 5px;
+    padding: 5px;
+    height: 25px;
+}
+
+.sequenceButton2Red {
+	background: red;
+}
+
+.sequenceButton2Green {
+	background: green;
+}
+
+.sequenceButton2Blue {
+	background: blue;
+}
+
+.sequenceButton2Black {
+	background: black;
+}
+
+.sapMInputBase.displayTextBackground {
+	background : white;
+}
+
+.sapMLabel.displayTextPhotoColor {
+	color: white;
+}

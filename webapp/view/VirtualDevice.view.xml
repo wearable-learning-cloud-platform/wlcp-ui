@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout" xmlns:f="sap.f"
+		controllerName="org.wlcp.wlcp-ui.controller.VirtualDevice" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="virtualDevice" showHeader="false" class="virtualDeviceBackground">
+		<content>
+			<NavContainer id="virtualDeviceNavContainer">
+			<Page id="initialPage" showHeader="false"></Page>
+			<Page id="selectGameInstance" showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="Please enter your game PIN" class="sapUiSmallMarginBottom"/>
+						<Input id="gamePinInput" width="12em" placeholder="Game PIN"/>
+						<Button width="12em" text="Join" type="Emphasized" press="joinGameInstance"></Button>
+					</items>
+				</VBox>
+			</Page>
+			<Page id="selectTeamPlayer" showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
+						<Select width="12em" items="{/teamPlayers}">
+							<core:Item key="{key}" text="Team {team} Player {player}" />
+						</Select>
+						<Button width="12em" text="Join" type="Emphasized" press="onTeamPlayerSelected"></Button>
+					</items>
+				</VBox>
+			</Page>
+			<Page id="virtualDevicePage" showHeader="false">
+			<tnt:ToolHeader>
+				<Text id="userTeamPlayer"/>
+				<ToolbarSpacer />
+				<Text text="Virtual Device" textAlign="Center" wrapping="false">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Disappear" />
+					</layoutData>
+				</Text>
+				<ToolbarSpacer />
+				<Button text="Disconnect" icon="sap-icon://disconnected" press="disconnectPressed"></Button>
+			</tnt:ToolHeader>
+			<l:Splitter id="mainSplitter" orientation="Vertical" height="100%" width="100%">
+				<NavContainer id="outputContainer">
+					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
+ 					<Page id="displayTextPage" showHeader="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<TextArea id="displayTextArea" editable="false" rows="8" cols="100" class="displayTextBackground"/>
+							</items>
+						</FlexBox>
+					</Page>
+					<Page id="displayTextPhotoPage" showHeader="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<VBox alignItems="Center" justifyContent="Center">
+									<!-- <TextArea id="displayText" editable="false" rows="4" cols="100" /> -->
+									<Label id="displayTextLabel" textAlign="Center" wrapping="true" class="sapUiMediumMargin displayTextPhotoColor"></Label>
+									<Image id="displayPhotoImage"></Image>
+								</VBox>
+							</items>
+						</FlexBox>
+					</Page>
+				</NavContainer>
+				<NavContainer id="inputContainer">
+					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
+					<Page id="singleButtonPress" showHeader="false" enableScrolling="false">
+						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
+							<items>
+								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed"></Button>
+								<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed"></Button>
+								<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" ></Button>
+								<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed"></Button>
+							</items>
+						</FlexBox>
+					</Page>
+					<Page id="sequenceButtonPress" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<VBox>
+									<html:div id="colorList">
+										<html:div id="colorListRed" class="sequenceButton2 sequenceButton2Red"/>
+										<html:div id="colorListGreen" class="sequenceButton2 sequenceButton2Green"/>
+										<html:div id="colorListBlue" class="sequenceButton2 sequenceButton2Blue"/>
+										<html:div id="colorListBlack" class="sequenceButton2 sequenceButton2Black"/>
+									</html:div>
+								</VBox>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<VBox>
+									<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
+									</html:div>
+								</VBox>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Button text="Submit" press="submitButtonPressSequence"></Button>
+								<Button text="Clear" press="clearButtonPressSequence"></Button>
+							</items>
+						</FlexBox>
+					</Page>
+					<Page id="keyboardInput" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Input id="keyboardInputField" placeholder="Enter keyboard input"></Input>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Button text="Submit" press="submitKeyboardInput"></Button>
+							</items>
+						</FlexBox>
+					</Page>
+				</NavContainer>
+			</l:Splitter>
+			</Page>
+			</NavContainer>
+		</content>
+	</Page>
+</core:View>

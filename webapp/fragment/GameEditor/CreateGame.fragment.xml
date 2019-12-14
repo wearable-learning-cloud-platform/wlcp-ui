@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog id="createGame" title="{i18n>gameEditor.new.title}">
+		<buttons>
+			<Button text="{i18n>gameEditor.new.create}" type="Accept" press="createGame"/>
+			<Button text="{i18n>button.cancel}" type="Reject" press="cancelCreateGame"/>
+		</buttons>
+		<VBox>
+			<Label text="{i18n>gameEditor.new.gameName}:" required="true"/>
+			<Input value="{/GameId}"/>
+		</VBox>
+		<VBox>
+			<Label text="{i18n>gameEditor.new.teamCount}:"/>
+			<StepInput min="1" max="9" value="{/TeamCount}" change="onTeamChange"/>
+		</VBox>
+		<VBox>
+			<Label text="{i18n>gameEditor.new.playersPerTeam}:"/>
+			<StepInput min="1" max="9" value="{/PlayersPerTeam}" change="onPlayerChange"/>
+		</VBox>
+		<VBox>
+			<Label text="{i18n>gameEditor.new.visibility}:"/>
+			<CheckBox text="{i18n>gameEditor.new.public}" selected="{/Visibility}" />
+		</VBox>
+	</Dialog>
+	
+</core:FragmentDefinition>

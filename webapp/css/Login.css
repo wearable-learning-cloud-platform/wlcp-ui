@@ -1,0 +1,16 @@
+.page {
+	background-image: url('/resources/img/background.png');
+    background-size: cover;
+}
+	 
+.box {
+	width: 350px;
+	height: 350px;
+	background-color: white;
+	box-shadow: 4px 8px 16px rgba(0, 0, 0, 1);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -175px;
+    margin-left: -175px;
+}

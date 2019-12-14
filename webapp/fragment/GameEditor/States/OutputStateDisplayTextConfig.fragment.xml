@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.displayText.help}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<TextArea rows="8" value="{displayText}" liveChange="onChange" valueLiveUpdate="true"/>
+		</items>
+	</FlexBox>
+	
+</core:FragmentDefinition>

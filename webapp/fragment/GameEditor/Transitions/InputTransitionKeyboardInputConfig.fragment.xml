@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text
+				text="{i18n>gameEditor.inputTransition.keyboardInput.help}" />
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Button text="{i18n>gameEditor.inputTransition.keyboardInput.addKeyboardField}" press="addKeyboardField"></Button>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<List showSeparators="None"
+				items="{path:'keyboardField', templateShareable:false}"
+				noDataText="{i18n>gameEditor.inputTransition.keyboardInput.noKeyboardField}">
+				<CustomListItem xmlns="sap.m">
+					<content>
+						<HBox justifyContent="Start" alignItems="Center"
+							height="50px">
+							<Input placeholder="{i18n>gameEditor.inputTransition.keyboardInput.placeHolder}" value="{value}"
+								enabled="false"></Input>
+							<Button icon="sap-icon://delete"
+								press="deleteKeyboardField" class="sequenceDeleteButton"></Button>
+						</HBox>
+					</content>
+				</CustomListItem>
+			</List>
+		</items>
+	</FlexBox>
+
+</core:FragmentDefinition>

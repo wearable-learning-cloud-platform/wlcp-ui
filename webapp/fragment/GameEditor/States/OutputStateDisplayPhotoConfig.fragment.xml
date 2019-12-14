@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc">
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.displayPhoto.help}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<TextArea rows="1" value="{url}" liveChange="updateScalingString" valueLiveUpdate="true"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.displayPhoto.help2}"/>
+		</items>
+	</FlexBox>
+	<Slider change="updateScalingString" liveChange="updateScalingString" value="{scale}" enableTickmarks="true" min="0" max="100" step="10" width="70%" showAdvancedTooltip="true" showHandleTooltip="false"/>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Image
+				src="{url}" height="{height}px" width="{width}px">
+			</Image>
+		</items>
+	</FlexBox>
+</core:FragmentDefinition>

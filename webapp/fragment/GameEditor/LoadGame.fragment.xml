@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition xmlns="sap.m"
+	xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog id="loadGame" title="Load Game">
+		<buttons>
+			<Button text="{i18n>gameEditor.load.load}" type="Accept" press="loadGame" />
+			<Button text="{i18n>button.cancel}" type="Reject" press="cancelLoadGame" />
+		</buttons>
+		<content>
+			<html:style>
+				.sapUiPopupWithPadding .sapMDialogScrollCont {
+				padding :
+				0;
+				}
+			</html:style>
+			<IconTabBar>
+				<items>
+					<IconTabFilter text="{i18n>gameEditor.load.yourGames}">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectYourGame}:" />
+						</FlexBox>
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<ComboBox id="userLoadGameComboBox"
+								items="{path: '/Games', sorter: { path: 'GameId' }}"
+								placeholder="{i18n>gameEditor.load.selectGame}">
+								<core:Item key="{GameId}" text="{GameId}" />
+							</ComboBox>
+						</FlexBox>
+					</IconTabFilter>
+					<IconTabFilter text="{i18n>gameEditor.load.publicGames}">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectPublicGame}:" />
+						</FlexBox>
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<ComboBox id="publicLoadGameComboBox"
+								items="{path: '/Games', sorter: { path: 'GameId' }}"
+								placeholder="{i18n>gameEditor.load.selectGame}">
+								<core:Item key="{GameId}" text="{GameId}" />
+							</ComboBox>
+						</FlexBox>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+		</content>
+	</Dialog>
+</core:FragmentDefinition>

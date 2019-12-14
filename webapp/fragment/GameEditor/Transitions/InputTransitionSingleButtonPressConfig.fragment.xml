@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+    <FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<VBox>
+				<CheckBox text="{i18n>gameEditor.color.red}" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"/>
+				<CheckBox text="{i18n>gameEditor.color.green}" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"/>
+				<CheckBox text="{i18n>gameEditor.color.blue}" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"/>
+				<CheckBox text="{i18n>gameEditor.color.black}" selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"/>
+			</VBox>
+		</items>
+	</FlexBox>
+
+</core:FragmentDefinition>

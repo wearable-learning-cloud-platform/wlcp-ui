@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc">
+	
+	<Dialog id="outputStateDialog" title="{i18n>gameEditor.inputTransition.title}" contentWidth="50%" contentHeight="50%">
+		<buttons>
+			<Button text="{i18n>button.accept}" type="Accept" press="acceptDialog"/>
+			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
+		</buttons>
+		<IconTabBar id="inputTransitionDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
+			<items>
+				<IconTabFilter icon="{icon}" text="{scopeText}" key="{scope}">
+					<content>
+						<l:Splitter>
+							<List class="navList" items="{path : 'navigationListItems', templateShareable:false}" mode="SingleSelectLeft" headerText="{i18n>gameEditor.inputTransition.selectTransitionType}" selectionChange="transitionTypeSelected"> 
+								<layoutData><l:SplitterLayoutData size="250px" resizable="false"/></layoutData>
+								<StandardListItem title="{title}" icon="{icon}" selected="{selected}" visible="{visible}"/>
+							</List>
+							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
+								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
+								<Page/>
+							</NavContainer>
+						</l:Splitter>
+					</content>
+				</IconTabFilter>
+			</items>
+		</IconTabBar>
+	</Dialog>
+</core:FragmentDefinition>

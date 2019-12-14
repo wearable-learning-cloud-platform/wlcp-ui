@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:f="sap.f" xmlns:l="sap.ui.layout"
+		controllerName="org.wlcp.wlcp-ui.controller.GameEditor" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="gameEditor" title="Title" showHeader="false" enableScrolling="false">
+		<content>
+			<l:Splitter orientation="Vertical">
+				<tnt:ToolHeader>
+					<tnt:layoutData>
+						<l:SplitterLayoutData size="48px" resizable="false"/>
+					</tnt:layoutData>
+					<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press="onSideNavButtonPress">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+					<ToolbarSpacer width="180px"/>
+					<Button id="newButton" text="{i18n>gameEditor.new}" type="Transparent" icon="sap-icon://create" press="newGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button id="loadButton" text="{i18n>gameEditor.load}" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" enabled="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false" press="openGameOptions">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<tnt:ToolHeaderUtilitySeparator />
+					<ToolbarSpacer width="12.5%"/>
+					<Title level = "H3" text = "{i18n>gameEditor.title}" textAlign="Center">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Title>
+					<tnt:ToolHeaderUtilitySeparator />
+					<ToolbarSpacer>
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
+						</layoutData>
+					</ToolbarSpacer>
+					
+					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
+					<Button icon = "sap-icon://switch-views" type="Transparent" press="switchViewPress"/>
+					<Button icon = "sap-icon://user-settings" type="Transparent"/>
+					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin"/>
+				</tnt:ToolHeader>
+				<l:Splitter id="mainSplitter">
+					<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">
+						<layoutData>
+							<l:SplitterLayoutData size="240px" resizable="false"/>
+						</layoutData>
+						<html:div id="toolboxTitle" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
+						<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow" style="top:50px;">
+							<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
+							<html:div class="toolboxOutputStateBottomColor"></html:div>
+						</html:div>
+						<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
+							<html:div class="centerTransitionText"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
+						</html:div>
+					</ScrollContainer>
+					<ScrollContainer id="pad" class="scroll-overflow-hidden" height="100%" width="100%" horizontal="true" vertical="true">
+					</ScrollContainer>
+				</l:Splitter>
+			</l:Splitter>
+		</content>
+	</Page>
+</core:View>

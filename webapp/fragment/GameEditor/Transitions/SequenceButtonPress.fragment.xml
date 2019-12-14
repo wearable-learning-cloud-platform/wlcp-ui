@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc">
+	
+	<Dialog id="sequencePressDialog" title="{i18n>gameEditor.inputTransition.sequenceButtonPress.configure}" contentWidth="50%" contentHeight="50%">
+		<buttons>
+			<Button text="{i18n>button.accept}" type="Accept" press="acceptSequence"/>
+			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
+		</buttons>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<VBox>
+					<html:div id="colorList">
+						<html:div id="colorListRed" class="sequenceButton sequenceButtonRed"/>
+						<html:div id="colorListGreen" class="sequenceButton sequenceButtonGreen"/>
+						<html:div id="colorListBlue" class="sequenceButton sequenceButtonBlue"/>
+						<html:div id="colorListBlack" class="sequenceButton sequenceButtonBlack"/>
+					</html:div>
+				</VBox>
+			</items>
+		</FlexBox>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<VBox>
+					<html:div id="colorListSortable-listUl" class="sequencePressColorList">
+					</html:div>
+				</VBox>
+			</items>
+		</FlexBox>
+	</Dialog>
+</core:FragmentDefinition>

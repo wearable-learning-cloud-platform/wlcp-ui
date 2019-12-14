@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns:l="sap.ui.layout"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog title="{i18n>gameEditor.quickstart.title}" contentHeight="50%" contentWidth="50%">
+		<buttons>
+			<Button text="{i18n>button.close}" type="Reject" press="closeQuickStartHelp"/>
+		</buttons>
+		<Carousel showPageIndicator="false">
+			<pages>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step1}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}1.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step2}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}2.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step3}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}3.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step4}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}4.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step5}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}5.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step6}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}6.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+					<Text text="{i18n>gameEditor.quickstart.step7}" textAlign="Center" width="100%"/>
+					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;wlcpfrontend/videos/{i18n>gameEditor.quickstart.video}7.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
+				</l:VerticalLayout>	
+			</pages>
+		</Carousel>
+	</Dialog>
+</core:FragmentDefinition>
