@@ -15,11 +15,11 @@ var Transition = class Transition {
 	}
 	
 	static absoluteToRelativeX(absoluteX, width) {
-		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
+		return absoluteX - (document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
 	}
 	
 	static absoluteToRelativeY(absoluteY) {
-		return absoluteY;// + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
+		return absoluteY;// + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight;
 	}
 	
 	create() {
@@ -145,7 +145,7 @@ var Transition = class Transition {
 //				div.style.left = bbx + "px";
 //				div.style.width = bbw + "px";
 //				div.style.height = bbh + "px";
-//				document.getElementById('gameEditor--pad').appendChild(div);
+//				document.getElementById('container-wlcp-ui---gameEditor--pad').appendChild(div);
 				
 				//If the transition is in the segments bounding box, return the current connection
 				if(((localX < (bbx + bbw)) && ((localX + 75) > bbx)) && (((localY < (bby + bbh)) && ((localY + 62.5) > bby)))) {

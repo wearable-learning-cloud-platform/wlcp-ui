@@ -1,7 +1,7 @@
 var GameEditor = {
 		
 	getEditor : function() {
-		return sap.ui.getCore().byId("gameEditor");
+		return sap.ui.getCore().byId("container-wlcp-ui---gameEditor");
 	},
 
 	getEditorController : function() {
@@ -13,16 +13,16 @@ var GameEditor = {
 	},
 	
 	getScrollTopOffset : function() {
-		return document.getElementById("gameEditor--mainSplitter-content-1").scrollTop;
+		return document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollTop;
 	},
 	
 	getScrollLeftOffset : function() {
-		return document.getElementById("gameEditor--mainSplitter-content-1").scrollLeft;
+		return document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollLeft;
 	},
 	
 	resetScroll : function() {
-		document.getElementById("gameEditor--pad").style.width = "100%";
-		document.getElementById("gameEditor--pad").style.height = "100%";
+		document.getElementById("container-wlcp-ui---gameEditor--pad").style.width = "100%";
+		document.getElementById("container-wlcp-ui---gameEditor--pad").style.height = "100%";
 	}
 
 }

@@ -25,11 +25,11 @@ var State = class State {
 	}
 	
 	static absoluteToRelativeX(absoluteX, width) {
-		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
+		return absoluteX - (document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
 	};
 	
 	static absoluteToRelativeY(absoluteY) {
-		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight - 20;
+		return absoluteY + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight - 20;
 	};
 	
 	create() {
@@ -72,7 +72,7 @@ var State = class State {
 		this.stateDiv.appendChild(bottomColorDiv);
 		
 		//Add the div to the pad
-		document.getElementById('gameEditor--pad').appendChild(this.stateDiv);
+		document.getElementById('container-wlcp-ui---gameEditor--pad').appendChild(this.stateDiv);
 		
 		//Get the width and height
 		this.width = this.stateDiv.getBoundingClientRect().width;
@@ -145,13 +145,13 @@ var State = class State {
 	}
 	
 	addPadSpace() {
-		if((this.positionX + this.width + 50) >= document.getElementById("gameEditor--pad").getBoundingClientRect().width - 75) {
-			document.getElementById("gameEditor--pad").style.width = (document.getElementById("gameEditor--pad").getBoundingClientRect().width + 500) + "px";
-			//document.getElementById("gameEditor--mainSplitter-content-1").scrollBy({ top: 0, left: document.getElementById("gameEditor--pad").clientWidth, behavior: 'smooth' });
+		if((this.positionX + this.width + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width - 75) {
+			document.getElementById("container-wlcp-ui---gameEditor--pad").style.width = (document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width + 500) + "px";
+			//document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy({ top: 0, left: document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth, behavior: 'smooth' });
 		}
-		if((this.positionY + this.height + 50) >= document.getElementById("gameEditor--pad").getBoundingClientRect().height - 75) {
-			document.getElementById("gameEditor--pad").style.height = (document.getElementById("gameEditor--pad").getBoundingClientRect().height + 500) + "px";
-			//document.getElementById("gameEditor--mainSplitter-content-1").scrollBy({ top: document.getElementById("gameEditor--pad").clientHeight, left: 0, behavior: 'smooth' });
+		if((this.positionY + this.height + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height - 75) {
+			document.getElementById("container-wlcp-ui---gameEditor--pad").style.height = (document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height + 500) + "px";
+			//document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy({ top: document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight, left: 0, behavior: 'smooth' });
 		}
 	}
 	

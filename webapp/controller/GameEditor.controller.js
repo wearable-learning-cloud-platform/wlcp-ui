@@ -59,7 +59,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var startState = new StartState("startStateTopColor", "startStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startState") , this.gameModel.GameId + "_start", this.jsPlumbInstance);
 		
 		//Set the position
-		startState.setPositionX(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
+		startState.setPositionX(((document.getElementById("container-wlcp-ui---gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
 		
 		//Redraw it
 		startState.draw();
@@ -72,19 +72,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	initToolboxText : function() {
-		$("#gameEditor--toolboxTitle")[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.toolboxTitle");
-		$("#gameEditor--toolboxOutputState")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState");
-		$("#gameEditor--toolboxTransition")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[0];
-		$("#gameEditor--toolboxTransition")[0].children[0].children[1].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[1];
+		$("#container-wlcp-ui---gameEditor--toolboxTitle")[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.toolboxTitle");
+		$("#container-wlcp-ui---gameEditor--toolboxOutputState")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState");
+		$("#container-wlcp-ui---gameEditor--toolboxTransition")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[0];
+		$("#container-wlcp-ui---gameEditor--toolboxTransition")[0].children[0].children[1].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[1];
 	},
 
 	initToolbox : function() {
-		$("#gameEditor--toolboxOutputState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
-		$("#gameEditor--toolboxTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
+		$("#container-wlcp-ui---gameEditor--toolboxOutputState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#container-wlcp-ui---gameEditor--toolboxTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
 	},
 	
 	initToolbox2 : function() {
-		$("#gameEditor--buttonPressTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
+		$("#container-wlcp-ui---gameEditor--buttonPressTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
 	},
 	
 	onItemSelect : function(oEvent) {
@@ -94,15 +94,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},	
 	
 	dragStart : function() {
-		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
-		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
-		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "visible";
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-0").style.overflow = "visible";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "visible";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "visible";
 	},
 	
 	stateDragStop : function(event, ui) {
-		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "auto";
-		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "hidden";
-		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-0").style.overflow = "auto";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "hidden";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		switch(ui.helper[0].childNodes[1].className) {
 			case "toolboxOutputStateTopColor":
@@ -118,9 +118,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	transitionDragStop : function(event, ui) {
-		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "auto";
-		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "hidden";
-		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-0").style.overflow = "auto";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "hidden";
+		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
 		
@@ -615,9 +615,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			if(oAction == sap.m.MessageBox.Action.OK) {
 				$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/deleteGame?gameId=" + this.gameModel.GameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function() {
 					this.resetEditor();
-					sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(false);
-					sap.ui.getCore().byId("gameEditor--runButton").setEnabled(false);
-					sap.ui.getCore().byId("gameEditor--optionsButton").setEnabled(false);
+					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
+					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
+					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
 					sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.deleted"))
 				}, this), error : $.proxy(function(data) {
 					sap.m.MessageToast.show(data.responseText);
@@ -636,9 +636,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.saveCount = null;
 		this.type = null;
 		
-		sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(true);
-		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true);
-		sap.ui.getCore().byId("gameEditor--optionsButton").setEnabled(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(true);
 		
 		GameEditor.resetScroll();
 	},
@@ -738,17 +738,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var that = this;
 		this.oldX = 0;
 		this.oldY = 0;
-		document.getElementById("gameEditor--mainSplitter-content-1").onmousemove = function (e) {
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmousemove = function (e) {
 			that.clicked && that.updateScrollPos(e);
 		}
 		
-		document.getElementById("gameEditor--mainSplitter-content-1").onmousedown = function (e) {
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmousedown = function (e) {
 			that.clicked = true;
 			that.oldX = e.pageX;
 			that.oldY = e.pageY;
 		}
 		
-		document.getElementById("gameEditor--mainSplitter-content-1").onmouseup = function (e) {
+		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmouseup = function (e) {
 			that.clicked = false;
 	        $('html').css('cursor', 'auto');
 		}
@@ -756,7 +756,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	updateScrollPos : function(e) {
 	    $('html').css('cursor', 'row-resize');
-	    document.getElementById("gameEditor--mainSplitter-content-1").scrollBy(this.oldX - e.pageX, this.oldY - e.pageY);
+	    document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy(this.oldX - e.pageX, this.oldY - e.pageY);
 	    this.oldX = e.pageX;
 	    this.oldY = e.pageY;    
 	},

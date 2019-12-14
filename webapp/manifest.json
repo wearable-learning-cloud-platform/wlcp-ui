@@ -80,6 +80,10 @@
 				"pattern": "RouteMainView",
 				"target": ["TargetMainView"]
 			}, {
+				"name": "RouteGameEditorView",
+				"pattern": "RouteGameEditorView",
+				"target": ["TargetGameEditorView"]
+			}, {
 				"name": "RouteVirtualDevice",
 				"pattern": "RouteVirtualDevice",
 				"target": ["TargetVirtualDevice"]
@@ -89,6 +93,12 @@
 					"viewType": "XML",
 					"viewLevel": 1,
 					"viewName": "MainView"
+				},
+				"TargetGameEditorView": {
+					"viewType": "XML",
+					"viewLevel": 1,
+					"viewName": "GameEditor",
+					"id" : "gameEditor"
 				},
 				"TargetVirtualDevice": {
 					"viewType": "XML",
