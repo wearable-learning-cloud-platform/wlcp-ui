@@ -515,13 +515,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	openDebuggerWindow : function(debugGameInstanceId) {
-		this.debuggerWindow = window.open(window.location.href + "debugger.html");
-		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this, debugGameInstanceId), true); 
-	},
-
-	debuggerWindowOpened : function(debugGameInstanceId) {
-		this.debuggerWindow.DebuggerWindow.initParams(debugGameInstanceId, sap.ui.getCore().getModel("user").oData.username);
-		this.debuggerWindow.DebuggerWindow.initDebugger();
+		this.debuggerWindow = window.open(window.location.origin + "/index.html#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
 	},
 	
 	openGameOptions : function(oEvent) {
@@ -714,24 +708,41 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.confirmExit");
 		};
 		
-		GameEditor.getEditor().addEventDelegate({
-			  onAfterRendering: function(){
+		// GameEditor.getEditor().addEventDelegate({
+		// 	  onAfterRendering: function(){
 				  
-				  //Load the data model
-				  ODataModel.setupODataModel();
+		// 		  //Load the data model
+		// 		  ODataModel.setupODataModel();
 				  
-				  //Check to see if we are loading from the game manager
-				  if(this.loadFromEditor != null) {
-					  setTimeout($.proxy(function() { this.loadFromManager(this.loadFromEditor) }, this), 1000);
-				  }
+		// 		  //Check to see if we are loading from the game manager
+		// 		  if(this.loadFromEditor != null) {
+		// 			  setTimeout($.proxy(function() { this.loadFromManager(this.loadFromEditor) }, this), 1000);
+		// 		  }
 				  
-				  //Setup scrolling via mouse
-				  this.setupScrolling();
+		// 		  //Setup scrolling via mouse
+		// 		  this.setupScrolling();
 				  
-				  //Load the toolbox text
-				  this.initToolboxText();
-			  }
-			}, this);	
+		// 		  //Load the toolbox text
+		// 		  this.initToolboxText();
+		// 	  }
+		// 	}, this);	
+
+		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
+	},
+
+	onRouteMatched : function (oEvent) {
+
+		//Load the data model
+		ODataModel.setupODataModel();
+
+		//Setup scrolling via mouse
+		this.setupScrolling();
+
+		//Load the toolbox text
+		this.initToolboxText();
+
+		//Load the quickstart help
+		//this.quickStartHelp();
 	},
 	
 	setupScrolling : function() {

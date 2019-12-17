@@ -44,19 +44,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 			Index.switchToGameManager();
 			break;
 		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor"):
-			//Index.switchToGameEditor();
-			//Index.gameEditorPage.getController().quickStartHelp();
-			//Index.gameEditorPage.getController().quickStartCookie();
-			// this.app = sap.ui.getCore().byId("container-wlcp-ui---app--mainApp");
-			// this.gameEditorPage = sap.ui.view({id:"gameEditor", viewName:"org.wlcp.wlcp-ui.view.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
-			// this.app.addPage(this.gameEditorPage);
-			// this.app.to(this.gameEditorPage);
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView");
 			break;
 		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gamePlayer"):
-			Index.switchToGamePlayer();
-			Index.gamePlayerPage.getController().debugMode = false;
-			Index.gamePlayerPage.getController().initVirtualDevice();
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
+				username : this.userModelData.username,
+				gameInstanceId : 0,
+				debugMode : false
+			});
 			break;
 		default:
 			break;

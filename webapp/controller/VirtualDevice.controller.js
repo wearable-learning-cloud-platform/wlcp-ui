@@ -41,7 +41,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	submitButtonPressSequence : function() {
-		var sequences = $("#virtualDevice--colorListSortable-listUl").sortable("toArray", {attribute : "class"});
+		var sequences = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", {attribute : "class"});
 		var sequence = "";
 		for(var i = 0; i < sequences.length; i++) {
 			if(sequences[i].includes("Red")) {
@@ -56,32 +56,32 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		this.resetStateDisplayTypes();
 		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, JSON.stringify({sequenceButtonPress : sequence}));
-		var children = $("#virtualDevice--colorListSortable-listUl").children();
+		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
 	},
 
 	clearButtonPressSequence : function() {
-		var children = $("#virtualDevice--colorListSortable-listUl").children();
+		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
 	},
 	
 	onAfterRenderingSequence : function() {
-		$("#virtualDevice--colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
-		$("#virtualDevice--colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
-		$("#virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
-		$("#virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
-		$("#virtualDevice--colorListSortable-listUl").sortable();
+		$("#container-wlcp-ui---virtualDevice--colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
+		$("#container-wlcp-ui---virtualDevice--colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
+		$("#container-wlcp-ui---virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
+		$("#container-wlcp-ui---virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable();
 	},
 	
 	submitKeyboardInput : function() {
-		var keyboardInput = sap.ui.getCore().byId("virtualDevice--keyboardInputField").getValue();
+		var keyboardInput = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").getValue();
 		this.resetStateDisplayTypes();
 		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, {}, JSON.stringify({keyboardInput : keyboardInput}));
-		sap.ui.getCore().byId("virtualDevice--keyboardInputField").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 	},
 	
 	setupSocketConnection : function(team, player) {
@@ -100,17 +100,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	    this.connectionResultSubscription = this.stompClient.subscribe("/subscription/connectionResult/" + gameInstanceId + "/" + this.username + "/" + team + "/" + player, function(response) {
 	    	var jsonResponse = JSON.parse(response.body);
 	    	if(jsonResponse.code == "FAIL") { 
-				var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-				navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameInstance"));
+				var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+				navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
 				sap.m.MessageBox.error("That team and player are taken! Someone else may have taken it before you.");
 				return;
 	    	}
 	    	that.team = jsonResponse.team;
 	    	that.player = jsonResponse.player;
 	    	that.connectionResultSubscription.unsubscribe();
-			var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--virtualDevicePage"));
-			sap.ui.getCore().byId("virtualDevice--userTeamPlayer").setText(that.username + "-T" + that.team + "P" + that.player);
+			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDevicePage"));
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + that.team + "P" + that.player);
 	    });
     	this.subscribeToChannels(gameInstanceId, team, player);
 	    this.stompClient.send("/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, {}, "{}");
@@ -123,11 +123,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.recievedDisplayText = true
 			//photo already initialized
 			if(that.recievedDisplayText && that.recievedDisplayPhoto){
-				var displayTextBox = sap.ui.getCore().byId("virtualDevice--displayTextLabel");
+				var displayTextBox = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel");
 				displayTextBox.setText(parsedJson.displayText); //this becomes id of displayTextPhoto Label
 			}
 			else {
-				var displayTextBox = sap.ui.getCore().byId("virtualDevice--displayTextArea");
+				var displayTextBox = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea");
 				displayTextBox.setValue(parsedJson.displayText); //this becomes id in displayText TextArea
 				that.switchToStateType("DisplayText");
 			}
@@ -140,11 +140,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.recievedDisplayPhotoText = true;
 			//load text if exists
 			if(that.recievedDisplayText) {
-				var displayTextLabel = sap.ui.getCore().byId("virtualDevice--displayTextLabel");
-				displayTextLabel.setText(sap.ui.getCore().byId("virtualDevice--displayTextArea").getValue());
+				var displayTextLabel = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel");
+				displayTextLabel.setText(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").getValue());
 			}
 			
-			var displayPhoto = sap.ui.getCore().byId("virtualDevice--displayPhotoImage");
+			var displayPhoto = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayPhotoImage");
 			//load image
 			var img = new Image();
 			img.addEventListener("load", $.proxy(function() {
@@ -188,44 +188,44 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	switchToStateType : function(type) {
-		var navContainer = sap.ui.getCore().byId("virtualDevice--outputContainer");
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--outputContainer");
 		switch(type) {
 		case "DisplayText":
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--displayTextPage"));
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextPage"));
 			break;
 		case "DisplayTextPhoto":
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--displayTextPhotoPage"));
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextPhotoPage"));
 			break;
 		}
 	},
 	
 	switchToTransitionType : function(type) {
-		var navContainer = sap.ui.getCore().byId("virtualDevice--inputContainer");
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--inputContainer");
 		switch(type) {
 		case "SingleButtonPress":
 			navContainer.afterNavigate = null;
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--singleButtonPress"));
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--singleButtonPress"));
 			break;
 		case "SequenceButtonPress":
-			var page = sap.ui.getCore().byId("virtualDevice--sequenceButtonPress");
+			var page = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--sequenceButtonPress");
 			page.onAfterRendering = $.proxy(this.onAfterRenderingSequence, this);
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--sequenceButtonPress"));
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--sequenceButtonPress"));
 			break;
 		case "KeyboardInput":
-			navContainer.to(sap.ui.getCore().byId("virtualDevice--keyboardInput"));
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInput"));
 			break;
 		}
 	},
 	
 	joinGameInstance : function() {
-		var gameInstanceId = sap.ui.getCore().byId("virtualDevice--gamePinInput").getValue();
+		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
 			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
 		} else {
 			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
 		}
-		sap.ui.getCore().byId("virtualDevice--gamePinInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
 	},
 	
 	joinDebugGameInstance : function() {
@@ -240,8 +240,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	handleGameTeamsAndPlayers : function(response) {
 		this.modelJSON.teamPlayers = [];
 		this.model.setData(this.modelJSON);
-		var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-		navContainer.to(sap.ui.getCore().byId("virtualDevice--selectTeamPlayer"));
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+		navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
 		for(var i = 0; i < response.length; i++) {
 			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
 		}
@@ -253,21 +253,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
 	
-	initVirtualDevice : function(debugGameInstanceId, username) {
-		if(!this.debugMode) {
-			this.username = sap.ui.getCore().getModel("user").oData.username;
-			sap.ui.getCore().setModel(this.model);
-		} else {
-			this.username = username;
-			this.debugGameInstanceId = debugGameInstanceId;
-			sap.ui.getCore().setModel(this.model);
-		}
-	},
-	
 	resetStateDisplayTypes : function() {
 		this.recievedDisplayText = false;
-		this.recievedDisplayPhoto = false;
-		
+		this.recievedDisplayPhoto = false;	
 	},
 
 /**
@@ -282,17 +270,23 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		window.onbeforeunload = function() {
 			return "Are you sure you want to leave this page? You will lose all unsaved data!";
 		};
-		
-		this.getView().addEventDelegate({
-			  onAfterRendering: function(){
-				  if(!this.debugMode) {
-						var navContainer = sap.ui.getCore().byId("__xmlview0--virtualDeviceNavContainer");
-						navContainer.to(sap.ui.getCore().byId("__xmlview0--selectGameInstance"));
-				  } else {
-					    this.joinDebugGameInstance();
-				  }
-			  }
-		}, this);
+
+		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteVirtualDeviceView").attachMatched(this.onRouteMatched, this);
+	},
+
+	onRouteMatched : function (oEvent) {
+		if(oEvent.getParameter("arguments").debugMode == "true") {
+			this.username = oEvent.getParameter("arguments").username;
+			this.debugGameInstanceId = oEvent.getParameter("arguments").gameInstanceId;
+			this.debugMode = true;
+			this.joinDebugGameInstance();
+		} else {
+			this.username = oEvent.getParameter("arguments").username;
+			this.debugMode = false;
+			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
+		}
+		this.getView().setModel(this.model);
 	},
 
 /**

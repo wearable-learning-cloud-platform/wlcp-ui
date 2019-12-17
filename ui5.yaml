@@ -2,3 +2,19 @@ specVersion: '1.0'
 metadata:
   name: wlcp-ui
 type: application
+server:
+  customMiddleware:
+    - name: apiProxy
+      afterMiddleware: connectUi5Proxy
+      mountPath: /
+      configuration:
+        proxyDefinitions:
+          /api/v1: "http://google.com"
+---
+specVersion: '1.0'
+kind: extension
+type: server-middleware
+metadata:
+  name: apiProxy
+middleware:
+  path: lib/middleware/apiProxy.js

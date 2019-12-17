@@ -3,5 +3,9 @@ sap.ui.define([
 ], function(Controller) {
   "use strict";
 
-  return Controller.extend("org.wlcp.wlcp-ui.controller.MainView", {});
+  return Controller.extend("org.wlcp.wlcp-ui.controller.MainView", {
+    onInit : function() {
+      sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
+    }
+  });
 });

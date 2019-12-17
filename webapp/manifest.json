@@ -80,13 +80,17 @@
 				"pattern": "RouteMainView",
 				"target": ["TargetMainView"]
 			}, {
+				"name": "RouteLoginView",
+				"pattern": "RouteLoginView",
+				"target": ["TargetLoginView"]
+			}, {
 				"name": "RouteGameEditorView",
 				"pattern": "RouteGameEditorView",
 				"target": ["TargetGameEditorView"]
 			}, {
-				"name": "RouteVirtualDevice",
-				"pattern": "RouteVirtualDevice",
-				"target": ["TargetVirtualDevice"]
+				"name": "RouteVirtualDeviceView",
+				"pattern": "RouteVirtualDeviceView/{username}/{gameInstanceId}/{debugMode}",
+				"target": ["TargetVirtualDeviceView"]
 			}],
 			"targets": {
 				"TargetMainView": {
@@ -94,16 +98,22 @@
 					"viewLevel": 1,
 					"viewName": "MainView"
 				},
+				"TargetLoginView": {
+					"viewType": "XML",
+					"viewLevel": 1,
+					"viewName": "Login"
+				},
 				"TargetGameEditorView": {
 					"viewType": "XML",
 					"viewLevel": 1,
 					"viewName": "GameEditor",
 					"id" : "gameEditor"
 				},
-				"TargetVirtualDevice": {
+				"TargetVirtualDeviceView": {
 					"viewType": "XML",
 					"viewLevel": 1,
-					"viewName": "VirtualDevice"
+					"viewName": "VirtualDevice",
+					"id" : "virtualDevice"
 				}
 			}
 		}
