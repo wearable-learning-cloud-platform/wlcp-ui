@@ -1,0 +1,24 @@
+{
+	"navigation": [{
+		"title": "Dashboard",
+		"icon" : "sap-icon://bbyd-dashboard",
+		"key" : "parent,org.wlcp.wlcp-ui.view.Dashboard,dashboard,page"
+	}, {
+		"title" : "Games",
+		"icon" : "sap-icon://iphone",
+		"key" : "parent,org.wlcp.wlcp-ui.view.Games,games,page",
+		"expanded" : false
+	}, {
+		"title" : "Game Instances",
+		"icon" : "sap-icon://instance",
+		"key" : "parent,org.wlcp.wlcp-ui.view.GameInstances,gameInstances,page",
+		"expanded" : false
+	}],
+	"fixedNavigation" : [{
+		"title" : "About",
+		"icon" : "sap-icon://hint"
+	}, {
+		"title" : "Help",
+		"icon" : "sap-icon://sys-help"
+	}]
+}

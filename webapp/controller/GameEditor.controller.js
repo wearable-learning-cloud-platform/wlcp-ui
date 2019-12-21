@@ -515,7 +515,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	openDebuggerWindow : function(debugGameInstanceId) {
-		this.debuggerWindow = window.open(window.location.origin + "/index.html#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
+		this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
 	},
 	
 	openGameOptions : function(oEvent) {

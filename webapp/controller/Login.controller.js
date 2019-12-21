@@ -41,7 +41,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		this.userModel.setData(this.userModelData);
 		switch(this.modelData.mode) {
 		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameManager"): 
-			Index.switchToGameManager();
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteMainToolPage");
 			break;
 		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor"):
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView");

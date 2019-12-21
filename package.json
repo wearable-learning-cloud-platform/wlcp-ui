@@ -6,7 +6,7 @@
         },
         "scripts": {
                 "start": "ui5 serve -o index.html --port 3000",
-                "serve": "ui5 serve",
+                "serve": "ui5 serve --port 3000",
                 "test": "npm run lint && npm run karma",
                 "karma-ci": "karma start karma-ci.conf.js",
                 "karma": "rimraf coverage && npm run karma-ci",
@@ -14,10 +14,11 @@
                 "build:ui": "rimraf dist && ui5 build  --a--dest dist/webapp"
         },
         "dependencies": {
+                "@openui5/sap.m": "^1.73.1",
                 "@openui5/sap.ui.core": "^1.73.1",
                 "@openui5/sap.ui.layout": "^1.73.1",
                 "@openui5/themelib_sap_belize": "^1.73.1",
-                "@openui5/sap.m": "^1.73.1",
+                "eureka-js-client": "^4.5.0",
                 "shx": "^0.3.2"
         },
         "devDependencies": {

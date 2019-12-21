@@ -91,6 +91,10 @@
 				"name": "RouteVirtualDeviceView",
 				"pattern": "RouteVirtualDeviceView/{username}/{gameInstanceId}/{debugMode}",
 				"target": ["TargetVirtualDeviceView"]
+			}, {
+				"name" : "RouteMainToolPage",
+				"pattern" : "RouteMainToolPage",
+				"target" : ["TargetMainToolPage"]
 			}],
 			"targets": {
 				"TargetMainView": {
@@ -114,6 +118,12 @@
 					"viewLevel": 1,
 					"viewName": "VirtualDevice",
 					"id" : "virtualDevice"
+				},
+				"TargetMainToolPage": {
+					"viewType": "XML",
+					"viewLevel": 1,
+					"viewName": "MainToolpage",
+					"id" : "mainToolPage"
 				}
 			}
 		}

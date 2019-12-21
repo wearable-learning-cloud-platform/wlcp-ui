@@ -10,6 +10,8 @@ server:
       configuration:
         proxyDefinitions:
           /api/v1: "http://google.com"
+    - name: eurekaClient
+      afterMiddleware: compression
 ---
 specVersion: '1.0'
 kind: extension
@@ -18,3 +20,11 @@ metadata:
   name: apiProxy
 middleware:
   path: lib/middleware/apiProxy.js
+---
+specVersion: '1.0'
+kind: extension
+type: server-middleware
+metadata:
+  name: eurekaClient
+middleware:
+  path: lib/middleware/eurekaClient.js

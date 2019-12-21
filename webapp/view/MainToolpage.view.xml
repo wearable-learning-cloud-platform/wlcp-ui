@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:f="sap.f" xmlns:l="sap.ui.layout"
+		controllerName="org.wlcp.wlcp-ui.controller.MainToolpage" xmlns:html="http://www.w3.org/1999/xhtml">
+		<tnt:ToolPage id="toolPage">
+			<tnt:header>
+				<tnt:ToolHeader>
+					<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press="onSideNavButtonPress">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+					<ToolbarSpacer/>
+					<Title level = "H3" text = "Wearable Learning Cloud Platform">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Title>
+					<tnt:ToolHeaderUtilitySeparator />
+					<ToolbarSpacer>
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
+						</layoutData>
+					</ToolbarSpacer>
+					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+					<Button icon = "sap-icon://user-settings" type="Transparent">
+					</Button>
+					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin">
+					</Button>
+				</tnt:ToolHeader>
+			</tnt:header>
+			<tnt:sideContent>
+				<tnt:SideNavigation expanded="true">
+				<tnt:NavigationList items="{path : '/navigation', templateShareable:false}">
+					<tnt:NavigationListItem select="selectParentItem" text="{title}" icon="{icon}" enabled="{enabled}" expanded="{expanded}" items="{path : 'items', templateShareable:false}" key="{key}">
+						<tnt:NavigationListItem select="selectParentItem" text="{title}" key="{key}" enabled="{enabled}">
+						</tnt:NavigationListItem>
+					</tnt:NavigationListItem>
+				</tnt:NavigationList>
+				<tnt:fixedItem>
+					<tnt:NavigationList items="{/fixedNavigation}">
+						<tnt:NavigationListItem text="{title}" icon="{icon}">
+						</tnt:NavigationListItem>
+					</tnt:NavigationList>
+				</tnt:fixedItem>
+				</tnt:SideNavigation>
+			</tnt:sideContent>
+			<tnt:mainContents>
+				<NavContainer id="pageContainer"/>
+			</tnt:mainContents>
+		</tnt:ToolPage>
+</core:View>
