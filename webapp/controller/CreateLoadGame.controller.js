@@ -6,22 +6,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		
 	onPlayerChange: function (oEvent) {
 		
-		var playerCount = GameEditor.getEditorController().newGameModel.PlayersPerTeam;
-		var teamCount = GameEditor.getEditorController().newGameModel.TeamCount;
+		var playerCount = GameEditor.getEditorController().newGameModel.playersPerTeam;
+		var teamCount = GameEditor.getEditorController().newGameModel.teamCount;
 		
 		var maxPlayerValue = this.getMaxPlayer(9, teamCount)
 		if(playerCount > maxPlayerValue){
-			GameEditor.getEditorController().newGameModel.PlayersPerTeam = playerCount - 1;
+			GameEditor.getEditorController().newGameModel.playersPerTeam = playerCount - 1;
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.team1") + teamCount + " " + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.team2")+ maxPlayerValue + " " + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.team3"));
 		}
 			
 	},
-	
 			
 	onTeamChange: function (oEvent) {
 					
-		var playerCount = GameEditor.getEditorController().newGameModel.PlayersPerTeam;
-		var teamCount = GameEditor.getEditorController().newGameModel.TeamCount;
+		var playerCount = GameEditor.getEditorController().newGameModel.playersPerTeam;
+		var teamCount = GameEditor.getEditorController().newGameModel.teamCount;
 			
 		var maxPlayerValue = this.getMaxPlayer(9, teamCount)
 		if(playerCount > maxPlayerValue){
@@ -42,11 +41,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 * Dialog. If it succeeds, createGameSuccess will be called.
 	 */
 	createGame : function() {
-		if(!GameEditor.getEditorController().newGameModel.GameId.match(/^[a-zA-Z]+$/)) {
+		if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 			return;
 		}
-		ODataModel.getODataModel().create("/Games", GameEditor.getEditorController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
+			url: "http://localhost:8050/wlcp-api/gameController/createGame",
+			type: 'POST',
+			dataType: 'json',
+			data: JSON.stringify(GameEditor.getEditorController().newGameModel),
+			success : $.proxy(this.createGameSuccess, this),
+			error : $.proxy(this.createGameError, this)
+		});
 	},
 	
 	loadGame : function() {
@@ -91,21 +97,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	createGameSuccess : function(oSuccess) {
 		GameEditor.getEditorController().resetEditor();
 		if(GameEditor.getEditor() != null) {
-			GameEditor.getEditorController().gameModel.GameId = GameEditor.getEditorController().newGameModel.GameId;
-			GameEditor.getEditorController().gameModel.TeamCount = GameEditor.getEditorController().newGameModel.TeamCount;
-			GameEditor.getEditorController().gameModel.PlayersPerTeam = GameEditor.getEditorController().newGameModel.PlayersPerTeam;
-			GameEditor.getEditorController().gameModel.Visibility = GameEditor.getEditorController().newGameModel.Visibility;
-			GameEditor.getEditorController().gameModel.StateIdCount = GameEditor.getEditorController().newGameModel.StateIdCount;
-			GameEditor.getEditorController().gameModel.TransitionIdCount = GameEditor.getEditorController().newGameModel.TransitionIdCount;
-			GameEditor.getEditorController().gameModel.ConnectionIdCount = GameEditor.getEditorController().newGameModel.ConnectionIdCount;
-			GameEditor.getEditorController().gameModel.Username = oSuccess.Username;
-			GameEditor.getEditorController().newGameModel.GameId = "";
-			GameEditor.getEditorController().newGameModel.TeamCount = 3;
-			GameEditor.getEditorController().newGameModel.PlayersPerTeam = 3;
-			GameEditor.getEditorController().newGameModel.Visibility = true;
-			GameEditor.getEditorController().newGameModel.StateIdCount = 0;
-			GameEditor.getEditorController().newGameModel.TransitionIdCount = 0;
-			GameEditor.getEditorController().newGameModel.ConnectionIdCount = 0;
+			GameEditor.getEditorController().gameModel.gameId = oSuccess.object.gameId;
+			GameEditor.getEditorController().gameModel.teamCount = oSuccess.object.teamCount;
+			GameEditor.getEditorController().gameModel.playersPerTeam = oSuccess.object.playersPerTeam;
+			GameEditor.getEditorController().gameModel.visibility = oSuccess.object.visibility;
+			GameEditor.getEditorController().gameModel.stateIdCount = oSuccess.object.stateIdCount;
+			GameEditor.getEditorController().gameModel.transitionIdCount = oSuccess.object.transitionIdCount;
+			GameEditor.getEditorController().gameModel.connectionIdCount = oSuccess.object.connectionIdCount;
+			GameEditor.getEditorController().gameModel.usernameId = oSuccess.object.usernameId;
+			GameEditor.getEditorController().newGameModel.gameId = "";
+			GameEditor.getEditorController().newGameModel.teamCount = 3;
+			GameEditor.getEditorController().newGameModel.playersPerTeam = 3;
+			GameEditor.getEditorController().newGameModel.visibility = true;
+			GameEditor.getEditorController().newGameModel.stateIdCount = 0;
+			GameEditor.getEditorController().newGameModel.transitionIdCount = 0;
+			GameEditor.getEditorController().newGameModel.connectionIdCount = 0;
 			GameEditor.getEditorController().initNewGame();
 		}
 		sap.ui.getCore().byId("createGame").close();
@@ -115,7 +121,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	
 	loadGameSuccess : function(oData) {
 		GameEditor.getEditorController().resetEditor();
-		GameEditor.getEditorController().gameModel.GameId = oData.results[0].GameId;
+		GameEditor.getEditorController().gameModel.gameId = oData.results[0].gameId;
 		GameEditor.getEditorController().gameModel.TeamCount = oData.results[0].TeamCount;
 		GameEditor.getEditorController().gameModel.PlayersPerTeam = oData.results[0].PlayersPerTeam;
 		GameEditor.getEditorController().gameModel.Visibility = oData.results[0].Visibility;

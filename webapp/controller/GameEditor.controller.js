@@ -1,33 +1,29 @@
 sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	oModel : null,
-	
+
 	newGameModel : {
-		GameId : "",
-		TeamCount : 3,
-		PlayersPerTeam : 3,
-		StateIdCount : 0,
-		TransitionIdCount : 0,
-		ConnectionIdCount : 0,
-		UsernameDetails : {
-			__metadata : {
-	            uri :  "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"//ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
-	         }
-		},
-		Visibility : true,
-		DataLog : false
+		gameId : "",
+		teamCount : 3,
+		playersPerTeam : 3,
+		stateIdCount : 0,
+		transitionIdCount : 0,
+		connectionIdCount : 0,
+		usernameId : "",
+		visibility : true,
+		dataLog : false
 	},
 	
 	gameModel : {
-		GameId : "",
-		TeamCount : 0,
-		PlayersPerTeam : 0,
-		StateIdCount : 0,
-		TransitionIdCount : 0,
-		ConnectionIdCount : 0,
-		Username : "",
-		Visibility : true,
-		DataLog : false
+		gameId : "",
+		teamCount : 0,
+		playersPerTeam : 0,
+		stateIdCount : 0,
+		transitionIdCount : 0,
+		connectionIdCount : 0,
+		usernameId : "",
+		visibility : true,
+		dataLog : false
 	},
 	
 	stateList : [],
@@ -68,7 +64,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.saveGame();
+		//this.saveGame();
 	},
 	
 	initToolboxText : function() {

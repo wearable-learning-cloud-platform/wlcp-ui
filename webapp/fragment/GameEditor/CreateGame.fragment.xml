@@ -10,19 +10,19 @@
 		</buttons>
 		<VBox>
 			<Label text="{i18n>gameEditor.new.gameName}:" required="true"/>
-			<Input value="{/GameId}"/>
+			<Input value="{/gameId}"/>
 		</VBox>
 		<VBox>
 			<Label text="{i18n>gameEditor.new.teamCount}:"/>
-			<StepInput min="1" max="9" value="{/TeamCount}" change="onTeamChange"/>
+			<StepInput min="1" max="9" value="{/teamCount}" change="onTeamChange"/>
 		</VBox>
 		<VBox>
 			<Label text="{i18n>gameEditor.new.playersPerTeam}:"/>
-			<StepInput min="1" max="9" value="{/PlayersPerTeam}" change="onPlayerChange"/>
+			<StepInput min="1" max="9" value="{/playersPerTeam}" change="onPlayerChange"/>
 		</VBox>
 		<VBox>
 			<Label text="{i18n>gameEditor.new.visibility}:"/>
-			<CheckBox text="{i18n>gameEditor.new.public}" selected="{/Visibility}" />
+			<CheckBox text="{i18n>gameEditor.new.public}" selected="{/visibility}" />
 		</VBox>
 	</Dialog>
 	

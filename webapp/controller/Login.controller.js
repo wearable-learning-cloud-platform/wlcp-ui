@@ -65,7 +65,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		this.newUserModel.setData(this.newUserModelData);
 		
 		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: ODataModel.getWebAppURL() + "/Rest/Controllers/userLogin",
+			url: "http://localhost:8050/wlcp-api/userController/userLogin",
 			type: 'POST',
 			dataType: 'json',
 			data: this.newUserModel.getJSON(),
