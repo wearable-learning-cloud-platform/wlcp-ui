@@ -59,13 +59,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	validateLogin : function() {
-		var oDataModel = ODataModel.getODataModel();
 		this.newUserModelData.username = this.modelData.username.toLowerCase();
 		//this.newUserModelData.password = this.modelData.password;
 		this.newUserModel.setData(this.newUserModelData);
 		
 		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: "http://localhost:8050/wlcp-api/userController/userLogin",
+			url: ServerConfig.getServerAddress() + "/userController/userLogin",
 			type: 'POST',
 			dataType: 'json',
 			data: this.newUserModel.getJSON(),
@@ -163,9 +162,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		
 		this.userModel.setData(this.userModelData);
 		sap.ui.getCore().setModel(this.userModel, "user");
-		
-		//Setup the ODATA
-		ODataModel.setupODataModel();
 		
 		this.getView().addEventDelegate({
 			  onAfterRendering: function(){

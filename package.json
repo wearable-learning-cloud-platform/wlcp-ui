@@ -19,6 +19,7 @@
                 "@openui5/sap.ui.layout": "^1.73.1",
                 "@openui5/themelib_sap_belize": "^1.73.1",
                 "eureka-js-client": "^4.5.0",
+                "ui5-middleware-simpleproxy": "^0.1.4",
                 "shx": "^0.3.2"
         },
         "devDependencies": {

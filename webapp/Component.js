@@ -71,7 +71,6 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigKeyboardInput");
 			
 			jQuery.sap.require("javascript/GameEditor/GameEditor");
-			jQuery.sap.require("javascript/ODataModel");
 			jQuery.sap.require("javascript/ServerConfig");
 			jQuery.sap.require("javascript/DataLogger");
 			

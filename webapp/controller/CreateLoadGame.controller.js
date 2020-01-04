@@ -46,7 +46,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			return;
 		}
 		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: "http://localhost:8050/wlcp-api/gameController/createGame",
+			url: ServerConfig.getServerAddress() + "/gameController/createGame",
 			type: 'POST',
 			dataType: 'json',
 			data: JSON.stringify(GameEditor.getEditorController().newGameModel),
@@ -68,9 +68,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
 			return;
 		}
-		// var filters = [];
-		// filters.push(new sap.ui.model.Filter({path: "GameId", operator: sap.ui.model.FilterOperator.EQ, value1: gameToLoad}));
-		// ODataModel.getODataModel().read("/Games", {filters : filters, success : this.loadGameSuccess, error: this.loadGameError});
 		GameEditor.getEditorController().gameModel.gameId = gameToLoad;
 		GameEditor.getEditorController().resetEditor();
 		GameEditor.getEditorController().load();
@@ -107,7 +104,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			GameEditor.getEditorController().gameModel.stateIdCount = oSuccess.object.stateIdCount;
 			GameEditor.getEditorController().gameModel.transitionIdCount = oSuccess.object.transitionIdCount;
 			GameEditor.getEditorController().gameModel.connectionIdCount = oSuccess.object.connectionIdCount;
-			GameEditor.getEditorController().gameModel.usernameId = oSuccess.object.username.usernameId;
+			GameEditor.getEditorController().gameModel.username.usernameId = oSuccess.object.username.usernameId;
 			GameEditor.getEditorController().newGameModel.gameId = "";
 			GameEditor.getEditorController().newGameModel.teamCount = 3;
 			GameEditor.getEditorController().newGameModel.playersPerTeam = 3;

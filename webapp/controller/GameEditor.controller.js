@@ -9,7 +9,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		stateIdCount : 0,
 		transitionIdCount : 0,
 		connectionIdCount : 0,
-		usernameId : "",
+		username : {
+			usernameId : sap.ui.getCore().getModel("user").oData.username
+		},
 		visibility : true,
 		dataLog : false
 	},
@@ -21,7 +23,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		stateIdCount : 0,
 		transitionIdCount : 0,
 		connectionIdCount : 0,
-		usernameId : "",
+		username : {
+			usernameId : ""
+		},
 		visibility : true,
 		dataLog : false
 	},
@@ -240,7 +244,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			publicGames : null
 		};
 		$.ajax({
-			url: "http://localhost:8050/wlcp-api/loadGameController/getPrivateGames?usernameId=" + "mmicciolo", 
+			url: ServerConfig.getServerAddress() + "/loadGameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, 
 			type: 'GET',
 			async : false,
 			success: function(data) {
@@ -251,7 +255,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 		});
 		$.ajax({
-			url: "http://localhost:8050/wlcp-api/loadGameController/getPublicGames", 
+			url: ServerConfig.getServerAddress() + "/loadGameController/getPublicGames", 
 			type: 'GET',
 			async : false,
 			success: function(data) {
@@ -271,7 +275,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: "http://localhost:8050/wlcp-api/loadGameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		$.ajax({url: ServerConfig.getServerAddress() + "/loadGameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadFromManager : function(gameInfo) {
@@ -283,7 +287,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		GameEditor.getEditorController().gameModel.stateIdCount = gameInfo.stateIdCount;
 		GameEditor.getEditorController().gameModel.transitionIdCount = gameInfo.transitionIdCount;
 		GameEditor.getEditorController().gameModel.connectionIdCount = gameInfo.connectionIdCount;
-		GameEditor.getEditorController().gameModel.usernameId = gameInfo.usernameId;
+		GameEditor.getEditorController().gameModel.username.usernameId = gameInfo.usernameId;
 		GameEditor.getEditorController().load();
 	},
 	
@@ -298,7 +302,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.gameModel.stateIdCount = loadedData.stateIdCount;
 		this.gameModel.transitionIdCount = loadedData.transitionIdCount;
 		this.gameModel.connectionIdCount = loadedData.connectionIdCount;
-		this.gameModel.usernameId = loadedData.username.usernameId;
+		this.gameModel.username.usernameId = loadedData.username.usernameId;
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -412,21 +416,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.saveRun = false;
 		
 		//Check to make sure the owner is saving
-		// if(this.gameModel.usernameId != sap.ui.getCore().getModel("user").oData.username) {
-		// 	if(this.saveRun) {
-		// 		return;
-		// 	} else {
-		// 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.editCopy"));
-		// 		return;
-		// 	}
-		// }
+		if(this.gameModel.username.usernameId != sap.ui.getCore().getModel("user").oData.username) {
+			if(this.saveRun) {
+				return;
+			} else {
+				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.editCopy"));
+				return;
+			}
+		}
 		
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-
-		//Update the game model
-		//ODataModel.getODataModel().update("/Games('" + this.gameModel.gameId + "')", this.gameModel);
 
 		//Save the game
 		this.save();
@@ -444,9 +445,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				connectionIdCount : this.gameModel.connectionIdCount,
 				visibility : this.gameModel.visibility,
 				dataLog : this.gameModel.dataLog,
-				username : {
-					usernameId : this.gameModel.usernameId//sap.ui.getCore().getModel("user").oData.username
-				},
+				username : this.gameModel.username,
 				states : [],
 				connections : [],
 				transitions :[]
@@ -478,7 +477,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    return val;
 			});
 		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: "http://localhost:8050/wlcp-api/gameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {
@@ -754,9 +753,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	onRouteMatched : function (oEvent) {
-
-		//Load the data model
-		ODataModel.setupODataModel();
 
 		//Setup scrolling via mouse
 		this.setupScrolling();

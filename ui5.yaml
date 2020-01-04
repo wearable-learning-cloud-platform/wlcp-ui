@@ -4,22 +4,13 @@ metadata:
 type: application
 server:
   customMiddleware:
-    - name: apiProxy
-      afterMiddleware: connectUi5Proxy
-      mountPath: /
-      configuration:
-        proxyDefinitions:
-          /api/v1: "http://google.com"
     - name: eurekaClient
       afterMiddleware: compression
----
-specVersion: '1.0'
-kind: extension
-type: server-middleware
-metadata:
-  name: apiProxy
-middleware:
-  path: lib/middleware/apiProxy.js
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /rest/controllers
+      configuration:
+        baseUri: "http://localhost:8050/wlcp-api/"
 ---
 specVersion: '1.0'
 kind: extension
