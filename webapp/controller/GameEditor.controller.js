@@ -52,7 +52,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	initStartState : function() {
 		
 		//Create a new start state
-		var startState = new StartState("startStateTopColor", "startStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startState") , this.gameModel.GameId + "_start", this.jsPlumbInstance);
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startState") , this.gameModel.gameId + "_start", this.jsPlumbInstance);
 		
 		//Set the position
 		startState.setPositionX(((document.getElementById("container-wlcp-ui---gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
@@ -64,7 +64,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		//this.saveGame();
+		this.saveGame();
 	},
 	
 	initToolboxText : function() {
@@ -201,18 +201,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	createStateId : function() {
-		this.gameModel.StateIdCount++;
-		return this.gameModel.GameId + "_state_" + this.gameModel.StateIdCount;
+		this.gameModel.stateIdCount++;
+		return this.gameModel.gameId + "_state_" + this.gameModel.stateIdCount;
 	},
 	
 	createTransitionId : function() {
-		this.gameModel.TransitionIdCount++;
-		return this.gameModel.GameId + "_transition_" + this.gameModel.TransitionIdCount;
+		this.gameModel.transitionIdCount++;
+		return this.gameModel.gameId + "_transition_" + this.gameModel.transitionIdCount;
 	},
 	
 	createConnectionId : function() {
-		this.gameModel.ConnectionIdCount++;
-		return this.gameModel.GameId + "_connection_" + this.gameModel.ConnectionIdCount;
+		this.gameModel.connectionIdCount++;
+		return this.gameModel.gameId + "_connection_" + this.gameModel.connectionIdCount;
 	},
 	
 	newGame : function() {
@@ -235,18 +235,33 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	loadGame : function() {
 		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
-		fragment.setModel(ODataModel.getODataModel());
-		fragment.addEventDelegate({
-			  onAfterRendering: function(){
-				    var oBinding = sap.ui.getCore().byId("userLoadGameComboBox").getBinding("items");
-			        oBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username),
-			        				 new sap.ui.model.Filter("DataLog", "EQ", false)]);
-			        
-				    var oBinding = sap.ui.getCore().byId("publicLoadGameComboBox").getBinding("items");
-			        oBinding.filter([new sap.ui.model.Filter("Visibility", "EQ", true),
-			        				 new sap.ui.model.Filter("DataLog", "EQ", false)]);
-			  }
-			}, this);
+		var loadGameDialogModel = {
+			privateGames : null,
+			publicGames : null
+		};
+		$.ajax({
+			url: "http://localhost:8050/wlcp-api/loadGameController/getPrivateGames?usernameId=" + "mmicciolo", 
+			type: 'GET',
+			async : false,
+			success: function(data) {
+				loadGameDialogModel.privateGames = data.object;
+			},
+			error : function() {
+
+			}
+		});
+		$.ajax({
+			url: "http://localhost:8050/wlcp-api/loadGameController/getPublicGames", 
+			type: 'GET',
+			async : false,
+			success: function(data) {
+				loadGameDialogModel.publicGames = data.object;
+			},
+			error : function() {
+
+			}
+		});
+		fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
 		fragment.open();
 	},
 	
@@ -256,23 +271,34 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/loadGame?gameId=" + this.gameModel.GameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		$.ajax({url: "http://localhost:8050/wlcp-api/loadGameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadFromManager : function(gameInfo) {
 		GameEditor.getEditorController().resetEditor();
-		GameEditor.getEditorController().gameModel.GameId = gameInfo.GameId;
-		GameEditor.getEditorController().gameModel.TeamCount = gameInfo.TeamCount;
-		GameEditor.getEditorController().gameModel.PlayersPerTeam = gameInfo.PlayersPerTeam;
-		GameEditor.getEditorController().gameModel.Visibility = gameInfo.Visibility;
-		GameEditor.getEditorController().gameModel.StateIdCount = gameInfo.StateIdCount;
-		GameEditor.getEditorController().gameModel.TransitionIdCount = gameInfo.TransitionIdCount;
-		GameEditor.getEditorController().gameModel.ConnectionIdCount = gameInfo.ConnectionIdCount;
-		GameEditor.getEditorController().gameModel.Username = gameInfo.Username;
+		GameEditor.getEditorController().gameModel.gameId = gameInfo.gameId;
+		GameEditor.getEditorController().gameModel.teamCount = gameInfo.teamCount;
+		GameEditor.getEditorController().gameModel.playersPerTeam = gameInfo.playersPerTeam;
+		GameEditor.getEditorController().gameModel.visibility = gameInfo.visibility;
+		GameEditor.getEditorController().gameModel.stateIdCount = gameInfo.stateIdCount;
+		GameEditor.getEditorController().gameModel.transitionIdCount = gameInfo.transitionIdCount;
+		GameEditor.getEditorController().gameModel.connectionIdCount = gameInfo.connectionIdCount;
+		GameEditor.getEditorController().gameModel.usernameId = gameInfo.usernameId;
 		GameEditor.getEditorController().load();
 	},
 	
 	loadSuccess(loadedData) {
+
+		loadedData = loadedData.object;
+
+		this.gameModel.gameId = loadedData.gameId;
+		this.gameModel.teamCount = loadedData.teamCount;
+		this.gameModel.playersPerTeam = loadedData.playersPerTeam;
+		this.gameModel.visibility = loadedData.visibility;
+		this.gameModel.stateIdCount = loadedData.stateIdCount;
+		this.gameModel.transitionIdCount = loadedData.transitionIdCount;
+		this.gameModel.connectionIdCount = loadedData.connectionIdCount;
+		this.gameModel.usernameId = loadedData.username.usernameId;
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -386,21 +412,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.saveRun = false;
 		
 		//Check to make sure the owner is saving
-		if(this.gameModel.Username != sap.ui.getCore().getModel("user").oData.username) {
-			if(this.saveRun) {
-				return;
-			} else {
-				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.editCopy"));
-				return;
-			}
-		}
+		// if(this.gameModel.usernameId != sap.ui.getCore().getModel("user").oData.username) {
+		// 	if(this.saveRun) {
+		// 		return;
+		// 	} else {
+		// 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.editCopy"));
+		// 		return;
+		// 	}
+		// }
 		
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 
 		//Update the game model
-		ODataModel.getODataModel().update("/Games('" + this.gameModel.GameId + "')", this.gameModel);
+		//ODataModel.getODataModel().update("/Games('" + this.gameModel.gameId + "')", this.gameModel);
 
 		//Save the game
 		this.save();
@@ -410,16 +436,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
-				gameId : this.gameModel.GameId,
-				teamCount : this.gameModel.TeamCount,
-				playersPerTeam : this.gameModel.PlayersPerTeam,
-				stateIdCount : this.gameModel.StateIdCount,
-				transitionIdCount : this.gameModel.TransitionIdCount,
-				connectionIdCount : this.gameModel.ConnectionIdCount,
-				visibility : this.gameModel.Visibility,
-				dataLog : this.gameModel.DataLog,
+				gameId : this.gameModel.gameId,
+				teamCount : this.gameModel.teamCount,
+				playersPerTeam : this.gameModel.playersPerTeam,
+				stateIdCount : this.gameModel.stateIdCount,
+				transitionIdCount : this.gameModel.transitionIdCount,
+				connectionIdCount : this.gameModel.connectionIdCount,
+				visibility : this.gameModel.visibility,
+				dataLog : this.gameModel.dataLog,
 				username : {
-					usernameId : sap.ui.getCore().getModel("user").oData.username
+					usernameId : this.gameModel.usernameId//sap.ui.getCore().getModel("user").oData.username
 				},
 				states : [],
 				connections : [],
@@ -452,11 +478,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    return val;
 			});
 		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ODataModel.getWebAppURL() + "/Rest/Controllers/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: "http://localhost:8050/wlcp-api/gameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + this.gameModel.GameId + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
+		this.busy.close();
+		//$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + this.gameModel.gameId + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
 	},
 	
 	saveError : function() {
@@ -494,7 +521,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(data == true) {
 			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.alreadyDebugging"), {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		}
 	},
 	
@@ -504,9 +531,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	handleDebugInstanceMessageBox : function(oAction) {
 		if(oAction == sap.m.MessageBox.Action.OK) {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/true", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/true", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		} 
 	},
 	
@@ -537,7 +564,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/copyGame?gameId=" + this.gameModel.GameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
+					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/copyGame?gameId=" + this.gameModel.gameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -576,7 +603,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/renameGame?gameId=" + this.gameModel.GameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
+					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/renameGame?gameId=" + this.gameModel.gameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -603,7 +630,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	deleteGame : function(oEvent) {
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.delete.confirm"), { icon : sap.m.MessageBox.Icon.WARNING, onClose : $.proxy(function(oAction) {
 			if(oAction == sap.m.MessageBox.Action.OK) {
-				$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/deleteGame?gameId=" + this.gameModel.GameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function() {
+				$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/deleteGame?gameId=" + this.gameModel.gameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function() {
 					this.resetEditor();
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);

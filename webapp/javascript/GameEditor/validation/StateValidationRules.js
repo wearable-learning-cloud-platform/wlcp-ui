@@ -11,7 +11,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFrom);
 				
 				//Get the active scope mask
-				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 				
 				parentMask = parentMask | activeScopeMask;
 			} else {
@@ -19,13 +19,13 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].transition);
 				
 				//Get the active scope mask
-				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 				
 				parentMask = parentMask | activeScopeMask;
 			}
 		}
 		
-		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask);
+		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, parentMask);
 		
 		var transitionCount = 0;
 		
@@ -52,9 +52,9 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 					}
 					
 					//Get the active scope mask
-					var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+					var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 					
-					var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+					var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopeMask);
 					
 					var notActiveScopeMasks = ~ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 					
@@ -83,9 +83,9 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 							var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFrom.outputConnections[n].transition);
 							
 							//Get the active scope mask
-							var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+							var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 							
-							var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+							var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopeMask);
 							
 							var notActiveScopeMasks = ~ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 							
@@ -100,16 +100,16 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
 		
 		//Get the active scope mask
-		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 		
 		//Get the active scope masks
-		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopeMask);
 		
 		//And the active scope mask together
-		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
+		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
 		
 		//Set the states scope
-		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
 		
 		if(revalidate) {
 			//Recursively revalidate the states below us

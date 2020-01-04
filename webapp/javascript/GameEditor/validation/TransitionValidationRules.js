@@ -10,11 +10,11 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
 		
 		//Get the active scope mask
-		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 		
 		parentMask = parentMask | activeScopeMask;
 		
-		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask);
+		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, parentMask);
 		
 		var neighborTransitions = [];
 		
@@ -33,7 +33,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(neighborTransitions[i]);
 			
 			//Get the active scope mask
-			var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+			var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 			
 			orMaskAll = orMaskAll | activeScopeMask;
 		}
@@ -44,9 +44,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
 				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFrom.outputConnections[i].connectionTo);
 
-				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 				
-				var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+				var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopeMask);
 				
 				var notActiveScopeMasks = ~ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 				
@@ -60,21 +60,21 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition, neighborTransitions);
 		
 		//Get the active scope mask
-		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, activeScopes);
 		
 		neighborMask = neighborMask | activeScopeMask;	
 		
 		//Get the active scope masks
-		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
+		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, orMaskAll);
 
 		//And the active scope mask together
-		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
+		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
 		
 		//And all of the masks together to get our new scope mask
 		parentMask = parentMask & andScopeMasks;
 		
 		//Set the transitions scope
-		transition.setScope(parentMask & (~neighborMask) & (~stateNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		transition.setScope(parentMask & (~neighborMask) & (~stateNeighborMask), GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
 		
 		if(revalidate) {
 			if(!transition.connection.isLoopBack) {

@@ -68,9 +68,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
 			return;
 		}
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "GameId", operator: sap.ui.model.FilterOperator.EQ, value1: gameToLoad}));
-		ODataModel.getODataModel().read("/Games", {filters : filters, success : this.loadGameSuccess, error: this.loadGameError});
+		// var filters = [];
+		// filters.push(new sap.ui.model.Filter({path: "GameId", operator: sap.ui.model.FilterOperator.EQ, value1: gameToLoad}));
+		// ODataModel.getODataModel().read("/Games", {filters : filters, success : this.loadGameSuccess, error: this.loadGameError});
+		GameEditor.getEditorController().gameModel.gameId = gameToLoad;
+		GameEditor.getEditorController().resetEditor();
+		GameEditor.getEditorController().load();
 		this.cancelLoadGame();
 	},
 	
@@ -104,7 +107,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			GameEditor.getEditorController().gameModel.stateIdCount = oSuccess.object.stateIdCount;
 			GameEditor.getEditorController().gameModel.transitionIdCount = oSuccess.object.transitionIdCount;
 			GameEditor.getEditorController().gameModel.connectionIdCount = oSuccess.object.connectionIdCount;
-			GameEditor.getEditorController().gameModel.usernameId = oSuccess.object.usernameId;
+			GameEditor.getEditorController().gameModel.usernameId = oSuccess.object.username.usernameId;
 			GameEditor.getEditorController().newGameModel.gameId = "";
 			GameEditor.getEditorController().newGameModel.teamCount = 3;
 			GameEditor.getEditorController().newGameModel.playersPerTeam = 3;
@@ -122,13 +125,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	loadGameSuccess : function(oData) {
 		GameEditor.getEditorController().resetEditor();
 		GameEditor.getEditorController().gameModel.gameId = oData.results[0].gameId;
-		GameEditor.getEditorController().gameModel.TeamCount = oData.results[0].TeamCount;
-		GameEditor.getEditorController().gameModel.PlayersPerTeam = oData.results[0].PlayersPerTeam;
-		GameEditor.getEditorController().gameModel.Visibility = oData.results[0].Visibility;
-		GameEditor.getEditorController().gameModel.StateIdCount = oData.results[0].StateIdCount;
-		GameEditor.getEditorController().gameModel.TransitionIdCount = oData.results[0].TransitionIdCount;
-		GameEditor.getEditorController().gameModel.ConnectionIdCount = oData.results[0].ConnectionIdCount;
-		GameEditor.getEditorController().gameModel.Username = oData.results[0].Username;
+		GameEditor.getEditorController().gameModel.teamCount = oData.results[0].TeamCount;
+		GameEditor.getEditorController().gameModel.playersPerTeam = oData.results[0].PlayersPerTeam;
+		GameEditor.getEditorController().gameModel.visibility = oData.results[0].Visibility;
+		GameEditor.getEditorController().gameModel.stateIdCount = oData.results[0].StateIdCount;
+		GameEditor.getEditorController().gameModel.transitionIdCount = oData.results[0].TransitionIdCount;
+		GameEditor.getEditorController().gameModel.connectionIdCount = oData.results[0].ConnectionIdCount;
+		GameEditor.getEditorController().gameModel.usernameId = oData.results[0].Username;
 		GameEditor.getEditorController().load();
 	},
 	

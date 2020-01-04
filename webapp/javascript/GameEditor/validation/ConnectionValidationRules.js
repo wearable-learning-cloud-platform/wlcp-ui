@@ -100,7 +100,7 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 	validate(validationData) {
 		
 		//Make the connection
-		if(validationData.connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start")) {
+		if(validationData.connectionFrom == (GameEditor.getEditorController().gameModel.gameId + "_start")) {
 			var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionFrom}).get(0);
 			var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionTo}).get(0);
 			var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});

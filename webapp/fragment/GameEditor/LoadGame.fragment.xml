@@ -22,9 +22,9 @@
 						</FlexBox>
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<ComboBox id="userLoadGameComboBox"
-								items="{path: '/Games', sorter: { path: 'GameId' }}"
+								items="{/privateGames}"
 								placeholder="{i18n>gameEditor.load.selectGame}">
-								<core:Item key="{GameId}" text="{GameId}" />
+								<core:Item key="{gameId}" text="{gameId}" />
 							</ComboBox>
 						</FlexBox>
 					</IconTabFilter>
@@ -34,9 +34,9 @@
 						</FlexBox>
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<ComboBox id="publicLoadGameComboBox"
-								items="{path: '/Games', sorter: { path: 'GameId' }}"
+								items="{/publicGames}"
 								placeholder="{i18n>gameEditor.load.selectGame}">
-								<core:Item key="{GameId}" text="{GameId}" />
+								<core:Item key="{gameId}" text="{gameId}" />
 							</ComboBox>
 						</FlexBox>
 					</IconTabFilter>
