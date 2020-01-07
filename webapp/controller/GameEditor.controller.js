@@ -104,17 +104,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "hidden";
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "auto";
 		
-		switch(ui.helper[0].childNodes[1].className) {
-			case "toolboxOutputStateTopColor":
-				if(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset() < 0 || State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset() < 0) {sap.m.MessageBox.error("A state could not be placed there!"); return;}
-				var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState") , this.createStateId(), this.jsPlumbInstance);
-				outputState.setPositionX(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
-				outputState.addPadSpace();
-				outputState.draw();
-				this.stateList.push(outputState);
-				DataLogger.logGameEditor();
-				break;
-		}
+		if(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset() < 0 || State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset() < 0) {sap.m.MessageBox.error("A state could not be placed there!"); return;}
+		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState") , this.createStateId(), this.jsPlumbInstance);
+		outputState.setPositionX(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
+		outputState.addPadSpace();
+		outputState.draw();
+		this.stateList.push(outputState);
+		DataLogger.logGameEditor();
 	},
 	
 	transitionDragStop : function(event, ui) {
