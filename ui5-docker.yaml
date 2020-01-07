@@ -8,10 +8,9 @@ server:
       afterMiddleware: compression
       configuration:
         appName: "wlcp-ui"
-        ipAddress: "localhost"
+        ipAddress: "wlcp-ui"
         port: 3000
-        hostName: "docker-host"
-        eurekaHost: "localhost"
+        eurekaHost: "wlcp-discovery"
         eurekaPort: 8761
     - name: ui5-middleware-simpleproxy
       afterMiddleware: compression
