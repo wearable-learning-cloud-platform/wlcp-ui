@@ -6,6 +6,11 @@ server:
   customMiddleware:
     - name: eurekaClient
       afterMiddleware: compression
+      configuration:
+        appName: "wlcp-ui"
+        port: 3000
+        eurekaHost: "wlcp-discovery.local"
+        eurekaPort: 8761
     - name: ui5-middleware-simpleproxy
       afterMiddleware: compression
       mountPath: /rest/controllers
