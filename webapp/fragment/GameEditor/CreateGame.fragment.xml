@@ -3,7 +3,7 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
-	<Dialog id="createGame" title="{i18n>gameEditor.new.title}">
+	<Dialog id="createGame" title="{i18n>gameEditor.new.title}" class="sapUiPopupWithPadding">
 		<buttons>
 			<Button text="{i18n>gameEditor.new.create}" type="Accept" press="createGame"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="cancelCreateGame"/>
