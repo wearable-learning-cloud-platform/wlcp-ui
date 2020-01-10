@@ -85,14 +85,33 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	setupSocketConnection : function(team, player) {
-		    this.socket = new SockJS("http://" + ServerConfig.getServerAddress() + "/wlcpGameServer/0");
-		    this.stompClient = Stomp.over(this.socket);
-		    var that = this;
-		    this.stompClient.connect({}, function (frame) {
-		    	that.connectToGameInstance(that.gameInstanceId, team, player);
-		    }, function(disconnectError) {
-		    	that.setupSocketConnection(team, player);
-		    });
+			// //this.socket = new SockJS("http://" + ServerConfig.getServerAddress() + "/wlcpGameServer/0");
+			// this.socket = new SockJS("http://localhost:8050/wlcp-gameserver/wlcpGameServer-js/0");
+			// this.stompClient = Stomp.over(this.socket);
+			// //this.stompClient = Stomp.client("ws://localhost:8050/wlcp-ui/gameserver/wlcpGameServer-ws/0");
+			// //this.stompClient = Stomp.client("ws://localhost:8050/wlcp-ui/gameserver-ws");
+			// //this.stompClient = Stomp.client("ws://localhost:3333/wlcpGameServer-ws/0");
+		    // var that = this;
+		    // this.stompClient.connect({}, function (frame) {
+		    // 	that.connectToGameInstance(that.gameInstanceId, team, player);
+		    // }, function(disconnectError) {
+		    // 	that.setupSocketConnection(team, player);
+			// });
+			var that = this;
+			this.stompClient = new StompJs.Client({
+				webSocketFactory : function() {
+					//return new SockJS("http://localhost:8080/sockjs");
+					//return new SockJS("http://localhost:8050/wlcp-gameserver/wlcpGameServer/0");
+					return new WebSocket("ws://localhost:8050/wlcp-gameserver/wlcpGameServer-ws/0");
+					//return new WebSocket("ws://localhost:3333/wlcpGameServer-ws/0");
+				}
+			});
+			this.stompClient.onConnect = function (frame) {
+				console.log(frame);
+				console.log("connected");
+				that.connectToGameInstance(that.gameInstanceId, team, player);
+			  };
+			this.stompClient.activate();
 	},
 	
 	connectToGameInstance(gameInstanceId, team, player) {
@@ -113,7 +132,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + that.team + "P" + that.player);
 	    });
     	this.subscribeToChannels(gameInstanceId, team, player);
-	    this.stompClient.send("/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, {}, "{}");
+		//this.stompClient.send("/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, {}, "{}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, body : {}});
 	},
 	
 	subscribeToChannels : function(gameInstanceId, team, player) {
@@ -221,7 +241,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
+			$.ajax({url : ServerConfig.getGameServerAddress() + "/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
 		} else {
 			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
 		}
