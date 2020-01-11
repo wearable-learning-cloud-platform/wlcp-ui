@@ -15,7 +15,12 @@ server:
       afterMiddleware: compression
       mountPath: /rest/controllers
       configuration:
-        baseUri: "http://18.224.27.204:8050/wlcp-api/"
+        baseUri: "http://new.wearablelearning.org:8050/wlcp-api/"
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /gameserver
+      configuration:
+        baseUri: "http://new.wearablelearning.org:8050/wlcp-gameserver"
 ---
 specVersion: '1.0'
 kind: extension

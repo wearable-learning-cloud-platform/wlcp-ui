@@ -17,6 +17,11 @@ server:
       mountPath: /rest/controllers
       configuration:
         baseUri: "http://localhost:8050/wlcp-api/"
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /gameserver
+      configuration:
+        baseUri: "http://localhost:8050/wlcp-gameserver"
 ---
 specVersion: '1.0'
 kind: extension

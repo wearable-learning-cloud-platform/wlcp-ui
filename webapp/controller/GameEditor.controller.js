@@ -478,27 +478,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	saveSuccess : function() {
 		this.busy.close();
-		//$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + this.gameModel.gameId + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
+		if(this.saveRun) {
+			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
+			$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, type: 'GET', success : $.proxy(this.checkForRunningDebugInstanceSuccess, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+		}
 	},
 	
 	saveError : function() {
 		this.busy.close();
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.saveError"));
-	},
-	
-	transpileSuccess : function() {
-		if(!this.saveRun) {
-			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpile"));
-			this.busy.close();
-		} else {
-			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
-			$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/checkDebugInstanceRunning?usernameId=" + sap.ui.getCore().getModel("user").oData.username, type: 'GET', success : $.proxy(this.checkForRunningDebugInstanceSuccess, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
-		}
-	},
-	
-	transpileError : function() {
-		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileError"));
-		this.busy.close();
 	},
 	
 	runGame : function() {
@@ -516,7 +504,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(data == true) {
 			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.alreadyDebugging"), {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		}
 	},
 	
@@ -526,9 +514,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	handleDebugInstanceMessageBox : function(oAction) {
 		if(oAction == sap.m.MessageBox.Action.OK) {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/true", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.gameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		} 
 	},
 	

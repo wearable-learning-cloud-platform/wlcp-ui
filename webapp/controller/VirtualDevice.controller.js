@@ -22,22 +22,22 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	redButtonPressed : function() {
 		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, "{\"buttonPress\" : 1}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 1})});
 	},
 
 	greenButtonPressed : function() {
 		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, "{\"buttonPress\" : 2}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 2})});
 	},
 
 	blueButtonPressed : function() {
 		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, "{\"buttonPress\" : 3}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 3})});
 	},
 
 	blackButtonPressed : function() {
 		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, "{\"buttonPress\" : 4}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 4})});
 	},
 	
 	submitButtonPressSequence : function() {
@@ -55,11 +55,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			}
 		}
 		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, {}, JSON.stringify({sequenceButtonPress : sequence}));
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({sequenceButtonPress : sequence})});
 		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
+	},
+
+		
+	submitKeyboardInput : function() {
+		var keyboardInput = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").getValue();
+		this.resetStateDisplayTypes();
+		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({keyboardInput : keyboardInput})});
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 	},
 
 	clearButtonPressSequence : function() {
@@ -76,41 +84,57 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		$("#container-wlcp-ui---virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
 		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable();
 	},
+
+	joinGameInstance : function() {
+		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
+		if(gameInstanceId != "") {
+			this.gameInstanceId = parseInt(gameInstanceId);
+			$.ajax({url : ServerConfig.getGameServerAddress() + "/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
+		} else {
+			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
+		}
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+	},
 	
-	submitKeyboardInput : function() {
-		var keyboardInput = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").getValue();
-		this.resetStateDisplayTypes();
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, {}, JSON.stringify({keyboardInput : keyboardInput}));
-		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
+	joinDebugGameInstance : function() {
+		this.gameInstanceId = this.debugGameInstanceId;
+		$.ajax({url : ServerConfig.getGameServerAddress() + "/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
+	},
+	
+	gameInstanceIdError : function() {
+		sap.m.MessageBox.error("Game PIN Does not Exist!");
+	},
+	
+	handleGameTeamsAndPlayers : function(response) {
+		this.modelJSON.teamPlayers = [];
+		this.model.setData(this.modelJSON);
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+		navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
+		for(var i = 0; i < response.length; i++) {
+			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+		}
+		this.model.setData(this.modelJSON);
+	},
+	
+	onTeamPlayerSelected : function(oEvent) {
+		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
+		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
 	
 	setupSocketConnection : function(team, player) {
-			// //this.socket = new SockJS("http://" + ServerConfig.getServerAddress() + "/wlcpGameServer/0");
-			// this.socket = new SockJS("http://localhost:8050/wlcp-gameserver/wlcpGameServer-js/0");
-			// this.stompClient = Stomp.over(this.socket);
-			// //this.stompClient = Stomp.client("ws://localhost:8050/wlcp-ui/gameserver/wlcpGameServer-ws/0");
-			// //this.stompClient = Stomp.client("ws://localhost:8050/wlcp-ui/gameserver-ws");
-			// //this.stompClient = Stomp.client("ws://localhost:3333/wlcpGameServer-ws/0");
-		    // var that = this;
-		    // this.stompClient.connect({}, function (frame) {
-		    // 	that.connectToGameInstance(that.gameInstanceId, team, player);
-		    // }, function(disconnectError) {
-		    // 	that.setupSocketConnection(team, player);
-			// });
 			var that = this;
 			this.stompClient = new StompJs.Client({
 				webSocketFactory : function() {
-					//return new SockJS("http://localhost:8080/sockjs");
-					//return new SockJS("http://localhost:8050/wlcp-gameserver/wlcpGameServer/0");
 					return new WebSocket("ws://localhost:8050/wlcp-gameserver/wlcpGameServer-ws/0");
-					//return new WebSocket("ws://localhost:3333/wlcpGameServer-ws/0");
 				}
 			});
 			this.stompClient.onConnect = function (frame) {
-				console.log(frame);
-				console.log("connected");
 				that.connectToGameInstance(that.gameInstanceId, team, player);
-			  };
+			};
+			this.stompClient.onStompError = function (frame) {
+				console.log("error connecting");
+				console.log(frame);
+			};
 			this.stompClient.activate();
 	},
 	
@@ -132,7 +156,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + that.team + "P" + that.player);
 	    });
     	this.subscribeToChannels(gameInstanceId, team, player);
-		//this.stompClient.send("/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, {}, "{}");
 		this.stompClient.publish({destination : "/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, body : {}});
 	},
 	
@@ -190,11 +213,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		var that = this;
 	    this.disconnectResultSubscription = this.stompClient.subscribe("/subscription/disconnectionResult/" + this.gameInstanceId + "/" + this.username + "/" + this.team + "/" + this.player, function(response) {
 	    	that.disconnectResultSubscription.unsubscribe();
-	    	that.stompClient.disconnect();
-	    	that.socket.close();
+	    	that.stompClient.deactivate();
 	    	that.onClose();
 	    });
-		this.stompClient.send("/app/gameInstance/" + this.gameInstanceId + "/disconnectFromGameInstance/" + this.username + "/" + this.team + "/" + this.player, {}, "{}");
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/disconnectFromGameInstance/" + this.username + "/" + this.team + "/" + this.player, body : {}});
 	},
 	
 	onClose : function() {
@@ -235,42 +257,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInput"));
 			break;
 		}
-	},
-	
-	joinGameInstance : function() {
-		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
-		if(gameInstanceId != "") {
-			this.gameInstanceId = parseInt(gameInstanceId);
-			$.ajax({url : ServerConfig.getGameServerAddress() + "/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
-		} else {
-			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
-		}
-		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
-	},
-	
-	joinDebugGameInstance : function() {
-		this.gameInstanceId = this.debugGameInstanceId;
-		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
-	},
-	
-	gameInstanceIdError : function() {
-		sap.m.MessageBox.error("Game PIN Does not Exist!");
-	},
-	
-	handleGameTeamsAndPlayers : function(response) {
-		this.modelJSON.teamPlayers = [];
-		this.model.setData(this.modelJSON);
-		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
-		navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
-		for(var i = 0; i < response.length; i++) {
-			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
-		}
-		this.model.setData(this.modelJSON);
-	},
-	
-	onTeamPlayerSelected : function(oEvent) {
-		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
-		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
 	
 	resetStateDisplayTypes : function() {

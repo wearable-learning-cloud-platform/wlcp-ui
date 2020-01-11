@@ -27,7 +27,7 @@ server:
       afterMiddleware: compression
       mountPath: /gameserver-ws
       configuration:
-        baseUri: "ws://localhost:8050/wlcp-ui/gameserver/wlcpGameServer-ws/0"
+        baseUri: "ws://localhost:8050/wlcp-gameserver/wlcpGameServer-ws/0"
 ---
 specVersion: '1.0'
 kind: extension
