@@ -3,8 +3,8 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"
 	xmlns:mvc="sap.ui.core.mvc">
-	<App id="mainApp">
-		<pages>
+	<!-- <App id="mainApp">
+		<pages> -->
 			<Page title="Title" showHeader="false" class="page">
 				<content>
 					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
@@ -12,9 +12,9 @@
 							<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
 							<Input width="12em" id="uid" placeholder="{i18n>login.username}" value="{/username}" autocomplete="off"></Input>
 							<Input width="12em" id="pasw" placeholder="{i18n>login.password}" value="{/password}" type="Password" autocomplete="off"></Input>
-							<ComboBox width="12em" placeholder="{i18n>login.mode}" items="{/items}" value="{/mode}">
+							<!-- <ComboBox width="12em" placeholder="{i18n>login.mode}" items="{/items}" value="{/mode}">
 								<core:Item text="{text}" />
-							</ComboBox>
+							</ComboBox> -->
 							<Button width="12em" text="{i18n>login.loginButton}" type="Emphasized" press="validateLogin"></Button>
 							<HBox>
 								<items>
@@ -26,6 +26,6 @@
 					</VBox>
 				</content>
 			</Page>
-		</pages>
-	</App>
+		<!-- </pages>
+	</App> -->
 </mvc:View>

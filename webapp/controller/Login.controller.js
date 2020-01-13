@@ -39,23 +39,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	onLoginPress: function() {
 		this.userModelData.username = this.modelData.username.toLowerCase();
 		this.userModel.setData(this.userModelData);
-		switch(this.modelData.mode) {
-		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameManager"): 
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteMainToolPage");
-			break;
-		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor"):
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView");
-			break;
-		case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gamePlayer"):
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
-				username : this.userModelData.username,
-				gameInstanceId : 0,
-				debugMode : false
-			});
-			break;
-		default:
-			break;
-		}
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		// switch(this.modelData.mode) {
+		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameManager"): 
+		// sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteMainToolPage");
+		// 	break;
+		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor"):
+		// 	sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView");
+		// 	break;
+		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gamePlayer"):
+		// 	sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
+		// 		username : this.userModelData.username,
+		// 		gameInstanceId : 0,
+		// 		debugMode : false
+		// 	});
+		// 	break;
+		// default:
+		// 	break;
+		// }
 	},
 	
 	validateLogin : function() {

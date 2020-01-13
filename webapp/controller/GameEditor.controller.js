@@ -647,37 +647,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		var mylocation = location; mylocation.reload();
 	},
-	
-	/**
-	 * Called when the user clicks on the switch view icon
-	 * @memberOf wlcpfrontend.View
-	 */
-	switchViewPress : function(oEvent) {
-	
-		//Create and popover
-		if (! this._oPopover) {
-			this._oPopover = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.PageTransferPopover", this);
-			this.getView().addDependent(this._oPopover);
-			this._oPopover.bindElement("/ProductCollection/0");
-		}
 
-		//Delay before showing
-		var oButton = oEvent.getSource();
-		jQuery.sap.delayedCall(0, this, function () {
-			this._oPopover.openBy(oButton);
-		});
-	},
-	
-	switchToManager : function(evt) {
-		 
-		Index.switchToGameManager();  
-		
-	},
-	
-	switchToPlayer : function(evt) {
-		 
-		Index.switchToGamePlayer();  
-		
+	onHomeButtonPress : function() {
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 	},
 	
 	quickStartHelp : function() {

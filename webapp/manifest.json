@@ -30,7 +30,7 @@
 
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "org.wlcp.wlcp-ui.view.Login",
+			"viewName": "org.wlcp.wlcp-ui.view.MainView",
 			"type": "XML",
 			"async": true,
 			"id": "app"
@@ -84,6 +84,10 @@
 				"pattern": "RouteLoginView",
 				"target": ["TargetLoginView"]
 			}, {
+				"name": "RouteModeSelectionView",
+				"pattern": "RouteModeSelectionView",
+				"target": ["TargetModeSelectionView"]
+			}, {
 				"name": "RouteGameEditorView",
 				"pattern": "RouteGameEditorView",
 				"target": ["TargetGameEditorView"]
@@ -107,21 +111,26 @@
 					"viewLevel": 1,
 					"viewName": "Login"
 				},
-				"TargetGameEditorView": {
+				"TargetModeSelectionView": {
 					"viewType": "XML",
 					"viewLevel": 1,
+					"viewName": "ModeSelection"
+				},
+				"TargetGameEditorView": {
+					"viewType": "XML",
+					"viewLevel": 2,
 					"viewName": "GameEditor",
 					"id" : "gameEditor"
 				},
 				"TargetVirtualDeviceView": {
 					"viewType": "XML",
-					"viewLevel": 1,
+					"viewLevel": 2,
 					"viewName": "VirtualDevice",
 					"id" : "virtualDevice"
 				},
 				"TargetMainToolPage": {
 					"viewType": "XML",
-					"viewLevel": 1,
+					"viewLevel": 2,
 					"viewName": "MainToolpage",
 					"id" : "mainToolPage"
 				}

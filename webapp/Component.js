@@ -1,8 +1,9 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"org/wlcp/wlcp-ui/model/models"
-], function(UIComponent, Device, models) {
+	"sap/ui/core/routing/HashChanger",
+	"org/wlcp/wlcp-ui/model/models",
+], function(UIComponent, Device, HashChanger, models) {
 	"use strict";
 
 	return UIComponent.extend("org.wlcp.wlcp-ui.Component", {
@@ -17,6 +18,12 @@ sap.ui.define([
 		 * @override
 		 */
 		init: function() {
+
+			//If there is no user session reset the navigation
+			if(this.getCookie("wlcp.userSession") == "") {
+				HashChanger.getInstance().replaceHash("");
+			}
+
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 
@@ -77,6 +84,22 @@ sap.ui.define([
 			jQuery.sap.require("javascript/jsplumb");
 			jQuery.sap.require("javascript/path-data-polyfill");
 			jQuery.sap.require("javascript/stomp");
-		}
+		},
+
+		getCookie : function(cname) {
+			var name = cname + "=";
+			var decodedCookie = decodeURIComponent(document.cookie);
+			var ca = decodedCookie.split(';');
+			for(var i = 0; i <ca.length; i++) {
+			  var c = ca[i];
+			  while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			  }
+			  if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			  }
+			}
+			return "";
+		  }
 	});
 });

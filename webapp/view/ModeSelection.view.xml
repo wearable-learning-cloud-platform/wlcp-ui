@@ -1,0 +1,26 @@
+<mvc:View
+	height="100%"
+	controllerName="org.wlcp.wlcp-ui.controller.ModeSelection"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m">
+	<Page
+		showHeader="true"
+        title="Welcome to the Wearable Learning Cloud Platform!"
+		enableScrolling="false" >
+		<TileContainer
+			id="container"
+			tileDelete="handleTileDelete">
+            <StandardTile title="Game Manager" icon="sap-icon://manager" info="Explore games!" infoState="Success" press="navigateToGameManager"/>
+			<StandardTile title="Game Editor" icon="sap-icon://edit" info="Create games!" infoState="Success" press="navigateToGameEditor"/>
+            <StandardTile title="Game Player" icon="sap-icon://play" info="Play games!" infoState="Success" press="navigateToGamePlayer"/>
+		</TileContainer>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+					<Button text="Logout"/>
+                    <Button icon="sap-icon://sys-help"/>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>
