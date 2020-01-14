@@ -1,16 +1,17 @@
 var ServerConfig = {
 	
 	getServerAddress : function() {
-		return window.location.origin + "/wlcp-ui/rest/controllers";
+		//return window.location.origin + "/wlcp-ui/rest/controllers";
+		return window.location.origin + "/wlcp-api";
 	},
 
 	getGameServerAddress : function() {
-		return window.location.origin + "/wlcp-ui/gameserver";
+		//return window.location.origin + "/wlcp-ui/gameserver";
+		return window.location.origin + "/wlcp-gameserver";
 	},
 
 	getGameServerWebSocketAddress : function() {
-		var location = window.location.origin + "/wlcp-ui/gameserver-ws";
-		return location;
-		//return location.replace("http", "ws");
+		var address = window.location.origin + "/wlcp-gameserver/wlcpGameServer-ws/0";
+		return address.replace("http", "ws");
 	}
 }

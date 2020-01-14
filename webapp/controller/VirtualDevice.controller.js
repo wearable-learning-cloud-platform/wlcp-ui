@@ -125,7 +125,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			var that = this;
 			this.stompClient = new StompJs.Client({
 				webSocketFactory : function() {
-					return new WebSocket("ws://localhost:8050/wlcp-gameserver/wlcpGameServer-ws/0");
+					return new WebSocket(ServerConfig.getGameServerWebSocketAddress());
 				}
 			});
 			this.stompClient.onConnect = function (frame) {
