@@ -1,6 +1,7 @@
 sap.ui.define([
-  "sap/ui/core/mvc/Controller"
-], function(Controller) {
+  "sap/ui/core/mvc/Controller",
+  "sap/ui/core/routing/HashChanger"
+], function(Controller, HashChanger) {
   "use strict";
 
   return Controller.extend("org.wlcp.wlcp-ui.controller.MainView", {
@@ -16,7 +17,10 @@ sap.ui.define([
       if(this.getCookie("wlcp.userSession") != "") {
           this.userModelData.username = this.getCookie("wlcp.userSession");
           this.userModel.setData(this.userModelData);
-		      sap.ui.getCore().setModel(this.userModel, "user");
+          sap.ui.getCore().setModel(this.userModel, "user");
+          if(HashChanger.getInstance().getHash() == "") {
+            sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
+          }
       } else {
         sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
       }
