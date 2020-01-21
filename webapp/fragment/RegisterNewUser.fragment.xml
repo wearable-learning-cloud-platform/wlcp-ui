@@ -14,13 +14,13 @@
 				<VBox>
 					<Text text="{i18n>register.instructions}"/>
 					<Input width="12em" id="username" placeholder="{i18n>register.username}"
-						value="{/newUser/UsernameId}"></Input>
+						value="{/newUser/usernameId}"></Input>
 					<Input width="12em" id="password" placeholder="{i18n>register.password}"
-						value="{/newUser/Password}" type="Password"></Input>
+						value="{/newUser/password}" type="Password"></Input>
 					<Input width="12em" id="firstName" placeholder="{i18n>register.firstname}"
-						value="{/newUser/FirstName}"></Input>
+						value="{/newUser/firstName}"></Input>
 					<Input width="12em" id="lastName" placeholder="{i18n>register.lastname}"
-						value="{/newUser/LastName}"></Input>
+						value="{/newUser/lastName}"></Input>
 				</VBox>
 			</items>
 		</FlexBox>

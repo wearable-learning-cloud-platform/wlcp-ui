@@ -16,10 +16,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 			}
 		],
 		newUser : {
-			UsernameId : "",
-			Password : "",
-			FirstName : "",
-			LastName : "",
+			usernameId : "",
+			password : "",
+			firstName : "",
+			lastName : "",
 		}
 	},
 	
@@ -95,9 +95,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	
 	registerNewUser : function() {
 		
-		//Load username data
-		ODataModel.getODataModel().read("/Usernames");
-		
 		//Create an instance of the dialog
 		this.registerNewUserDialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.RegisterNewUser", this);
 		
@@ -112,28 +109,30 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		var registerData = this.model.getData().newUser;
 		
 		//Make sure username and password are filled out
-		if(registerData.UsernameId == "" || registerData.Password == "") {
+		if(registerData.usernameId == "" || registerData.password == "") {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.fill"));
 			return;
 		}
 		
 		//Make sure a-z A-Z only
-		if(!registerData.UsernameId.match(/^[a-zA-Z]+$/)) {
+		if(!registerData.usernameId.match(/^[a-zA-Z]+$/)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.usernameRequirements"));
 			return;
 		}
 		
-		//Check to make sure that username doesnt already exist
-		if(typeof ODataModel.getODataModel().getProperty("/Usernames('" + registerData.UsernameId + "')") !== "undefined") {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.duplicateUsername"));
-			return;
+		//Convert the username to all lower case
+		registerData.usernameId = registerData.usernameId.toLowerCase();
+
+		//Populate the DTO
+		var userRegistrationDto = {
+			usernameId : registerData.usernameId,
+			password : registerData.password,
+			firstName : registerData.firstName,
+			lastName : registerData.lastName
 		}
 		
-		//Convert the username to all lower case
-		registerData.UsernameId = registerData.UsernameId.toLowerCase();
-		
 		//If we get here we can register them
-		ODataModel.getODataModel().create("/Usernames", registerData, {success : $.proxy(this.registerSuccess, this), error : $.proxy(this.registerError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/registrationController/registerUser", type: 'POST', dataType: 'json', data: JSON.stringify(userRegistrationDto), success : $.proxy(this.registerSuccess, this), error : $.proxy(this.registerError, this)});
 	},
 	
 	registerSuccess : function() {
@@ -142,7 +141,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	registerError : function() {
-		
+		sap.m.MessageBox.error("Error registering!");
+		this.cancelRegisterNewUser();
 	},
 	
 	cancelRegisterNewUser : function() {
