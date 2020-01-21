@@ -119,6 +119,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.usernameRequirements"));
 			return;
 		}
+
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
 		
 		//Convert the username to all lower case
 		registerData.usernameId = registerData.usernameId.toLowerCase();
@@ -148,6 +151,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
+		this.busy.close();
 	},
 
 /**

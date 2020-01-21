@@ -14,8 +14,8 @@
 		<VBox>
 			<FlexBox alignItems="Center" justifyContent="Center">
 				<items>
-					<ComboBox id="gameInstanceGame" placeholder="Select a game..." items="{odata>/Games}">
-						<core:Item key="{odata>GameId}" text="{odata>GameId}"></core:Item>
+					<ComboBox id="gameInstanceGame" placeholder="Select a game..." items="{odata>/object}">
+						<core:Item key="{odata>gameId}" text="{odata>gameId}"></core:Item>
 					</ComboBox>
 				</items>
 			</FlexBox>

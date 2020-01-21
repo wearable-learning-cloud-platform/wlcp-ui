@@ -3,20 +3,23 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	socket : null,
 	
 	onStartGameInstance : function() {
-		
+
+		//Set a pointer to this we can use in the callback
+		var that = this;
+
+		//Get the data
+		$.ajax({url: ServerConfig.getServerAddress() + "/gameController/getGames/", type: 'GET', success : function(data) {
+
 		//Create an instance of the dialog
-		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameInstances.StartGameInstance", this);
-		
+		that.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", that);
+
 		//Set the model
-		this.dialog.setModel(ODataModel.getODataModel(), "odata");
-		
-		//Setup an on after rendering function for filtering
-		this.dialog.addEventDelegate({
-			onAfterRendering : $.proxy(this.onAfterRenderingStartGameInstance, this)
-		});
-		
+		that.dialog.setModel(new sap.ui.model.json.JSONModel(data), "odata");
+
 		//Open the dialog
-		this.dialog.open();
+		that.dialog.open();
+	}});
+
 	},
 	
 	onAfterRenderingStartGameInstance : function () {
@@ -31,7 +34,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	onStopGameInstance : function(oEvent) {
-		this.stopInstanceId = ODataModel.getODataModel().getProperty(oEvent.getParameter("tile").oBindingContexts.odata.sPath).GameInstanceId;
+		this.stopInstanceId = this.getView().getModel("odata").getProperty(oEvent.getParameter("tile").oBindingContexts.odata.sPath).gameInstanceId;
 		sap.m.MessageBox.confirm("Are you sure you want to stop this game instance?", {onClose : $.proxy(this.stopGameInstance, this)});
 	},
 	
@@ -44,7 +47,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	startGameInstance : function() {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + sap.ui.getCore().byId("gameInstanceGame").getSelectedKey() + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
+			url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startGameInstance",
+			type: 'POST',
+			dataType: 'json',
+			data: JSON.stringify({
+				gameId : sap.ui.getCore().byId("gameInstanceGame").getSelectedKey(),
+				usernameId : sap.ui.getCore().getModel("user").oData.username
+			}),
+			success : $.proxy(this.gameInstanceStarted, this),
+			error : $.proxy(this.gameInstanceStarted, this)
+		});
+		//$.ajax({url: ServerConfig.getServerAddress() + "/Rest/Controllers/transpileGame?gameId=" + sap.ui.getCore().byId("gameInstanceGame").getSelectedKey() + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
 	},
 	
 	transpileSuccess : function() {
@@ -61,7 +75,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	gameInstanceStarted : function(response) {
 		this.onCancel();
 		this.busy.close();
-		ODataModel.getODataModel().refresh();
+		//ODataModel.getODataModel().refresh();
+		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
 	},
 	
@@ -74,18 +89,34 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	stopGameInstance : function(oEvent) {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/stopGameInstance/" + this.stopInstanceId, success : $.proxy(this.gameInstanceStopped, this), error : $.proxy(this.gameInstanceStoppedError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
+		url: ServerConfig.getGameServerAddress() + "/gameInstanceController/stopGameInstance",
+		type: 'POST',
+		dataType: 'json',
+		data: JSON.stringify({
+			gameInstanceId : this.stopInstanceId
+		}),
+		success : $.proxy(this.gameInstanceStopped, this),
+		error : $.proxy(this.gameInstanceStopped, this)
+	});
 	},
 	
 	gameInstanceStopped : function(response) {
 		this.busy.close();
-		ODataModel.getODataModel().refresh();
+		//ODataModel.getODataModel().refresh();
+		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
 	gameInstanceStoppedError : function(response) {
 		this.busy.close();
 		sap.m.MessageToast.show(response.responseText);
+	},
+
+	getGameInstancesSuccess : function(data) {
+		this.getView().setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
+		//sap.ui.getCore().byId("__xmlview3--gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel(data), "odata");
+		this.getView().byId("gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
 	},
 	
 /**
@@ -94,6 +125,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 * @memberOf wlcpfrontend.views.GameInstances
 */
 	onInit: function() {
+
+		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
 		
 		//TEMPORARY FIX TO STOP FLICKERING OF TILES!!
 		//THE TILE CONTAINER CONTROL HAS BEEN DEPRECIATED

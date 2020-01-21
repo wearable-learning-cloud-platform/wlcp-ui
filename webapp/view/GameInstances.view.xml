@@ -10,8 +10,8 @@
 			</Toolbar>
 		</subHeader>
 		<content>
-			<TileContainer id="gameInstanceTileContainer" tileDelete="onStopGameInstance" tiles="{path : 'odata>/GameInstances', parameters : {expand : 'GameDetails'}}" >
-				<StandardTile press="onTilePress" number="{odata>GameInstanceId}" numberUnit="Game Pin" title="{odata>Game}" icon="sap-icon://instance" />
+			<TileContainer id="gameInstanceTileContainer" tileDelete="onStopGameInstance" tiles="{odata>/object}" >
+				<StandardTile press="onTilePress" number="{odata>gameInstanceId}" numberUnit="Game Pin" title="{odata>gameId}" icon="sap-icon://instance" />
 			</TileContainer>
 		</content>
 		<footer>
