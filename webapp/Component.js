@@ -83,6 +83,7 @@ sap.ui.define([
 			
 			jQuery.sap.require("javascript/jsplumb");
 			jQuery.sap.require("javascript/path-data-polyfill");
+			jQuery.sap.require("jquery-ui-touch-punch-min");
 			jQuery.sap.require("javascript/stomp");
 		},
 
