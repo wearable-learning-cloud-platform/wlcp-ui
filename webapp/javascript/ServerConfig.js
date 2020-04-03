@@ -1,12 +1,10 @@
 var ServerConfig = {
 	
 	getServerAddress : function() {
-		//return window.location.origin + "/wlcp-ui/rest/controllers";
 		return window.location.origin + "/wlcp-api";
 	},
 
 	getGameServerAddress : function() {
-		//return window.location.origin + "/wlcp-ui/gameserver";
 		return window.location.origin + "/wlcp-gameserver";
 	},
 

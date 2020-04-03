@@ -193,8 +193,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.MainToolpage", {
 		this.getView().setModel(this.model);
 		
 		//Load the initial view which is the dashboard
-		this.currentView = sap.ui.xmlview("org.wlcp.wlcp-ui.view.Dashboard");
-		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--dashboard");
+		this.currentView = sap.ui.xmlview("org.wlcp.wlcp-ui.view.GameInstances");
+		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--gameInstances");
 		sap.ui.getCore().byId(this.getView().getId() + "--pageContainer").addPage(this.currentPage);
 		sap.ui.getCore().byId(this.getView().getId() + "--pageContainer").to(this.currentPage.getId());
 	},
