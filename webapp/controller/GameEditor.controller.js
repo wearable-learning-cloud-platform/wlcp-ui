@@ -547,7 +547,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/copyGame?gameId=" + this.gameModel.gameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
+					$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/copyGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -568,6 +568,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				dialog.destroy();
 			}
 		});
+		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
 	},
 	
@@ -586,7 +587,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/renameGame?gameId=" + this.gameModel.gameId + "&newGameId=" + newGameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function(data) {
+					$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/renameGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -607,13 +608,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				dialog.destroy();
 			}
 		});
+		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
 	},
 	
 	deleteGame : function(oEvent) {
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.delete.confirm"), { icon : sap.m.MessageBox.Icon.WARNING, onClose : $.proxy(function(oAction) {
 			if(oAction == sap.m.MessageBox.Action.OK) {
-				$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/deleteGame?gameId=" + this.gameModel.gameId + "&usernameId=" + sap.ui.getCore().getModel("user").oData.username , type: 'GET', success : $.proxy(function() {
+				$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/deleteGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
 					this.resetEditor();
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
@@ -684,26 +686,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		
 		window.onbeforeunload = function() {
 			return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.confirmExit");
-		};
-		
-		// GameEditor.getEditor().addEventDelegate({
-		// 	  onAfterRendering: function(){
-				  
-		// 		  //Load the data model
-		// 		  ODataModel.setupODataModel();
-				  
-		// 		  //Check to see if we are loading from the game manager
-		// 		  if(this.loadFromEditor != null) {
-		// 			  setTimeout($.proxy(function() { this.loadFromManager(this.loadFromEditor) }, this), 1000);
-		// 		  }
-				  
-		// 		  //Setup scrolling via mouse
-		// 		  this.setupScrolling();
-				  
-		// 		  //Load the toolbox text
-		// 		  this.initToolboxText();
-		// 	  }
-		// 	}, this);	
+		};	
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
 	},
