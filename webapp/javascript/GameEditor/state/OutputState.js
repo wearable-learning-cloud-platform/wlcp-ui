@@ -363,20 +363,17 @@ var OutputState = class OutputState extends State {
 	save() {
 		var tempInputConnections = [];
 		for(var i = 0; i < this.inputConnections.length; i++) {
-			tempInputConnections.push({
-				connectionId : this.inputConnections[i].connectionId
-			});
+			tempInputConnections.push(this.inputConnections[i].connectionId);
 		}
 		
 		var tempOutputConnections = [];
 		for(var i = 0; i < this.outputConnections.length; i++) {
-			tempOutputConnections.push({
-				connectionId : this.outputConnections[i].connectionId
-			});
+			tempOutputConnections.push(this.outputConnections[i].connectionId);
 		}
 		
 		var saveData = {
 			stateId : this.htmlId,
+			game : GameEditor.getEditorController().gameModel.gameId,
 			positionX : this.positionX,
 			positionY : this.positionY,
 			stateType : "OUTPUT_STATE",

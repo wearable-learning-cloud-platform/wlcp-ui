@@ -17,17 +17,17 @@ var Connection = class Connection {
 	
 	static load(loadData) {
 		for(var i = 0; i < loadData.length; i++) {
-			var editorConnection = new Connection(loadData[i].connectionId, loadData[i].connectionFrom.stateId, loadData[i].connectionTo.stateId);
+			var editorConnection = new Connection(loadData[i].connectionId, loadData[i].connectionFrom, loadData[i].connectionTo);
 			editorConnection.isLoopBack = loadData[i].backwardsLoop;
 			GameEditor.getEditorController().connectionList.push(editorConnection);
-			if(loadData[i].connectionFrom.htmlId == (GameEditor.getEditorController().gameModel.gameId + "_start") || loadData[i].connectionFrom.stateId.includes("_start")) {
-				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom.stateId}).get(0);
-				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo.stateId}).get(0);
+			if(loadData[i].connectionFrom.htmlId == (GameEditor.getEditorController().gameModel.gameId + "_start") || loadData[i].connectionFrom.includes("_start")) {
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom}).get(0);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo}).get(0);
 				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});
 				connection.id = loadData[i].connectionId;
 			} else {
-				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom.stateId}).get(1);
-				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo.stateId}).get(0);
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom}).get(1);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo}).get(0);
 				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
 				connection.id = loadData[i].connectionId;
 			}
@@ -92,16 +92,11 @@ var Connection = class Connection {
 	save() {
 		var saveData = {
 			connectionId : this.connectionId,
-			connectionFrom : {
-				stateId : this.connectionFrom.htmlId
-			},
-			connectionTo : {
-				stateId : this.connectionTo.htmlId
-			},
+			game : GameEditor.getEditorController().gameModel.gameId,
+			connectionFrom : this.connectionFrom.htmlId,
+			connectionTo : this.connectionTo.htmlId,
 			backwardsLoop : this.isLoopBack,
-			transition : this.transition == null ? null : {
-				transitionId : this.transition.overlayId
-			}
+			transition : this.transition == null ? null : this.transition.overlayId
 		}
 		return saveData;
 	}

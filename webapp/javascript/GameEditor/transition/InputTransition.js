@@ -182,16 +182,16 @@ var InputTransition = class InputTransition extends Transition {
 			}
 		}
 		
-		if(typeof loadData.connection !== "undefined") {
+		//if(typeof loadData.connection !== "undefined") {
 			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
-				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connection.connectionId) {
+				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connection) {
 					connection = GameEditor.getEditorController().connectionList[i];
 					connection.connectionFrom = { htmlId : connection.connectionFrom };
 					connection.connectionTo = { htmlId : connection.connectionTo };
 					break;
 				}
 			}
-		}
+		//}
 		
 		//Place the transition
 		var inputTransition = new InputTransition("transition", connection, loadData.transitionId, this);
@@ -222,9 +222,8 @@ var InputTransition = class InputTransition extends Transition {
 		
 		var saveData = {
 			transitionId : this.overlayId,
-			connection : {
-				connectionId : this.connection.connectionId
-			},
+			game : GameEditor.getEditorController().gameModel.gameId,
+			connection : this.connection.connectionId,
 			activeTransitions : activeTransitions,
 		}
 		

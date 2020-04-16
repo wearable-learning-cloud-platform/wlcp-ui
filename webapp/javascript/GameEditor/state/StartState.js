@@ -44,12 +44,11 @@ var StartState = class StartState extends State {
 	save() {
 		var tempOutputConnections = [];
 		for(var i = 0; i < this.outputConnections.length; i++) {
-			tempOutputConnections.push({
-				connectionId : this.outputConnections[i].connectionId
-			});
+			tempOutputConnections.push(this.outputConnections[i].connectionId);
 		}
 		var saveData = {
 			stateId : this.htmlId,
+			game : GameEditor.getEditorController().gameModel.gameId,
 			positionX : this.positionX,
 			positionY : this.positionY,
 			stateType : "START_STATE",

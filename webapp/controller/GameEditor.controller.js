@@ -332,7 +332,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				if(loadedData.states[i].stateId == this.stateList[n].htmlId) {
 					for(var j = 0; j < loadedData.states[i].inputConnections.length; j++) {
 						for(var l = 0; l < this.connectionList.length; l++) {
-							if(loadedData.states[i].inputConnections[j].connectionId == this.connectionList[l].connectionId) {
+							if(loadedData.states[i].inputConnections[j] == this.connectionList[l].connectionId) {
 								this.stateList[n].inputConnections.push(this.connectionList[l]);
 								this.connectionList[l].connectionTo = this.stateList[n];
 							}
@@ -340,7 +340,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					}
 					for(var j = 0; j < loadedData.states[i].outputConnections.length; j++) {
 						for(var l = 0; l < this.connectionList.length; l++) {
-							if(loadedData.states[i].outputConnections[j].connectionId == this.connectionList[l].connectionId) {
+							if(loadedData.states[i].outputConnections[j] == this.connectionList[l].connectionId) {
 								this.stateList[n].outputConnections.push(this.connectionList[l]);
 								this.connectionList[l].connectionFrom = this.stateList[n];
 							}
@@ -356,7 +356,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				for(var n = 0; n < this.connectionList.length; n++) {
 					if(this.connectionList[n].connectionId == loadedData.connections[i].connectionId) {
 						for(var j = 0; j < this.transitionList.length; j++) {
-							if(this.transitionList[j].overlayId == loadedData.connections[i].transition.transitionId) {
+							if(this.transitionList[j].overlayId == loadedData.connections[i].transition) {
 								this.connectionList[n].transition = this.transitionList[j];
 							}
 						}
@@ -371,7 +371,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				for(var n = 0; n < this.transitionList.length; n++) {
 					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
 						for(var j = 0; j < this.connectionList.length; j++) {
-							if(this.connectionList[j].connectionId == loadedData.transitions[n].connection.connectionId) {
+							if(this.connectionList[j].connectionId == loadedData.transitions[n].connection) {
 								this.transitionList[n].connection = this.connectionList[j];
 							}
 						}

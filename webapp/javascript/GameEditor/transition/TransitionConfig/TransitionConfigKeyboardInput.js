@@ -75,7 +75,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 					}
 					if(keyboardInputStrings.length > 0) {
 						keyboardInputs[iconTabs[i].scope] = {
-							transition : { transitionId : this.transition.overlayId },
+							transition : this.transition.overlayId,
 							scope : iconTabs[i].scope,
 							keyboardInputs : keyboardInputStrings
 						}
