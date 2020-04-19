@@ -75,6 +75,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 					}
 					if(keyboardInputStrings.length > 0) {
 						keyboardInputs[iconTabs[i].scope] = {
+							keyboardInputId : this.transition.overlayId + "_" + iconTabs[i].scope.toLowerCase().replace(" ", "_"),
 							transition : this.transition.overlayId,
 							scope : iconTabs[i].scope,
 							keyboardInputs : keyboardInputStrings

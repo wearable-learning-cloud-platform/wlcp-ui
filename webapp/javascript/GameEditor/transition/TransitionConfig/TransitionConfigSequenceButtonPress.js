@@ -83,6 +83,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 					}
 					if(sequences.length > 0) {
 						sequenceButtonPresses[iconTabs[i].scope] = {
+							sequenceButtonPressId : this.transition.overlayId + "_" + iconTabs[i].scope.toLowerCase().replace(" ", "_"),
 							transition : this.transition.overlayId,
 							scope : iconTabs[i].scope,
 							sequences : sequences
