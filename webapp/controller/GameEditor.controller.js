@@ -274,19 +274,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		$.ajax({url: ServerConfig.getServerAddress() + "/loadGameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
-	loadFromManager : function(gameInfo) {
-		GameEditor.getEditorController().resetEditor();
-		GameEditor.getEditorController().gameModel.gameId = gameInfo.gameId;
-		GameEditor.getEditorController().gameModel.teamCount = gameInfo.teamCount;
-		GameEditor.getEditorController().gameModel.playersPerTeam = gameInfo.playersPerTeam;
-		GameEditor.getEditorController().gameModel.visibility = gameInfo.visibility;
-		GameEditor.getEditorController().gameModel.stateIdCount = gameInfo.stateIdCount;
-		GameEditor.getEditorController().gameModel.transitionIdCount = gameInfo.transitionIdCount;
-		GameEditor.getEditorController().gameModel.connectionIdCount = gameInfo.connectionIdCount;
-		GameEditor.getEditorController().gameModel.username.usernameId = gameInfo.usernameId;
-		GameEditor.getEditorController().load();
-	},
-	
 	loadSuccess(loadedData) {
 
 		loadedData = loadedData.object;
@@ -399,11 +386,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	reloadGame : function(gameId) {
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "GameId", operator: sap.ui.model.FilterOperator.EQ, value1: gameId}));
-		ODataModel.getODataModel().read("/Games", {filters : filters, success : $.proxy(function(oData) {
-			this.loadFromManager(oData.results[0]);
-		}, this), error: this.loadGameError});
+		GameEditor.getEditorController().resetEditor();
+		GameEditor.getEditorController().gameModel.gameId = gameId;
+		GameEditor.getEditorController().load();
 	},
 
 	saveGame : function() {
