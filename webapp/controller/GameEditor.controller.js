@@ -685,7 +685,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.initToolboxText();
 
 		//Load the quickstart help
-		//this.quickStartHelp();
+		if(!document.URL.includes("localhost")) {
+			this.quickStartHelp();
+		}
 	},
 	
 	setupScrolling : function() {

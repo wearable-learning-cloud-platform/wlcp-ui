@@ -9,7 +9,7 @@
 					<tnt:layoutData>
 						<l:SplitterLayoutData size="48px" resizable="false"/>
 					</tnt:layoutData>
-					<Button id="sideNavigationToggleButton" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
+					<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
@@ -56,6 +56,7 @@
 					
 					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
 					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
+					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
 					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin"/>
 				</tnt:ToolHeader>
 				<l:Splitter id="mainSplitter">

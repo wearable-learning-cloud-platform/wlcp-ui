@@ -150,6 +150,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.MainToolpage", {
 		var sideExpanded = toolPage.getSideExpanded();
 		toolPage.setSideExpanded(!toolPage.getSideExpanded());
 	},
+
+	onHomeButtonPress : function() {
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+	},
 	
 	onGotoLogin: function() {
 

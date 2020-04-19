@@ -7,6 +7,11 @@
 			<NavContainer id="virtualDeviceNavContainer">
 			<Page id="initialPage" showHeader="false"></Page>
 			<Page id="selectGameInstance" showHeader="false">
+				<tnt:ToolHeader>
+					<ToolbarSpacer />
+					<ToolbarSpacer />
+					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+				</tnt:ToolHeader>
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Please enter your game PIN" class="sapUiSmallMarginBottom"/>
@@ -16,6 +21,11 @@
 				</VBox>
 			</Page>
 			<Page id="selectTeamPlayer" showHeader="false">
+				<tnt:ToolHeader>
+					<ToolbarSpacer />
+					<ToolbarSpacer />
+					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+				</tnt:ToolHeader>
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
