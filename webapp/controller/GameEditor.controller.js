@@ -37,6 +37,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	jsPlumbInstance : null,
 	
 	loadFromEditor : null,
+
+	scroller : new GameEditorScroller(),
 	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
@@ -689,33 +691,57 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			this.quickStartHelp();
 		}
 	},
-	
+
 	setupScrolling : function() {
-		var that = this;
-		this.oldX = 0;
-		this.oldY = 0;
-		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmousemove = function (e) {
-			that.clicked && that.updateScrollPos(e);
-		}
-		
-		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmousedown = function (e) {
-			that.clicked = true;
-			that.oldX = e.pageX;
-			that.oldY = e.pageY;
-		}
-		
-		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").onmouseup = function (e) {
-			that.clicked = false;
-	        $('html').css('cursor', 'auto');
-		}
+		var scrollPlaceHolder = document.createElement('div');
+		scrollPlaceHolder.id = "scrollPlaceHolder";
+		scrollPlaceHolder.style.height = "1px";
+		scrollPlaceHolder.style.width = "1px";
+		scrollPlaceHolder.style.position = "absolute";
+		document.getElementById("container-wlcp-ui---gameEditor--pad").appendChild(scrollPlaceHolder);
+		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousemove", $.proxy(GameEditor.getEditorController().scroller.handleMousemove, GameEditor.getEditorController().scroller), false);
+		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousedown", function(event) {
+			GameEditor.getEditorController().scroller.leftMouseDown = true;
+		}, false);
+		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mouseup", function(event) {
+			GameEditor.getEditorController().scroller.leftMouseDown = false;
+			GameEditor.getEditorController().scroller.handleMousemove(event);
+		}, false);
 	},
 	
-	updateScrollPos : function(e) {
-	    $('html').css('cursor', 'row-resize');
-	    document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy(this.oldX - e.pageX, this.oldY - e.pageY);
-	    this.oldX = e.pageX;
-	    this.oldY = e.pageY;    
-	},
+	// setupScrolling : function() {
+	// 	var that = this;
+	// 	this.oldX = 0;
+	// 	this.oldY = 0;
+	// 	document.getElementById("container-wlcp-ui---gameEditor--pad").onmousemove = function (e) {
+	// 		that.clicked && that.updateScrollPos(e);
+	// 	}
+		
+	// 	document.getElementById("container-wlcp-ui---gameEditor--pad").onmousedown = function (e) {
+	// 		that.clicked = true;
+	// 		that.oldX = e.pageX;
+	// 		that.oldY = e.pageY;
+	// 	}
+		
+	// 	document.getElementById("container-wlcp-ui---gameEditor--pad").onmouseup = function (e) {
+	// 		that.clicked = false;
+	//         $('html').css('cursor', 'auto');
+	// 	}
+
+	// 	var scrollPlaceHolder = document.createElement('div');
+	// 	scrollPlaceHolder.id = "scrollPlaceHolder";
+	// 	scrollPlaceHolder.style.height = "1px";
+	// 	scrollPlaceHolder.style.width = "1px";
+	// 	scrollPlaceHolder.style.position = "absolute";
+	// 	document.getElementById("container-wlcp-ui---gameEditor--pad").appendChild(scrollPlaceHolder);
+	// },
+	
+	// updateScrollPos : function(e) {
+	//     $('html').css('cursor', 'row-resize');
+	//     document.getElementById("container-wlcp-ui---gameEditor--pad").scrollBy(this.oldX - e.pageX, this.oldY - e.pageY);
+	//     this.oldX = e.pageX;
+	//     this.oldY = e.pageY;    
+	// },
 
 /**
 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered

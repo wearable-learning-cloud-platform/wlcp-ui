@@ -80,6 +80,13 @@ var State = class State {
 		
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.stopped, this)});
+		document.getElementById(this.stateDiv.id).addEventListener("mousedown", function(event) {
+			GameEditor.getEditorController().scroller.leftMouseDown = true;
+		}, false);
+		document.getElementById(this.stateDiv.id).addEventListener("mouseup", function(event) {
+			GameEditor.getEditorController().scroller.leftMouseDown = false;
+			GameEditor.getEditorController().scroller.handleMousemove(event);
+		}, false);
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
 		if(!this.stateDiv.id.includes("start")) {
@@ -145,23 +152,25 @@ var State = class State {
 	}
 	
 	addPadSpace() {
-		if((this.positionX + this.width + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width - 75) {
-			document.getElementById("container-wlcp-ui---gameEditor--pad").style.width = (document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width + 500) + "px";
-			//document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy({ top: 0, left: document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth, behavior: 'smooth' });
+		if(((this.positionX + this.width + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width + document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft - 75) && (document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft + document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth == document.getElementById("container-wlcp-ui---gameEditor--pad").scrollWidth)) {
+			document.getElementById("scrollPlaceHolder").style.left = document.getElementById("scrollPlaceHolder").offsetLeft + 500 + "px";
+			this.stateDiv._katavorioDrag.remark();
 		}
-		if((this.positionY + this.height + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height - 75) {
-			document.getElementById("container-wlcp-ui---gameEditor--pad").style.height = (document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height + 500) + "px";
-			//document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-1").scrollBy({ top: document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight, left: 0, behavior: 'smooth' });
+		if(((this.positionY + this.height + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height + document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop - 75) && (document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop + document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight == document.getElementById("container-wlcp-ui---gameEditor--pad").scrollHeight)) {
+			document.getElementById("scrollPlaceHolder").style.top = document.getElementById("scrollPlaceHolder").offsetTop + 500 + "px";
+			this.stateDiv._katavorioDrag.remark();
 		}
 	}
 	
-	moved() {
+	moved(event) {
 		
 		//Update the position
 		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
 		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
 		
 		this.addPadSpace();
+
+		GameEditor.getEditorController().scroller.handleMousemove(event.e);
 	}
 	
 	stopped() {

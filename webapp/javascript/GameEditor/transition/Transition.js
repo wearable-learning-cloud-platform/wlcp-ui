@@ -78,7 +78,7 @@ var Transition = class Transition {
 			var segments = connections[i].canvas.firstChild.getPathData();
 			
 			//Loop through and calculate all of bounding boxes for the segments
-			for(var n = 0; n < segments.length; n = n + 2) {
+			for(var n = 0; n < segments.length; n++) {
 				
 				//Get segment 1 and transform it to pad space
 				var seg1 = connections[i].canvas.createSVGPoint();

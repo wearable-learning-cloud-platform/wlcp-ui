@@ -42,7 +42,7 @@
 					</Button>
 					<tnt:ToolHeaderUtilitySeparator />
 					<ToolbarSpacer width="12.5%"/>
-					<Title level = "H3" text = "{i18n>gameEditor.title}" textAlign="Center">
+					<Title class="noselect" level = "H3" text = "{i18n>gameEditor.title}" textAlign="Center">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
@@ -54,7 +54,7 @@
 						</layoutData>
 					</ToolbarSpacer>
 					
-					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+					<f:Avatar class="noselect" displaySize="XS" initials="MM" press="handleAvatarPress"/>
 					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
 					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin"/>
@@ -64,16 +64,16 @@
 						<layoutData>
 							<l:SplitterLayoutData size="240px" resizable="false"/>
 						</layoutData>
-						<html:div id="toolboxTitle" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
+						<html:div id="toolboxTitle" class="noselect" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
 						<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow" style="top:50px;">
-							<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
+							<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText noselect">Output State</html:div></html:div>
 							<html:div class="toolboxOutputStateBottomColor"></html:div>
 						</html:div>
 						<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
-							<html:div class="centerTransitionText"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
+							<html:div class="centerTransitionText noselect"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
 						</html:div>
 					</ScrollContainer>
-					<ScrollContainer id="pad" class="scroll-overflow-hidden" height="100%" width="100%" horizontal="true" vertical="true">
+					<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
 					</ScrollContainer>
 				</l:Splitter>
 			</l:Splitter>

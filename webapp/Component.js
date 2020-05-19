@@ -81,7 +81,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/ServerConfig");
 			jQuery.sap.require("javascript/DataLogger");
 			
-			jQuery.sap.require("javascript/jsplumb");
+			jQuery.sap.require("javascript/jsplumb-2-13-1");
 			jQuery.sap.require("javascript/path-data-polyfill");
 			jQuery.sap.require("javascript/jquery-ui-touch-punch-min");
 			jQuery.sap.require("javascript/stomp");
