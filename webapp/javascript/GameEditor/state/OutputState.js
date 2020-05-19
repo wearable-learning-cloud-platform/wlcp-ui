@@ -39,7 +39,7 @@ var OutputState = class OutputState extends State {
 		//Define the output end point style
 		this.outputEndPoint = {
 				 endpoint:"Dot",
-				 isTarget:false,
+				 isTarget:true,
 				 isSource:true,
 				 maxConnections: -1,
 		};

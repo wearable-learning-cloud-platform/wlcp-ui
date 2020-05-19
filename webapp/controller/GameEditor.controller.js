@@ -156,6 +156,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	connectionDropped : function(oEvent) {
+		//Check to see if we are trying to drag a connection to an output endpoint
+		if(oEvent.dropEndpoint.anchor.type === "Bottom") {
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotDragOutputToOutput"));
+			return false;
+		} 
 		//Check to see if the state has an input transition
 		if(GameEditor.getJsPlumbInstance().getConnections({target : oEvent.sourceId}).length == 0 && !oEvent.sourceId.includes("start")) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.outputWithoutInput"));

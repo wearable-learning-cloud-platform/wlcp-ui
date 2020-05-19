@@ -8,7 +8,7 @@ var StartState = class StartState extends State {
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
 		this.outputEndPoint = {
 				 endpoint:"Dot",
-				 isTarget:false,
+				 isTarget:true,
 				 isSource:true,
 				 maxConnections: -1,
 			};
