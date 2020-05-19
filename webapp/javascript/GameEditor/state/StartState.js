@@ -12,6 +12,7 @@ var StartState = class StartState extends State {
 				 isSource:true,
 				 maxConnections: -1,
 			};
+		this.stateType = "START_STATE";
 		this.create();
 	}
 	

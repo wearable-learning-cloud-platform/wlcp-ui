@@ -20,6 +20,7 @@ var OutputState = class OutputState extends State {
 		this.setupValidationRules();
 		this.scopeMask = 0xffffffff;
 		this.oldActiveScopes = [];
+		this.stateType = "OUTPUT_STATE";
 	}
 	
 	create() {

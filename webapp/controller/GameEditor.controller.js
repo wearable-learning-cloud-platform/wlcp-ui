@@ -129,6 +129,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					break;
 				}
 			}
+			if(connection.connectionFrom.stateType === "START_STATE") {
+				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotPlaceTransitionAfterStartState"));
+				return;
+			}
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			inputTransition.connection.transition = inputTransition;
 			this.transitionList.push(inputTransition);
