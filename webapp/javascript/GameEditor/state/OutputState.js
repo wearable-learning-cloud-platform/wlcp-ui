@@ -46,7 +46,11 @@ var OutputState = class OutputState extends State {
 		
 		//Setup the end points
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { id : this.htmlId + "input", anchor:"Top", paintStyle:{ fill: "#5E696E" } }, this.inputEndPoint);
-		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { id : this.htmlId + "output", anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
+		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { id : this.htmlId + "output", anchor:"Bottom", paintStyle:{ fill: "#5E696E" }, dragOptions: {
+			drag: function(event) { 
+				GameEditor.getEditorController().scroller.leftMouseDown = true;
+				GameEditor.getEditorController().scroller.handleMousemove(event.e);
+			}}}, this.outputEndPoint);
 		
 		//Setup double click
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
