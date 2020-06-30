@@ -64,7 +64,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 
 		
 	submitKeyboardInput : function() {
-		var keyboardInput = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").getValue();
+		var keyboardInput = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").getValue().toLowerCase();
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({keyboardInput : keyboardInput})});
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
