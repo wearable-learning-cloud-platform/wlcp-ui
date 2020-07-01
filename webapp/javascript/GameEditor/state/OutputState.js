@@ -140,7 +140,7 @@ var OutputState = class OutputState extends State {
 	}
 	
 	descriptionChanged(oEvent) {
-		this.changeText(oEvent.getParameter("newValue"));
+		this.newDescriptionText = oEvent.getParameter("newValue");
 	}
 	
 	createData() {
@@ -311,6 +311,9 @@ var OutputState = class OutputState extends State {
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
+		if(typeof this.newDescriptionText !== "undefined") {
+			this.changeText(this.newDescriptionText);
+		}
 		DataLogger.logGameEditor();
     }
     
