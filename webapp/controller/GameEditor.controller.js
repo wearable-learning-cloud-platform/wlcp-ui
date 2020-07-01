@@ -498,7 +498,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	checkForRunningDebugInstanceSuccess : function(data) {
 		if(data == true) {
-			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.alreadyDebugging"), {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
+			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.alreadyDebugging"), {actions : [sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance"), sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.existingInstance")],onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
 		} else {
 			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		}
@@ -509,7 +509,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	handleDebugInstanceMessageBox : function(oAction) {
-		if(oAction == sap.m.MessageBox.Action.OK) {
+		if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance")) {
 			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
 		} else {
 			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
