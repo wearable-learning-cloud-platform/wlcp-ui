@@ -26,7 +26,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom.htmlId, target : this.connection.connectionTo.htmlId})[0];
 		
 		//Add the overlay
-		this.jsPlumbConnection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>" + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[0] + "</div><div>" + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition").split(" ")[1] + "</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
+		this.jsPlumbConnection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>" + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition") + "</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
 		
 		//Store the id
 		for(var key in this.jsPlumbConnection.getOverlays()) {
