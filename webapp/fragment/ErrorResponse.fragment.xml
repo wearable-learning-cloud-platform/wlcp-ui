@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog id="errorResponseDialog" title = "Whoops! Something went Wrong...">
+    	<buttons>
+            <Button type="Reject" text="See Debug Message" press="showDebugMessage"/>
+			<Button type="Accept" text="OK" press="onCloseErrorResponse"/>
+		</buttons>
+        <f:Form id="errorResponseForm"
+			editable="false">
+			<f:title>
+				<core:Title text="Error Response" />
+			</f:title>
+			<f:layout>
+				<f:ResponsiveGridLayout
+					labelSpanXL="3"
+					labelSpanL="3"
+					labelSpanM="3"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					emptySpanXL="4"
+					emptySpanL="4"
+					emptySpanM="4"
+					emptySpanS="0"
+					columnsXL="1"
+					columnsL="1"
+					columnsM="1"
+					singleContainerFullSize="false" />
+			</f:layout>
+			<f:formContainers>
+				<f:FormContainer>
+					<f:formElements>
+						<f:FormElement label="HTTP Status">
+							<f:fields>
+								<Text text="{/status}"/>
+							</f:fields>
+						</f:FormElement>
+						<f:FormElement label="Time Stamp">
+							<f:fields>
+                                <Text text="{/timestamp}"/>
+							</f:fields>
+						</f:FormElement>
+						<f:FormElement label="Message">
+							<f:fields>
+								<Text text="{/message}" />
+							</f:fields>
+						</f:FormElement>
+                        <f:FormElement label="Additional Errors"> 
+							<f:fields>
+                                <List headerText="Sub-errors" items="{/subErrors}">
+                                    <StandardListItem title="{message}"/>
+                                 </List>
+							</f:fields>
+						</f:FormElement>
+					</f:formElements>
+				</f:FormContainer>
+			</f:formContainers>
+		</f:Form>
+    </Dialog>
+</core:FragmentDefinition>
