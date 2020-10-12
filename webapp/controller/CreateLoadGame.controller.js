@@ -46,7 +46,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			return;
 		}
 		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: ServerConfig.getServerAddress() + "/saveGameController/saveGame",
+			url: ServerConfig.getServerAddress() + "/gameController/saveGame",
 			type: 'POST',
 			dataType: 'json',
 			data: JSON.stringify(GameEditor.getEditorController().newGameModel),

@@ -250,7 +250,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			publicGames : null
 		};
 		$.ajax({
-			url: ServerConfig.getServerAddress() + "/loadGameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, 
+			url: ServerConfig.getServerAddress() + "/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, 
 			type: 'GET',
 			async : false,
 			success: function(data) {
@@ -261,7 +261,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 		});
 		$.ajax({
-			url: ServerConfig.getServerAddress() + "/loadGameController/getPublicGames", 
+			url: ServerConfig.getServerAddress() + "/gameController/getPublicGames", 
 			type: 'GET',
 			async : false,
 			success: function(data) {
@@ -281,7 +281,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ServerConfig.getServerAddress() + "/loadGameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		$.ajax({url: ServerConfig.getServerAddress() + "/gameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadSuccess(loadedData) {
@@ -468,7 +468,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    return val;
 			});
 		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/saveGameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {
