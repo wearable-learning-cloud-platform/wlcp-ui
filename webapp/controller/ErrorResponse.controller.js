@@ -1,14 +1,11 @@
 sap.ui.controller("org.wlcp.wlcp-ui.controller.ErrorResponse", {
 
-    onCloseErrorResponse : function(oEvent) {
-        sap.ui.getCore().byId("errorResponseDialog").close();
-        sap.ui.getCore().byId("errorResponseDialog").destroy();
-    },
+    dialog : null,
+    errorResponseDataModel : null,
 
-    setupDataModel : function(error) {
-        if(typeof(error.responseJSON.subErrors) === "undefined") { error.responseJSON.subErrors = []; error.responseJSON.subErrors.push({message:"No Sub-errors..."}); }
-        this.errorResponseDataModel = new sap.ui.model.json.JSONModel(error.responseJSON);
-        sap.ui.getCore().byId("errorResponseDialog").setModel(this.errorResponseDataModel);
+    onCloseErrorResponse : function(oEvent) {
+        this.dialog.close();
+        this.dialog.destroy();
     },
 
     showDebugMessage : function(oEvent) {

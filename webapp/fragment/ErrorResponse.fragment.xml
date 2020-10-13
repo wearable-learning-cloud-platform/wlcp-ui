@@ -6,13 +6,12 @@
     xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 	
-	<Dialog id="errorResponseDialog" title = "Whoops! Something went Wrong...">
+	<Dialog title = "Whoops! Something went Wrong...">
     	<buttons>
             <Button type="Reject" text="See Debug Message" press="showDebugMessage"/>
 			<Button type="Accept" text="OK" press="onCloseErrorResponse"/>
 		</buttons>
-        <f:Form id="errorResponseForm"
-			editable="false">
+        <f:Form editable="false">
 			<f:title>
 				<core:Title text="Error Response" />
 			</f:title>

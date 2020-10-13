@@ -244,35 +244,27 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	loadGame : function() {
-		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
 		var loadGameDialogModel = {
 			privateGames : null,
 			publicGames : null
 		};
-		$.ajax({
-			url: ServerConfig.getServerAddress() + "/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, 
-			type: 'GET',
-			async : false,
-			success: function(data) {
-				loadGameDialogModel.privateGames = data.object;
-			},
-			error : function() {
-
-			}
-		});
-		$.ajax({
-			url: ServerConfig.getServerAddress() + "/gameController/getPublicGames", 
-			type: 'GET',
-			async : false,
-			success: function(data) {
-				loadGameDialogModel.publicGames = data.object;
-			},
-			error : function() {
-
-			}
-		});
-		fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
-		fragment.open();
+		RestAPIHelper.get("/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, false,
+		function(data) {
+			loadGameDialogModel.privateGames = data;
+			RestAPIHelper.get("/gameController/getPublicGames", false,
+			function(data) {
+				loadGameDialogModel.publicGames = data;
+				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
+				fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+				fragment.open();
+			}, 
+			function(error) {
+				//Allow default error handling
+			}, this);
+		}, 
+		function(error) {
+			//Allow default error handling
+		}, this);
 	},
 	
 	load : function() {
@@ -281,12 +273,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ServerConfig.getServerAddress() + "/gameController/loadGame?gameId=" + this.gameModel.gameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		RestAPIHelper.get("/gameController/loadGame?gameId=" + this.gameModel.gameId, true, this.loadSuccess, this.loadError, this);
 	},
 	
 	loadSuccess(loadedData) {
-
-		loadedData = loadedData.object;
 
 		this.gameModel.gameId = loadedData.gameId;
 		this.gameModel.teamCount = loadedData.teamCount;
@@ -467,15 +457,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    }
 			    return val;
 			});
-		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+
+		RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
 	},
 	
 	saveSuccess : function() {
 		this.busy.close();
 		if(this.saveRun) {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
-			$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, type: 'GET', success : $.proxy(this.checkForRunningDebugInstanceSuccess, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
 		}
 	},
 	
@@ -499,7 +489,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(data == true) {
 			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.alreadyDebugging"), {actions : [sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance"), sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.existingInstance")],onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
 		} else {
-			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		}
 	},
 	
@@ -509,9 +499,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	handleDebugInstanceMessageBox : function(oAction) {
 		if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance")) {
-			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		} else {
-			$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startDebugGameInstance", type: 'POST', dataType: 'json', data: JSON.stringify({gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}), success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		} 
 	},
 	
@@ -542,14 +532,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/copyGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
+					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
+					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
 						this.reloadGame(newGameId);
-					}, this), error : $.proxy(function(data) {
+					},
+					function error(error) {
+						//Default error handling.
+
 						dialog.close();
-						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.error"))
-					}, this)});
+					}, this);
 				}, this)
 			}),
 			endButton : new sap.m.Button({
@@ -582,14 +575,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/renameGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
+
+					
+					RestAPIHelper.post("/gameController/renameGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
+					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
 						dialog.close();
 						this.reloadGame(newGameId);
-					}, this), error : $.proxy(function(data) {
+					},
+					function error(error) {
+						//Default error handling.
+
 						dialog.close();
-						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.rename.error"))
-					}, this)});
+					}, this);
 				}, this)
 			}),
 			endButton : new sap.m.Button({
@@ -610,15 +608,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	deleteGame : function(oEvent) {
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.delete.confirm"), { icon : sap.m.MessageBox.Icon.WARNING, onClose : $.proxy(function(oAction) {
 			if(oAction == sap.m.MessageBox.Action.OK) {
-				$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/gameController/deleteGame", type: 'POST', dataType: 'json', data: JSON.stringify({oldGameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username}), success : $.proxy(function(data) {
+				RestAPIHelper.post("/gameController/deleteGame", {oldGameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
+				function(data) {
 					this.resetEditor();
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
 					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
 					sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.deleted"))
-				}, this), error : $.proxy(function(data) {
-					sap.m.MessageToast.show(data.responseText);
-				}, this)});
+				},
+				function error(error) {
+					//Default error handling.
+				}, this);
 			}
 		}, this)});
 	},

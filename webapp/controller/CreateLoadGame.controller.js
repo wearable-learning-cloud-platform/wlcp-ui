@@ -45,14 +45,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 			return;
 		}
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: ServerConfig.getServerAddress() + "/gameController/saveGame",
-			type: 'POST',
-			dataType: 'json',
-			data: JSON.stringify(GameEditor.getEditorController().newGameModel),
-			success : $.proxy(this.createGameSuccess, this),
-			error : $.proxy(this.createGameError, this)
-		});
+		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
 	loadGame : function() {
@@ -97,14 +90,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	createGameSuccess : function(oSuccess) {
 		GameEditor.getEditorController().resetEditor();
 		if(GameEditor.getEditor() != null) {
-			GameEditor.getEditorController().gameModel.gameId = oSuccess.object.gameId;
-			GameEditor.getEditorController().gameModel.teamCount = oSuccess.object.teamCount;
-			GameEditor.getEditorController().gameModel.playersPerTeam = oSuccess.object.playersPerTeam;
-			GameEditor.getEditorController().gameModel.visibility = oSuccess.object.visibility;
-			GameEditor.getEditorController().gameModel.stateIdCount = oSuccess.object.stateIdCount;
-			GameEditor.getEditorController().gameModel.transitionIdCount = oSuccess.object.transitionIdCount;
-			GameEditor.getEditorController().gameModel.connectionIdCount = oSuccess.object.connectionIdCount;
-			GameEditor.getEditorController().gameModel.username.usernameId = oSuccess.object.username.usernameId;
+			GameEditor.getEditorController().gameModel.gameId = oSuccess.gameId;
+			GameEditor.getEditorController().gameModel.teamCount = oSuccess.teamCount;
+			GameEditor.getEditorController().gameModel.playersPerTeam = oSuccess.playersPerTeam;
+			GameEditor.getEditorController().gameModel.visibility = oSuccess.visibility;
+			GameEditor.getEditorController().gameModel.stateIdCount = oSuccess.stateIdCount;
+			GameEditor.getEditorController().gameModel.transitionIdCount = oSuccess.transitionIdCount;
+			GameEditor.getEditorController().gameModel.connectionIdCount = oSuccess.connectionIdCount;
+			GameEditor.getEditorController().gameModel.username.usernameId = oSuccess.username.usernameId;
 			GameEditor.getEditorController().newGameModel.gameId = "";
 			GameEditor.getEditorController().newGameModel.teamCount = 3;
 			GameEditor.getEditorController().newGameModel.playersPerTeam = 3;

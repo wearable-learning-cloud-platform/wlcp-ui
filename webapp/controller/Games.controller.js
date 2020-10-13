@@ -51,7 +51,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Games", {
 	onDeleteConfirm : function(oAction) {
 		if(oAction == sap.m.MessageBox.Action.OK) {
 			var gameInfo = ODataModel.getODataModel().getProperty(this.tileToRemove.getBindingContext("odata").sPath);
-			$.ajax({url: ODataModel.getWebAppURL() + "/DeleteGame", type: 'POST', dataType: 'text', data: 'gameId=' + gameInfo.GameId, success : $.proxy(this.deleteSuccess, this), error : $.proxy(this.deleteError, this)});
+			RestAPIHelper.postAbsolute(ODataModel.getWebAppURL() + "/DeleteGame", 'gameId=' + gameInfo.GameId, this.deleteSuccess, this.deleteError, this);	
 		}
 	},
 	

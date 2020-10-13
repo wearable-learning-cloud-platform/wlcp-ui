@@ -8,7 +8,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		var that = this;
 
 		//Get the data
-		$.ajax({url: ServerConfig.getServerAddress() + "/gameController/getGames/", type: 'GET', success : function(data) {
+		RestAPIHelper.get("/gameController/getGames/", true, 
+
+		function(data) {
 
 		//Create an instance of the dialog
 		that.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", that);
@@ -18,7 +20,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 
 		//Open the dialog
 		that.dialog.open();
-	}});
+
+		},
+
+		function(error) {
+
+		}, this);
 
 	},
 	
@@ -47,36 +54,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	startGameInstance : function() {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: ServerConfig.getGameServerAddress() + "/gameInstanceController/startGameInstance",
-			type: 'POST',
-			dataType: 'json',
-			data: JSON.stringify({
-				gameId : sap.ui.getCore().byId("gameInstanceGame").getSelectedKey(),
-				usernameId : sap.ui.getCore().getModel("user").oData.username
-			}),
-			success : $.proxy(this.gameInstanceStarted, this),
-			error : $.proxy(this.gameInstanceStarted, this)
-		});
-		//$.ajax({url: ServerConfig.getServerAddress() + "/Rest/Controllers/transpileGame?gameId=" + sap.ui.getCore().byId("gameInstanceGame").getSelectedKey() + "&write=true", type: 'GET', success : $.proxy(this.transpileSuccess, this), error : $.proxy(this.transpileError, this)});
-	},
-	
-	transpileSuccess : function() {
-		var gameId = sap.ui.getCore().byId("gameInstanceGame").getSelectedKey();
-		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startGameInstance/" + gameId + "/" + sap.ui.getCore().getModel("user").oData.username, success : $.proxy(this.gameInstanceStarted, this), error : $.proxy(this.gameInstanceStartError, this)});
-	},
-	
-	transpileError : function() {
-		sap.m.MessageBox.error("There was an error transpiling the game! The instance could not be started!");
-		this.onCancel();
-		this.busy.close();
+
+		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : sap.ui.getCore().byId("gameInstanceGame").getSelectedKey(), usernameId : sap.ui.getCore().getModel("user").oData.username}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
 	},
 	
 	gameInstanceStarted : function(response) {
 		this.onCancel();
 		this.busy.close();
-		//ODataModel.getODataModel().refresh();
-		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
+		
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
 	},
 	
@@ -89,22 +75,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	stopGameInstance : function(oEvent) {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-		url: ServerConfig.getGameServerAddress() + "/gameInstanceController/stopGameInstance",
-		type: 'POST',
-		dataType: 'json',
-		data: JSON.stringify({
-			gameInstanceId : this.stopInstanceId
-		}),
-		success : $.proxy(this.gameInstanceStopped, this),
-		error : $.proxy(this.gameInstanceStopped, this)
-	});
+		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/stopGameInstance", {gameInstanceId : this.stopInstanceId}, true, this.gameInstanceStopped, this.gameInstanceStoppedError, this);
 	},
 	
 	gameInstanceStopped : function(response) {
 		this.busy.close();
-		//ODataModel.getODataModel().refresh();
-		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
@@ -126,7 +102,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 */
 	onInit: function() {
 
-		$.ajax({url: ServerConfig.getGameServerAddress() + "/gameInstanceController/gameInstances/", type: 'GET', success : $.proxy(this.getGameInstancesSuccess, this), error : $.proxy(this.getGameInstancesError, this)});
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances/", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		
 		//TEMPORARY FIX TO STOP FLICKERING OF TILES!!
 		//THE TILE CONTAINER CONTROL HAS BEEN DEPRECIATED
