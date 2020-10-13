@@ -25,15 +25,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	startGameInstance : function() {
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
-
 		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : sap.ui.getCore().byId("gameInstanceGame").getSelectedKey(), usernameId : sap.ui.getCore().getModel("user").oData.username}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
 	},
 	
 	gameInstanceStarted : function(response) {
 		this.onCancel();
-		this.busy.close();
 		
 		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
@@ -41,24 +37,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	
 	gameInstanceStartError : function(response) {
 		this.onCancel();
-		this.busy.close();
 		sap.m.MessageToast.show(response.responseText);
 	},
 	
 	stopGameInstance : function(oEvent) {
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
 		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/stopGameInstance", {gameInstanceId : this.stopInstanceId}, true, this.gameInstanceStopped, this.gameInstanceStoppedError, this);
 	},
 	
 	gameInstanceStopped : function(response) {
-		this.busy.close();
 		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
 	gameInstanceStoppedError : function(response) {
-		this.busy.close();
 		sap.m.MessageToast.show(response.responseText);
 	},
 

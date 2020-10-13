@@ -268,15 +268,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	load : function() {
-		
-		//Open the busy dialog
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
-		
 		RestAPIHelper.get("/gameController/loadGame?gameId=" + this.gameModel.gameId, true, this.loadSuccess, this.loadError, this);
 	},
 	
 	loadSuccess(loadedData) {
+
+		//Open the busy dialog
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
 
 		this.gameModel.gameId = loadedData.gameId;
 		this.gameModel.teamCount = loadedData.teamCount;
@@ -458,11 +457,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    return val;
 			});
 
+		this.busy.close();
+
 		RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
 	},
 	
 	saveSuccess : function() {
-		this.busy.close();
 		if(this.saveRun) {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
@@ -470,19 +470,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	saveError : function() {
-		this.busy.close();
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.saveError"));
 	},
 	
 	runGame : function() {
 		this.saveRun = true;
 		this.save();
-	},
-	
-	run : function() {
-		//Open the busy dialog
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
 	},
 	
 	checkForRunningDebugInstanceSuccess : function(data) {
