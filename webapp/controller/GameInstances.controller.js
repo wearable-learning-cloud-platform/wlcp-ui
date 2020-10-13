@@ -2,33 +2,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 
 	socket : null,
 	
-	onStartGameInstance : function() {
-
-		//Set a pointer to this we can use in the callback
-		var that = this;
-
-		//Get the data
-		RestAPIHelper.get("/gameController/getGames/", true, 
-
-		function(data) {
-
-		//Create an instance of the dialog
-		that.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", that);
-
-		//Set the model
-		that.dialog.setModel(new sap.ui.model.json.JSONModel(data), "odata");
-
-		//Open the dialog
-		that.dialog.open();
-
-		},
-
-		function(error) {
-
-		}, this);
-
-	},
-	
 	onAfterRenderingStartGameInstance : function () {
 		var gameBinding = sap.ui.getCore().byId("gameInstanceGame").getBinding("items");
 		gameBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
