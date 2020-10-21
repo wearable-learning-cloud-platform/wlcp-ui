@@ -74,6 +74,7 @@ var RestAPIHelper = {
 	},
 	
 	createErrorResponseDialog : function(error) {
+		if(typeof(error.responseJSON) === "undefined") { return; }
 		if(typeof(error.responseJSON.subErrors) === "undefined") { error.responseJSON.subErrors = []; error.responseJSON.subErrors.push({message:"No Sub-errors..."}); }
 		var controller = sap.ui.controller("org.wlcp.wlcp-ui.controller.ErrorResponse");
 		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.ErrorResponse", controller);
