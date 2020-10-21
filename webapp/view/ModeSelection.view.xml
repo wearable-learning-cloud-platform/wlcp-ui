@@ -17,7 +17,7 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-					<Button text="Logout"/>
+					<Button text="Logout" press="logout"/>
                     <Button icon="sap-icon://sys-help"/>
 				<ToolbarSpacer/>
 			</Toolbar>

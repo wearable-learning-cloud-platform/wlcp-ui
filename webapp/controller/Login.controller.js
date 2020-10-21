@@ -12,48 +12,42 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	model : new sap.ui.model.json.JSONModel(),
-	
+
 	userModelData : {
 		username: ""
-	},
-	
-	newUserModelData : {
-		username: ""
-	},
-	
+	  },
+  
 	userModel : new sap.ui.model.json.JSONModel(),
-	newUserModel : new sap.ui.model.json.JSONModel(),
-	
-	onLoginPress: function() {
-		this.userModelData.username = this.modelData.username.toLowerCase();
-		this.userModel.setData(this.userModelData);
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+
+	createModelData : function() {
+		this.model = new sap.ui.model.json.JSONModel({
+			username : "",
+			password : "",
+			newUser : {
+				usernameId : "",
+				password : "",
+				firstName : "",
+				lastName : "",
+			}
+		});
 	},
 	
 	validateLogin : function() {
-		this.newUserModelData.username = this.modelData.username.toLowerCase();
-		//this.newUserModelData.password = this.modelData.password;
-		this.newUserModel.setData(this.newUserModelData);
-
-		RestAPIHelper.post("/userController/userLogin", this.newUserModel.getData(), true, this.oDataSuccess, this.oDataError, this);
+		var loginDto = {
+			usernameId : this.model.getData().username,
+			password : this.model.getData().password
+		}
+		RestAPIHelper.post("/login", loginDto, true, this.success, this.eror, this);
 	},
 	
-	oDataSuccess : function(oData) {
-		var usernameFound = false;
-		
-		if(oData!=null && oData == true) {
-			
-			this.onLoginPress();
-			usernameFound = true;
-			
-		}
-		
-		if(!usernameFound) {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.incorrectLogin"));
-		}
+	success : function() {
+		this.userModelData.username = this.model.getData().username;
+		this.userModel.setData(this.userModelData);
+		sap.ui.getCore().setModel(this.userModel, "user");
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 	},
 	
-	oDataError : function(oData) {
+	error : function() {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
 	},
 	
@@ -84,7 +78,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		}
 		
 		//If we get here we can register them
-		RestAPIHelper.post("/registrationController/registerUser", userRegistrationDto, true, function(data) {
+		RestAPIHelper.post("/usernameController/registerUser", userRegistrationDto, true, function(data) {
 			this.cancelRegisterNewUser();
 			sap.m.MessageBox.success(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.success"));
 		}, function(error) {

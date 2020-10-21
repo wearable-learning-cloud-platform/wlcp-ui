@@ -4,28 +4,19 @@ var RestAPIHelper = {
 	busyDialogRequests : [],
 
 	getAbsolute : function(url, async, successHandler, errorHandler, context) {
-		this.requestBusyDialog();
-		var that = this;
-		$.ajax({
-			url: window.location.origin + url, 
-			type: 'GET',
-			async : async,
-			success: function(data) {
-				that.callHandlerBasedOnContext(successHandler, data, context);
-			},
-			error : function(error) {
-				that.createErrorResponseDialog(error);
-				that.callHandlerBasedOnContext(errorHandler, error, context);
-			}
-		});
-
+		this.genericGet(window.location.origin + url, async, successHandler, errorHandler, context);
 	},
 
 	get : function(url, async, successHandler, errorHandler, context) {
+		this.genericGet(ServerConfig.getServerAddress() + url, async, successHandler, errorHandler, context);
+	},
+
+	genericGet : function(url, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + this.getCookie("wlcp.userSession")}) {
 		this.requestBusyDialog();
 		var that = this;
 		$.ajax({
-			url: ServerConfig.getServerAddress() + url, 
+			headers : headers,
+			url: url, 
 			type: 'GET',
 			async : async,
 			success: function(data) {
@@ -36,16 +27,24 @@ var RestAPIHelper = {
 				that.callHandlerBasedOnContext(errorHandler, error, context);
 			}
 		});
-
 	},
 
 	postAbsolute : function(url, data, async, successHandler, errorHandler, context) {
+		this.genericPost(window.location.origin + url, data, async, successHandler, errorHandler, context);
+	},
+
+	post : function(url, data, async, successHandler, errorHandler, context) {
+		this.genericPost(ServerConfig.getServerAddress() + url, data, async, successHandler, errorHandler, context);
+	},
+
+	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + this.getCookie("wlcp.userSession")}) {
 		this.requestBusyDialog();
         var that = this;
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-		url: window.location.origin + url,
+		$.ajax({
+		headers : headers,
+		contentType : "application/json",
+		url: url,
 		type: 'POST',
-		dataType: 'json',
 		async : async,
 		data: JSON.stringify(data),
 		success: function(data) {
@@ -58,23 +57,20 @@ var RestAPIHelper = {
 		});
 	},
 
-	post : function(url, data, async, successHandler, errorHandler, context) {
-		this.requestBusyDialog();
-        var that = this;
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-		url: ServerConfig.getServerAddress() + url,
-		type: 'POST',
-		dataType: 'json',
-		async : async,
-		data: JSON.stringify(data),
-		success: function(data) {
-            that.callHandlerBasedOnContext(successHandler, data, context);
-		},
-		error : function(error) {
-				that.createErrorResponseDialog(error);
-				that.callHandlerBasedOnContext(errorHandler, error, context);
-			}
-		});
+	getCookie : function(cname) {
+		var name = cname + "=";
+		var decodedCookie = decodeURIComponent(document.cookie);
+		var ca = decodedCookie.split(';');
+		for(var i = 0; i <ca.length; i++) {
+		  var c = ca[i];
+		  while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		  }
+		  if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		  }
+		}
+		return "";
 	},
 	
 	createErrorResponseDialog : function(error) {

@@ -24,6 +24,10 @@ return Controller.extend("org.wlcp.wlcp-ui.controller.ModeSelection", {
             gameInstanceId : 0,
             debugMode : false
         });
+    },
+
+    logout() {
+        RestAPIHelper.get("/logout", true, function(){location.reload();}, function(){});
     }
 });
 
