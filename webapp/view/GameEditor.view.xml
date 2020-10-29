@@ -57,7 +57,6 @@
 					<f:Avatar class="noselect" displaySize="XS" initials="MM" press="handleAvatarPress"/>
 					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
-					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin"/>
 				</tnt:ToolHeader>
 				<l:Splitter id="mainSplitter">
 					<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">

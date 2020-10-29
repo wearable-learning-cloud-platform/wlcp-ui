@@ -3,18 +3,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	modelData : {
 		username : "",
 		password : "",
-		mode : "",
-		items : [
-			{
-				text : ""
-			},
-			{
-				text : ""
-			}, 
-			{
-				text : ""
-			}
-		],
 		newUser : {
 			usernameId : "",
 			password : "",
@@ -24,72 +12,42 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	model : new sap.ui.model.json.JSONModel(),
-	
+
 	userModelData : {
 		username: ""
-	},
-	
-	newUserModelData : {
-		username: ""
-	},
-	
+	  },
+  
 	userModel : new sap.ui.model.json.JSONModel(),
-	newUserModel : new sap.ui.model.json.JSONModel(),
-	
-	onLoginPress: function() {
-		this.userModelData.username = this.modelData.username.toLowerCase();
-		this.userModel.setData(this.userModelData);
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
-		// switch(this.modelData.mode) {
-		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameManager"): 
-		// sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteMainToolPage");
-		// 	break;
-		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor"):
-		// 	sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView");
-		// 	break;
-		// case sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gamePlayer"):
-		// 	sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
-		// 		username : this.userModelData.username,
-		// 		gameInstanceId : 0,
-		// 		debugMode : false
-		// 	});
-		// 	break;
-		// default:
-		// 	break;
-		// }
-	},
-	
-	validateLogin : function() {
-		this.newUserModelData.username = this.modelData.username.toLowerCase();
-		//this.newUserModelData.password = this.modelData.password;
-		this.newUserModel.setData(this.newUserModelData);
-		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-			url: ServerConfig.getServerAddress() + "/userController/userLogin",
-			type: 'POST',
-			dataType: 'json',
-			data: this.newUserModel.getJSON(),
-			success : $.proxy(this.oDataSuccess, this),
-			error : $.proxy(this.oDataError, this)
+
+	createModelData : function() {
+		this.model = new sap.ui.model.json.JSONModel({
+			username : "",
+			password : "",
+			newUser : {
+				usernameId : "",
+				password : "",
+				firstName : "",
+				lastName : "",
+			}
 		});
 	},
 	
-	oDataSuccess : function(oData) {
-		var usernameFound = false;
-		
-		if(oData!=null && oData == true) {
-			
-			this.onLoginPress();
-			usernameFound = true;
-			
+	validateLogin : function() {
+		var loginDto = {
+			usernameId : this.model.getData().username,
+			password : this.model.getData().password
 		}
-		
-		if(!usernameFound) {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.incorrectLogin"));
-		}
+		RestAPIHelper.post("/login", loginDto, true, this.success, this.eror, this);
 	},
 	
-	oDataError : function(oData) {
+	success : function() {
+		this.userModelData.username = this.model.getData().username;
+		this.userModel.setData(this.userModelData);
+		sap.ui.getCore().setModel(this.userModel, "user");
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+	},
+	
+	error : function() {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
 	},
 	
@@ -104,24 +62,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		//Open the dialog
 		this.registerNewUserDialog.open();
 	},
-	
+
 	confirmRegisterNewUser : function() {
 		var registerData = this.model.getData().newUser;
-		
-		//Make sure username and password are filled out
-		if(registerData.usernameId == "" || registerData.password == "") {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.fill"));
-			return;
-		}
-		
-		//Make sure a-z A-Z only
-		if(!registerData.usernameId.match(/^[a-zA-Z]+$/)) {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.usernameRequirements"));
-			return;
-		}
-
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
 		
 		//Convert the username to all lower case
 		registerData.usernameId = registerData.usernameId.toLowerCase();
@@ -135,23 +78,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		}
 		
 		//If we get here we can register them
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ServerConfig.getServerAddress() + "/registrationController/registerUser", type: 'POST', dataType: 'json', data: JSON.stringify(userRegistrationDto), success : $.proxy(this.registerSuccess, this), error : $.proxy(this.registerError, this)});
-	},
-	
-	registerSuccess : function() {
-		sap.m.MessageBox.success(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.success"));
-		this.cancelRegisterNewUser();
-	},
-	
-	registerError : function() {
-		sap.m.MessageBox.error("Error registering!");
-		this.cancelRegisterNewUser();
+		RestAPIHelper.post("/usernameController/registerUser", userRegistrationDto, true, function(data) {
+			this.cancelRegisterNewUser();
+			sap.m.MessageBox.success(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.success"));
+		}, function(error) {
+			//Let the default handler handle the error
+		}, this);
 	},
 	
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
-		this.busy.close();
 	},
 
 /**
@@ -170,12 +107,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		
 		this.getView().addEventDelegate({
 			  onAfterRendering: function(){
-				    //this.onLoginPress();
-					this.modelData.items[0].text = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameManager");
-					this.modelData.items[1].text = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gameEditor");
-					this.modelData.items[2].text =sap.ui.getCore().getModel("i18n").getResourceBundle().getText("mode.gamePlayer");
-					this.model.setData(this.modelData);
-					this.getView().setModel(this.model);
+
 			  }
 			}, this);
 	},

@@ -37,7 +37,7 @@ var DataLogger = {
 				saveJSON.transitions.push(gameEditor.transitionList[i].save());
 			}
 			
-			$.ajax({url: ODataModel.getWebAppURL() + "/LogGameEditor", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.logSuccess, this), error : $.proxy(this.logError, this)});
+			RestAPIHelper.postAbsolute(ODataModel.getWebAppURL() + "/LogGameEditor", saveJSON, true, this.logSuccess, this.logError, this);
 		}
 	},
 

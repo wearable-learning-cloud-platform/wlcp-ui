@@ -23,11 +23,7 @@
 						</layoutData>
 					</ToolbarSpacer>
 					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
-					<Button icon = "sap-icon://user-settings" type="Transparent">
-					</Button>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
-					<Button icon = "sap-icon://log" type="Transparent" press="onGotoLogin">
-					</Button>
 				</tnt:ToolHeader>
 			</tnt:header>
 			<tnt:sideContent>
