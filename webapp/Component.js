@@ -80,6 +80,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/GameEditor");
 			jQuery.sap.require("javascript/ServerConfig");
 			jQuery.sap.require("javascript/RestAPIHelper");
+			jQuery.sap.require("javascript/MetricsHelper");
 			jQuery.sap.require("javascript/DataLogger");
 			
 			jQuery.sap.require("javascript/jsplumb-2-13-1");
