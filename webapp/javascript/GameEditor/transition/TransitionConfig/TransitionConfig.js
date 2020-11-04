@@ -87,7 +87,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].navigationListItems;
 						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
 							for(var l = 0; l < transitionTypes.length; l++) {
-								if(activeList.includes("") && !activeList.includes("Single Button Press") && !activeList.includes("Sequence Button Press") && !activeList.includes("Keyboard Input")) {
+								if(activeList.includes("") && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"))) {
 									transitionTypes[l].visible = true;
 								} else if(activeList.includes(transitionTypes[l].title)) {
 									transitionTypes[l].visible = true;
@@ -109,18 +109,18 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == scope) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == "Single Button Press") {
+					if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
 						if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected || 
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
-							return "Single Button Press";
+							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == "Sequence Button Press") {
+					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) {
 						if(iconTabs[i].navigationContainerPages[n].sequencePress.length > 0) { 
-							return "Sequence Button Press";
+							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress");
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == "Keyboard Input") {
+					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
 						if(iconTabs[i].navigationContainerPages[n].keyboardField.length > 0) {
-							return "Keyboard Input";
+							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput");
 						}
 					}
 				}
