@@ -153,11 +153,19 @@ var State = class State {
 	
 	addPadSpace() {
 		if(((this.positionX + this.width + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width + document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft - 75) && (document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft + document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth == document.getElementById("container-wlcp-ui---gameEditor--pad").scrollWidth)) {
-			document.getElementById("scrollPlaceHolder").style.left = document.getElementById("scrollPlaceHolder").offsetLeft + 500 + "px";
+			if(document.getElementById("scrollPlaceHolder").style.left === "0px") {
+				document.getElementById("scrollPlaceHolder").style.left = document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().width * 2 + "px";
+			} else {
+				document.getElementById("scrollPlaceHolder").style.left = document.getElementById("scrollPlaceHolder").offsetLeft + 500 + "px"
+			}
 			this.stateDiv._katavorioDrag.remark();
 		}
 		if(((this.positionY + this.height + 50) >= document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height + document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop - 75) && (document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop + document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight == document.getElementById("container-wlcp-ui---gameEditor--pad").scrollHeight)) {
-			document.getElementById("scrollPlaceHolder").style.top = document.getElementById("scrollPlaceHolder").offsetTop + 500 + "px";
+			if(document.getElementById("scrollPlaceHolder").style.top === "0px") {
+				document.getElementById("scrollPlaceHolder").style.top = document.getElementById("container-wlcp-ui---gameEditor--pad").getBoundingClientRect().height * 2 + "px";
+			} else {
+				document.getElementById("scrollPlaceHolder").style.top = document.getElementById("scrollPlaceHolder").offsetTop + 500 + "px";
+			}
 			this.stateDiv._katavorioDrag.remark();
 		}
 	}
