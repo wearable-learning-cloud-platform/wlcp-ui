@@ -321,7 +321,10 @@ var OutputState = class OutputState extends State {
     	if(oEvent == sap.m.MessageBox.Action.OK) {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
-    		this.dialog.destroy();
+			this.dialog.destroy();
+			if(typeof this.newDescriptionText !== "undefined") {
+				this.changeText(this.newDescriptionText);
+			}
     		DataLogger.logGameEditor();
     	}
     }
