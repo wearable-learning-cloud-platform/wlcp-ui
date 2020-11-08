@@ -459,7 +459,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		this.busy.close();
 
-		RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
+		//RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
 	},
 	
 	saveSuccess : function() {

@@ -80,6 +80,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/GameEditor");
 			jQuery.sap.require("javascript/ServerConfig");
 			jQuery.sap.require("javascript/RestAPIHelper");
+			jQuery.sap.require("javascript/SessionHelper");
 			jQuery.sap.require("javascript/MetricsHelper");
 			jQuery.sap.require("javascript/DataLogger");
 			
@@ -87,6 +88,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/path-data-polyfill");
 			jQuery.sap.require("javascript/jquery-ui-touch-punch-min");
 			jQuery.sap.require("javascript/stomp");
+			jQuery.sap.require("javascript/jwt-decode");
 		},
 
 		getCookie : function(cname) {

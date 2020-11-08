@@ -13,12 +13,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	
 	model : new sap.ui.model.json.JSONModel(),
 
-	userModelData : {
-		username: ""
-	  },
-  
-	userModel : new sap.ui.model.json.JSONModel(),
-
 	createModelData : function() {
 		this.model = new sap.ui.model.json.JSONModel({
 			username : "",
@@ -41,10 +35,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	success : function() {
-		this.userModelData.username = this.model.getData().username;
-		this.userModel.setData(this.userModelData);
-		sap.ui.getCore().setModel(this.userModel, "user");
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		if(SessionHelper.sessionCookieValid()) {
+			SessionHelper.setupNewSession(this);
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		} else {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
+		}
+		this.resetDataModel();
 	},
 	
 	error : function() {
@@ -89,6 +86,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
+		this.resetDataModel();
+	},
+
+	resetDataModel() {
+		this.createModelData();
+		this.getView().setModel(this.model);
 	},
 
 /**
@@ -101,9 +104,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		//Set the data to the model
 		this.model.setData(this.modelData);
 		this.getView().setModel(this.model);
-		
-		this.userModel.setData(this.userModelData);
-		sap.ui.getCore().setModel(this.userModel, "user");
 		
 		this.getView().addEventDelegate({
 			  onAfterRendering: function(){

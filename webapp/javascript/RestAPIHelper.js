@@ -11,7 +11,7 @@ var RestAPIHelper = {
 		this.genericGet(ServerConfig.getServerAddress() + url, async, successHandler, errorHandler, context);
 	},
 
-	genericGet : function(url, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + this.getCookie("wlcp.userSession")}) {
+	genericGet : function(url, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}) {
 		this.requestBusyDialog();
 		var that = this;
 		$.ajax({
@@ -37,7 +37,7 @@ var RestAPIHelper = {
 		this.genericPost(ServerConfig.getServerAddress() + url, data, async, successHandler, errorHandler, context);
 	},
 
-	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + this.getCookie("wlcp.userSession")}) {
+	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}) {
 		this.requestBusyDialog();
         var that = this;
 		$.ajax({
@@ -55,22 +55,6 @@ var RestAPIHelper = {
 				that.callHandlerBasedOnContext(errorHandler, error, context);
 			}
 		});
-	},
-
-	getCookie : function(cname) {
-		var name = cname + "=";
-		var decodedCookie = decodeURIComponent(document.cookie);
-		var ca = decodedCookie.split(';');
-		for(var i = 0; i <ca.length; i++) {
-		  var c = ca[i];
-		  while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		  }
-		  if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		  }
-		}
-		return "";
 	},
 	
 	createErrorResponseDialog : function(error) {
