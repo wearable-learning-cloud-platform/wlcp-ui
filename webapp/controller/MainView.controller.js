@@ -7,6 +7,7 @@ sap.ui.define([
   return Controller.extend("org.wlcp.wlcp-ui.controller.MainView", {
 
     onInit : function() {
+      if(HashChanger.getInstance().getHash().includes("RouteVirtualDeviceView") && (HashChanger.getInstance().getHash().includes("true"))) { return; }
       if(SessionHelper.sessionCookieValid()) {
         SessionHelper.setupNewSession(this);
         sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");

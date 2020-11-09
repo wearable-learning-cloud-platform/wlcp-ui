@@ -85,6 +85,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		//sap.ui.getCore().byId("__xmlview3--gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel(data), "odata");
 		this.getView().byId("gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
 	},
+
+	_onObjectMatched: function (oEvent) {
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances/", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
+		console.log("enter");
+	},
 	
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -93,11 +98,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 */
 	onInit: function() {
 
-		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances/", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
+		//RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances/", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
 		
 		//TEMPORARY FIX TO STOP FLICKERING OF TILES!!
 		//THE TILE CONTAINER CONTROL HAS BEEN DEPRECIATED
 		//THIS NEED TO BE REWRITTEN
+
+		var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+		oRouter.getRoute("RouteMainToolPage").attachPatternMatched(this._onObjectMatched, this);
 		
 //		this.getView().byId("gameInstanceTileContainer").addEventDelegate({
 //			  onAfterRendering: function(){
