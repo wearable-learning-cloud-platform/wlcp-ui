@@ -3,23 +3,50 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"
-	xmlns:l="sap.ui.layout">
+	xmlns:l="sap.ui.layout"
+	xmlns:html="http://www.w3.org/1999/xhtml">
 	
 	<Dialog id="startGameInstance" title = "Start a game instance">
 		<buttons>
 			<Button text="Start" type="Accept" press="startGameInstance"/>
 			<Button text="Cancel" type="Reject" press="onCancel"/>
 		</buttons>
-		
-		<VBox>
-			<FlexBox alignItems="Center" justifyContent="Center">
+
+		<content>
+			<html:style>
+				.sapUiPopupWithPadding .sapMDialogScrollCont {
+				padding :
+				0;
+				}
+			</html:style>
+			<IconTabBar>
 				<items>
-					<ComboBox id="gameInstanceGame" placeholder="Select a game..." items="{odata>/}">
-						<core:Item key="{odata>gameId}" text="{odata>gameId}"></core:Item>
-					</ComboBox>
+					<IconTabFilter text="{i18n>gameEditor.load.yourGames}">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectYourGame}:" />
+						</FlexBox>
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<ComboBox id="userLoadGameComboBox"
+								items="{/privateGames}"
+								placeholder="{i18n>gameEditor.load.selectGame}">
+								<core:Item key="{gameId}" text="{gameId}" />
+							</ComboBox>
+						</FlexBox>
+					</IconTabFilter>
+					<IconTabFilter text="{i18n>gameEditor.load.publicGames}">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectPublicGame}:" />
+						</FlexBox>
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<ComboBox id="publicLoadGameComboBox"
+								items="{/publicGames}"
+								placeholder="{i18n>gameEditor.load.selectGame}">
+								<core:Item key="{gameId}" text="{gameId}" />
+							</ComboBox>
+						</FlexBox>
+					</IconTabFilter>
 				</items>
-			</FlexBox>
-		</VBox>
-		
+			</IconTabBar>
+		</content>	
 	</Dialog>
 </core:FragmentDefinition>

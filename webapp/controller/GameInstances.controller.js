@@ -3,30 +3,28 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	socket : null,
 	
 	onStartGameInstance : function() {
-
-		//Set a pointer to this we can use in the callback
-		var that = this;
-
-		//Get the data
-		RestAPIHelper.get("/gameController/getGames/", true, 
-
+		var loadGameDialogModel = {
+			privateGames : null,
+			publicGames : null
+		};
+		RestAPIHelper.get("/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, false,
 		function(data) {
-
-		//Create an instance of the dialog
-		that.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", that);
-
-		//Set the model
-		that.dialog.setModel(new sap.ui.model.json.JSONModel(data), "odata");
-
-		//Open the dialog
-		that.dialog.open();
-
-		},
-
+			loadGameDialogModel.privateGames = data;
+			RestAPIHelper.get("/gameController/getPublicGames", false,
+			function(data) {
+				loadGameDialogModel.publicGames = data;
+				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", this);
+				fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+				fragment.open();
+				this.dialog = fragment;
+			}, 
+			function(error) {
+				//Allow default error handling
+			}, this);
+		}, 
 		function(error) {
-
+			//Allow default error handling
 		}, this);
-
 	},
 	
 	onAfterRenderingStartGameInstance : function () {
@@ -52,7 +50,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	startGameInstance : function() {
-		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : sap.ui.getCore().byId("gameInstanceGame").getSelectedKey(), usernameId : sap.ui.getCore().getModel("user").oData.username}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
+		var gameToLoad = "";
+		if(sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey() != "" && sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey() != "") {
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectError"));
+			return;
+		} else if(sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey() != "") {
+			gameToLoad = sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey();
+		} else if(sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey() != "") {
+			gameToLoad = sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey();
+		} else {
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
+			return;
+		}
+		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : gameToLoad, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
 	},
 	
 	gameInstanceStarted : function(response) {
@@ -68,7 +78,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	stopGameInstance : function(oEvent) {
-		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/stopGameInstance", {gameInstanceId : this.stopInstanceId}, true, this.gameInstanceStopped, this.gameInstanceStoppedError, this);
+		if(oEvent == sap.m.MessageBox.Action.OK) {
+			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/stopGameInstance", {gameInstanceId : this.stopInstanceId}, true, this.gameInstanceStopped, this.gameInstanceStoppedError, this);
+		}
 	},
 	
 	gameInstanceStopped : function(response) {
