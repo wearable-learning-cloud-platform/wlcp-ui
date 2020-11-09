@@ -147,6 +147,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			data.push({buttons : buttonsArray});
 			this.transition.model.setProperty(this.path23 + "/sequencePress", data);
 			this.transition.onChange();
+			this.transition.onAfterRenderingDialog();
 			this.sequenceRefresh();
 		}
 		this.closeDialog();
@@ -166,6 +167,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			sequenceArray.splice(index, 1);
 			this.transition.model.setProperty(this.deleteSequencePath, sequenceArray);
 			this.transition.onChange();
+			this.transition.onAfterRenderingDialog();
 			this.sequenceRefresh();
 		} 
 	}

@@ -118,6 +118,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			data.push({value : keyboardInputValue});
 			this.transition.model.setProperty(this.path23 + "/keyboardField", data);
 			this.transition.onChange();
+			this.transition.onAfterRenderingDialog();
 			this.closeDialog();
 		}
 	}
@@ -136,6 +137,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			sequenceArray.splice(index, 1);
 			this.transition.model.setProperty(this.deleteKeyboardPath, sequenceArray);
 			this.transition.onChange();
+			this.transition.onAfterRenderingDialog();
 		}
 	}
 
