@@ -69,9 +69,23 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="noState" showHeader="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<Text class="noStateNoTransition" text="No State"/>
+							</items>
+						</FlexBox>
+					</Page>
 				</NavContainer>
 				<NavContainer id="inputContainer">
 					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
+					<Page id="noTransition" showHeader="false" enableScrolling="false">
+						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
+							<items>
+								<Text class="noStateNoTransition" text="No Transition"/>
+							</items>
+						</FlexBox>
+					</Page>
 					<Page id="singleButtonPress" showHeader="false" enableScrolling="false">
 						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
 							<items>

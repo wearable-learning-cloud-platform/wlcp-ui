@@ -129,6 +129,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				}
 			});
 			this.stompClient.onConnect = function (frame) {
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gamePlayer.connecting"));
 				that.connectToGameInstance(that.gameInstanceId, team, player);
 			};
 			this.stompClient.onStompError = function (frame) {
@@ -161,6 +162,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	subscribeToChannels : function(gameInstanceId, team, player) {
 		var that = this;
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noState/" + this.username + "/" + team + "/" + player, function(response) {
+			that.switchToStateType("NoState");
+		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/displayText/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
 			that.recievedDisplayText = true
@@ -198,6 +202,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			img.src = parsedJson.url;
 			that.switchToStateType("DisplayTextPhoto");
 		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noTransition/" + this.username + "/" + team + "/" + player, function(response) {
+			that.switchToTransitionType("NoTransition");
+		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/singleButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("SingleButtonPress");
 		});
@@ -233,6 +240,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	switchToStateType : function(type) {
 		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--outputContainer");
 		switch(type) {
+		case "NoState":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--noState"));
+			break;
 		case "DisplayText":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextPage"));
 			break;
@@ -245,6 +255,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	switchToTransitionType : function(type) {
 		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--inputContainer");
 		switch(type) {
+		case "NoTransition":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--noTransition"));
+			break;
 		case "SingleButtonPress":
 			navContainer.afterNavigate = null;
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--singleButtonPress"));

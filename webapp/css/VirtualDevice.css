@@ -76,3 +76,8 @@
 .sapMLabel.displayTextPhotoColor {
 	color: white;
 }
+
+.noStateNoTransition {
+	color: white;
+	font-size: x-large;
+}
