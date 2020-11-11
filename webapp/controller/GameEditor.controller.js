@@ -522,9 +522,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	copyGame : function(oEvent) {
 		var dialog = new sap.m.Dialog({
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
-			content : new sap.m.Input({
+			content : [new sap.m.Input({
 				placeholder : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.placeholder")
-			}),
+			}), new sap.m.CheckBox({text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.new.public"), selected : true})],
 			beginButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
 				type : sap.m.ButtonType.Accept,
@@ -534,7 +534,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
+					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected()}, true, 
 					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
