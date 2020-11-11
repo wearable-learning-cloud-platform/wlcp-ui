@@ -6,7 +6,7 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	
-	<Dialog id="startGameInstance" title = "Start a game instance">
+	<Dialog id="startGameInstance" title = "Start a game">
 		<buttons>
 			<Button text="Start" type="Accept" press="startGameInstance"/>
 			<Button text="Cancel" type="Reject" press="onCancel"/>

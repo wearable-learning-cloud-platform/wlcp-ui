@@ -68,7 +68,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	gameInstanceStarted : function(response) {
 		this.onCancel();
 		
-		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
+		this.getGameInstances();
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
 	},
 	
@@ -84,7 +84,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	gameInstanceStopped : function(response) {
-		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
+		this.getGameInstances();
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
@@ -98,9 +98,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		this.getView().byId("gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
 	},
 
-	_onObjectMatched: function (oEvent) {
-		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances/", true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
-		console.log("enter");
+	onRouteMatched: function (oEvent) {
+		this.getGameInstances();
+	},
+
+	getGameInstances : function() {
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/gameInstances?usernameId=" + sap.ui.getCore().getModel("user").getProperty("/username"), true, this.getGameInstancesSuccess, this.getGameInstancesError, this);
+	},
+
+	reset : function() {
+		this.getView().setModel(new sap.ui.model.json.JSONModel({object : {}}), "odata");
+		this.getView().byId("gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel({object : {}}), "odata");
+		var oTileContainer = this.getView().byId("gameInstanceTileContainer");
+		oTileContainer.setEditable(false);
 	},
 	
 /**
@@ -116,8 +126,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		//THE TILE CONTAINER CONTROL HAS BEEN DEPRECIATED
 		//THIS NEED TO BE REWRITTEN
 
-		var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-		oRouter.getRoute("RouteMainToolPage").attachPatternMatched(this._onObjectMatched, this);
+		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteMainToolPage").attachPatternMatched(this.onRouteMatched, this);
 		
 //		this.getView().byId("gameInstanceTileContainer").addEventDelegate({
 //			  onAfterRendering: function(){

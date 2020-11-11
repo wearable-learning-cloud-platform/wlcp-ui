@@ -16,6 +16,9 @@ var SessionHelper = {
                 if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"] !== "undefined") {
                   sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"].undefined.getController().resetDataModel();
                 }
+                if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"] !== "undefined") {
+                  sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"].undefined.getController().resetGameManager();
+                }
                 if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"] !== "undefined") {
                   sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"].undefined.getController().resetEditor();
                 }

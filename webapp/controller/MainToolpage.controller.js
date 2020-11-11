@@ -77,16 +77,22 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.MainToolpage", {
 			var view = sap.ui.xmlview(keySplit[1]);
 			this.getView().addDependent(view);
 			view.open();
-			
 			break;
 		default:
+			break;
 		}
+	},
+
+	selectFixedParentItem : function (oEvent) {
+		new sap.m.MessageBox.information("Please see more at http://www.wearablelearning.org/");	
 	},
 	
 	goToPage : function(item, viewId, hierarchyType, viewName, pageName) {
 		
 		//If we are trying to switch to the view we are already on, ignore the request
 		if(viewName == this.currentView.sViewName) {
+			if(pageName === "gameInstances")
+				this.currentView.getController().getGameInstances();
 			return;
 		}
 		
@@ -178,6 +184,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.MainToolpage", {
 		jQuery.sap.delayedCall(0, this, function () {
 			this._oPopover.openBy(oButton);
 		});
+	},
+
+	resetGameManager : function() {
+		this.currentView.getController().reset();
 	},
 
 /**

@@ -22,7 +22,7 @@
 							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
 						</layoutData>
 					</ToolbarSpacer>
-					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+					<f:Avatar displaySize="XS" initials="MM"/>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
 				</tnt:ToolHeader>
 			</tnt:header>
@@ -36,7 +36,7 @@
 				</tnt:NavigationList>
 				<tnt:fixedItem>
 					<tnt:NavigationList items="{/fixedNavigation}">
-						<tnt:NavigationListItem text="{title}" icon="{icon}">
+						<tnt:NavigationListItem select="selectFixedParentItem" text="{title}" icon="{icon}">
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
 				</tnt:fixedItem>

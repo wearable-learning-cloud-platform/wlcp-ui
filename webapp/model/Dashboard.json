@@ -1,6 +1,6 @@
 {
 	"navigation": [{
-		"title" : "Game Instances",
+		"title" : "Running Games",
 		"icon" : "sap-icon://instance",
 		"key" : "parent,org.wlcp.wlcp-ui.view.GameInstances,gameInstances,page",
 		"expanded" : false

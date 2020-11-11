@@ -28,6 +28,10 @@ return Controller.extend("org.wlcp.wlcp-ui.controller.ModeSelection", {
 
     logout() {
         RestAPIHelper.get("/logout", true, function(){location.reload();}, function(){});
+    },
+
+    help() {
+        new sap.m.MessageBox.information("Please see more at http://www.wearablelearning.org/");
     }
 });
 
