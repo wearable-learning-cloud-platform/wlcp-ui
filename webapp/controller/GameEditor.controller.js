@@ -243,6 +243,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		  
 		//Setup the toolbox drag and drop
 		this.initToolbox();
+
+		//Set the game name
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
 	},
 	
 	loadGame : function() {
@@ -287,6 +290,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.gameModel.transitionIdCount = loadedData.transitionIdCount;
 		this.gameModel.connectionIdCount = loadedData.connectionIdCount;
 		this.gameModel.username.usernameId = loadedData.username.usernameId;
+
+		//Set the game name
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -632,6 +638,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(true);
+
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
 	},
@@ -678,6 +686,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		window.onbeforeunload = function() {
 			return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.confirmExit");
 		};	
+
+		//No Game Loaded
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
 	},

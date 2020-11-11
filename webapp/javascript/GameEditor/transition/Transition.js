@@ -19,7 +19,7 @@ var Transition = class Transition {
 	}
 	
 	static absoluteToRelativeY(absoluteY) {
-		return absoluteY;// + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight;
+		return absoluteY - document.getElementById("container-wlcp-ui---gameEditor--padPage").firstElementChild.clientHeight;// + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight;
 	}
 	
 	create() {

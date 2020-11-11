@@ -29,7 +29,7 @@ var State = class State {
 	};
 	
 	static absoluteToRelativeY(absoluteY) {
-		return absoluteY + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight - 20;
+		return absoluteY - document.getElementById("container-wlcp-ui---gameEditor--padPage").firstElementChild.clientHeight;// + document.getElementById("container-wlcp-ui---gameEditor--toolbox-scroll").offsetHeight - 18;
 	};
 	
 	create() {

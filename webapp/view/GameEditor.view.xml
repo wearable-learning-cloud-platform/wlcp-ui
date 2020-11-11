@@ -72,8 +72,10 @@
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
 					</ScrollContainer>
-					<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
-					</ScrollContainer>
+					<Page id="padPage">
+						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
+						</ScrollContainer>
+					</Page>
 				</l:Splitter>
 			</l:Splitter>
 		</content>
