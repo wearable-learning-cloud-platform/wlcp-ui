@@ -14,30 +14,30 @@
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
 					</Button>
-					<ToolbarSpacer width="180px"/>
+					<ToolbarSpacer width="200px"/>
 					<Button id="newButton" text="{i18n>gameEditor.new}" type="Transparent" icon="sap-icon://create" press="newGame">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<Button id="loadButton" text="{i18n>gameEditor.load}" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" enabled="false">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 						<menu>
 							<Menu>
@@ -48,23 +48,19 @@
 							</Menu>
 						</menu>
 					</MenuButton>
-					<tnt:ToolHeaderUtilitySeparator />
-					<ToolbarSpacer width="12.5%"/>
-					<Title class="noselect" level = "H3" text = "{i18n>gameEditor.title}" textAlign="Center">
+					<Label class="noselect" text = "{i18n>gameEditor.title}" textAlign="Center">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Disappear" />
+						</layoutData>
+					</Label>
+					<ToolbarSpacer/>
+					<!-- <f:Avatar class="noselect" displaySize="XS" initials="MM" press="handleAvatarPress"/> -->
+					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
+					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
-					</Title>
-					<tnt:ToolHeaderUtilitySeparator />
-					<ToolbarSpacer>
-						<layoutData>
-							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
-						</layoutData>
-					</ToolbarSpacer>
-					
-					<f:Avatar class="noselect" displaySize="XS" initials="MM" press="handleAvatarPress"/>
-					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
-					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+					</Button>
 				</tnt:ToolHeader>
 				<l:Splitter id="mainSplitter">
 					<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">
