@@ -35,11 +35,19 @@
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false" press="openGameOptions">
+					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
-					</Button>
+						<menu>
+							<Menu>
+								<MenuItem text="{i18n>gameEditor.gameOptions.copyGame}" icon="sap-icon://copy" press="copyGame"/>
+								<MenuItem text="{i18n>gameEditor.gameOptions.renameGame}" icon="sap-icon://bold-text" press="renameGame"/>
+								<MenuItem text="{i18n>gameEditor.gameOptions.deleteGame}" icon="sap-icon://delete" press="deleteGame"/>
+								<MenuItem text="{i18n>gameEditor.gameOptions.gameProperties}" icon="sap-icon://detail-view" press="gameProperties"/>
+							</Menu>
+						</menu>
+					</MenuButton>
 					<tnt:ToolHeaderUtilitySeparator />
 					<ToolbarSpacer width="12.5%"/>
 					<Title class="noselect" level = "H3" text = "{i18n>gameEditor.title}" textAlign="Center">

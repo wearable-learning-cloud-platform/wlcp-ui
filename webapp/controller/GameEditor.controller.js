@@ -511,14 +511,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
 	},
 	
-	openGameOptions : function(oEvent) {
-		if(!this.gameOptionsPopover) {
-			this.gameOptionsPopover = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.GameOptions", this);
-			this.getView().addDependent(this.gameOptionsPopover);
-		}
-		this.gameOptionsPopover.openBy(oEvent.getSource());
-	},
-	
 	copyGame : function(oEvent) {
 		var dialog = new sap.m.Dialog({
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
@@ -623,6 +615,35 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				}, this);
 			}
 		}, this)});
+	},
+
+	gameProperties : function(oEvent) {
+		var dialog = new sap.m.Dialog({
+			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.gameOptions.gameProperties"),
+			content : [new sap.m.CheckBox({text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.gameProperties.visibility"), selected : this.gameModel.visibility})],
+			beginButton : new sap.m.Button({
+				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.accept"),
+				type : sap.m.ButtonType.Accept,
+				press : $.proxy(function(oAction) {
+					this.gameModel.visibility = oAction.oSource.getParent().mAggregations.content[0].getSelected();
+					this.saveGame();
+					dialog.close();
+					dialog.destroy();
+				}, this)
+			}),
+			endButton : new sap.m.Button({
+				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
+				type : sap.m.ButtonType.Reject,
+				press : function() {
+					dialog.close();
+				}
+			}),
+			afterClose : function() {
+				dialog.destroy();
+			}
+		});
+		dialog.addStyleClass("sapUiPopupWithPadding");
+		dialog.open();
 	},
 	
 	resetEditor : function() {
