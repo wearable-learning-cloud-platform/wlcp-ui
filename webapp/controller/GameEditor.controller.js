@@ -207,6 +207,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					}
 				}
 			}
+		} else {
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotDropConnection"));
 		}
 	},
 
