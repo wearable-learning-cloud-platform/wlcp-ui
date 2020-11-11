@@ -307,7 +307,11 @@ var OutputState = class OutputState extends State {
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
     		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : $.proxy(this.acceptRevalidation, this)});
     		return;
-    	}
+		}
+		if(this.getActiveScopes().length == 0) {
+			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges.title"), onClose : $.proxy(this.acceptWithoutAnyChanges, this)});
+    		return;
+		}
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
@@ -327,7 +331,14 @@ var OutputState = class OutputState extends State {
 			}
     		DataLogger.logGameEditor();
     	}
-    }
+	}
+	
+	acceptWithoutAnyChanges(oEvent) {
+		if(oEvent == sap.m.MessageBox.Action.OK) {
+			this.dialog.close();
+			this.dialog.destroy();
+		}
+	}
 	
 	closeDialog() {
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
