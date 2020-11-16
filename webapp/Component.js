@@ -89,6 +89,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/jquery-ui-touch-punch-min");
 			jQuery.sap.require("javascript/stomp");
 			jQuery.sap.require("javascript/jwt-decode");
+			jQuery.sap.require("javascript/md5");
 		},
 
 		getCookie : function(cname) {

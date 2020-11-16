@@ -41,10 +41,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 * Dialog. If it succeeds, createGameSuccess will be called.
 	 */
 	createGame : function() {
-		if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
-			return;
-		}
+		// if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
+		// 	sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
+		// 	return;
+		// }
 		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
