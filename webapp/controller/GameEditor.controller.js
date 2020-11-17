@@ -58,7 +58,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	initStartState : function() {
 		
 		//Create a new start state
-		var startState = new StartState("startStateTopColor", "startStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startState") , this.gameModel.gameId + "_start", this.jsPlumbInstance);
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startState") , md5(this.gameModel.gameId) + "_start", this.jsPlumbInstance);
 		
 		//Set the position
 		startState.setPositionX(((document.getElementById("container-wlcp-ui---gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
@@ -214,17 +214,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	createStateId : function() {
 		this.gameModel.stateIdCount++;
-		return this.gameModel.gameId + "_state_" + this.gameModel.stateIdCount;
+		return md5(this.gameModel.gameId) + "_state_" + this.gameModel.stateIdCount;
 	},
 	
 	createTransitionId : function() {
 		this.gameModel.transitionIdCount++;
-		return this.gameModel.gameId + "_transition_" + this.gameModel.transitionIdCount;
+		return md5(this.gameModel.gameId) + "_transition_" + this.gameModel.transitionIdCount;
 	},
 	
 	createConnectionId : function() {
 		this.gameModel.connectionIdCount++;
-		return this.gameModel.gameId + "_connection_" + this.gameModel.connectionIdCount;
+		return md5(this.gameModel.gameId) + "_connection_" + this.gameModel.connectionIdCount;
 	},
 	
 	
@@ -291,7 +291,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	load : function() {
-		RestAPIHelper.get("/gameController/loadGame?gameId=" + this.gameModel.gameId, true, this.loadSuccess, this.loadError, this);
+		RestAPIHelper.get("/gameController/loadGame?gameId=" + encodeURIComponent(this.gameModel.gameId), true, this.loadSuccess, this.loadError, this);
 	},
 	
 	loadSuccess(loadedData) {
