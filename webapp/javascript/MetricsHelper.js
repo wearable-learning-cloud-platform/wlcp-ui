@@ -66,6 +66,23 @@ var MetricsHelper = {
 			"timeStamp" : Date.now()
 		};
 		return payload;
+	},
+
+
+	/**
+	 * 
+	 */
+	createButtonPayload : function(logEventType, logContext, gameId, buttonPressed) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(),
+			"buttonPressed" : buttonPressed
+		};
+		return payload;
 	}
 
 }

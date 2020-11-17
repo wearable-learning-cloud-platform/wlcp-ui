@@ -227,10 +227,20 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		return this.gameModel.gameId + "_connection_" + this.gameModel.connectionIdCount;
 	},
 	
-	newGame : function() {
+	
+	/**
+	 * Called when the New game editor button is pressed
+	 */
+	newGame : function(oEvent) {
 		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.CreateGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
 		fragment.setModel(new sap.ui.model.json.JSONModel(this.newGameModel));
 		fragment.open();
+		
+		var test = oEvent.getSource();
+		console.log(test.getId())
+		// Log event: New button pressed
+		console.log("New button pressed")
+		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "new-game-button")); 
 	},
 	
 	initNewGame : function() {
@@ -248,6 +258,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
 	},
 	
+	
+	/**
+	 * Called when the Load game editor button is pressed
+	 */
 	loadGame : function() {
 		var loadGameDialogModel = {
 			privateGames : null,
@@ -270,6 +284,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		function(error) {
 			//Allow default error handling
 		}, this);
+
+		// Log event: Load button pressed
+		console.log("Load button pressed")
+		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "load-game-button"));
 	},
 	
 	load : function() {
@@ -674,14 +692,40 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 	},
 	
+
+	/**
+	 * Called when the Quick start game editor button is pressed
+	 */
 	quickStartHelp : function() {
 		this.quickStartHelpDialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.QuickStartHelp", this);
 		this.quickStartHelpDialog.open();
+
+		// Log event: Quick Start button pressed
+		console.log("Quick Start button pressed")
+		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "quickstart-open-button"));
+	},
+
+	/**
+	 * Called when the side-scrolling arrows are clicked on the Quick Start Help carousel
+	 * @param {*} oEvent 
+	 */
+	quickStartPageChanged : function(oEvent) {
+		var test1 = oEvent.getSource()
+		console.log(test1.getActivePage());
+		console.log("Page changed")
 	},
 	
+
+	/**
+	 * Called when the Quick start game editor dialog is closed
+	 */
 	closeQuickStartHelp : function() {
 		this.quickStartHelpDialog.close();
 		this.quickStartHelpDialog.destroy();
+
+		// Log event: Quick Start Close button pressed
+		console.log("Quick Start Close dialog button pressed")
+		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "quickstart-close-button"));
 	},
 	
 	quickStartCookie : function() {
