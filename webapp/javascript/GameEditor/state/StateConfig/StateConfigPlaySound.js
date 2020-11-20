@@ -105,7 +105,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 	
 	//put XML code here
 	getStateConfigFragment() {
-		return sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStateConfigPlaySound", this);
+		return sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStatePlaySoundConfig", this);
 	}
 	
 	//returns verified scopes Team 1, Player 2, Game Wide ect
