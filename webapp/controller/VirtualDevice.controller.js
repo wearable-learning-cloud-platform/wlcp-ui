@@ -164,6 +164,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		var that = this;
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noState/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToStateType("NoState");
+			that.stopAudio();
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/displayText/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
@@ -178,6 +179,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				displayTextBox.setValue(parsedJson.displayText); //this becomes id in displayText TextArea
 				that.switchToStateType("DisplayText");
 			}
+			that.stopAudio();
 			//that.switchToStateType("DisplayPhoto");
 			//displayTextBox.setValue(parsedJson.displayText);
 		});
@@ -201,6 +203,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			}, this));
 			img.src = parsedJson.url;
 			that.switchToStateType("DisplayTextPhoto");
+			that.stopAudio();
+		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/playSound/" + this.username + "/" + team + "/" + player, function(response) {
+			var parsedJson = JSON.parse(response.body);
+			that.playSound = new Audio(parsedJson.url);
+			that.playSound.play();
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noTransition/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("NoTransition");
@@ -214,6 +222,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/keyboardInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("KeyboardInput");
 		});
+	},
+
+	stopAudio : function() {
+		if(typeof this.playSound !== "undefined") {
+			this.playSound.pause();
+		}
 	},
 	
 	disconnectPressed : function() {

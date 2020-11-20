@@ -71,6 +71,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfig");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigDisplayText");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigDisplayPhoto");
+			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigPlaySound");
 			
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
