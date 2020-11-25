@@ -1,22 +1,22 @@
-var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
+var StateConfigPlayVideo = class StateConfigPlayVideo extends StateConfig {
 	
 	constructor(state) {
 		super(state);
-		this.playSoundPage = null;
+		this.playVideoPage = null;
 	}
 	
 	//side bar in configure window list of available states
 	getNavigationListItem() {
 		return {	
-			text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playSound"),
-			icon : "sap-icon://sound-loud"	
+			text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playVideo"),
+			icon : "sap-icon://video"	
 		}
 	}
 	
 	//return title of page
 	getNavigationContainerPage() {
 		return {
-			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playSound"),
+			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playVideo"),
 			url : "",
 		}
     }
@@ -31,7 +31,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
-						this.playSoundPage = i;
+						this.playVideoPage = i;
 						break;
 					}
 				}
@@ -39,8 +39,8 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		}
 
 		if(typeof this.oFileUploader === "undefined") {
-			var oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[this.playSoundPage].getContent()[0].getContentAreas()[1].getPages()[2].getContent()[2].getItems()[0];
-			oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
+			var oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[this.playVideoPage].getContent()[0].getContentAreas()[1].getPages()[3].getContent()[2].getItems()[0];
+		    oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
 			oFileUploader.addHeaderParameter(new sap.ui.unified.FileUploaderParameter({
 				name : "Authorization",
 				value : "Bearer " + SessionHelper.getCookie("wlcp.userSession")
@@ -63,8 +63,8 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
-						this.playSoundPage = iconTabs[i].navigationContainerPages[n];
-						this.playSoundPage.url = ServerConfig.getServerAddress() + "/objectStoreController/files/" + sResponse;
+						this.playVideoPage = iconTabs[i].navigationContainerPages[n];
+						this.playVideoPage.url = ServerConfig.getServerAddress() + "/objectStoreController/files/" + sResponse;
                         this.state.model.setData(this.state.modelJSON);
                         this.urlUpdated(oEvent);
 						break;
@@ -73,38 +73,10 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			}
 		}
     }
-    
-    play(oEvent) {
-		if(typeof this.sound !== "undefined") {
-			if(!this.sound.paused && !this.sound.ended) {
-				return;
-			} else if(this.sound.paused || this.sound.ended) {
-				this.sound.currentTime = 0;
-				this.sound.play();
-				return;
-			}
-		}
-        var iconTabs = this.state.modelJSON.iconTabs;
-		for(var i = 0; i < iconTabs.length; i++) {
-			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
-				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
-                        this.sound = new Audio(iconTabs[i].navigationContainerPages[n].url);
-                        this.sound.play();
-						break;
-					}
-				}
-			}
-		}
-    }
-
-    stop(oEvent) {
-        this.sound.pause();
-    }
 	
 	//put XML code here
 	getStateConfigFragment() {
-		return sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStatePlaySoundConfig", this);
+		return sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStatePlayVideoConfig", this);
 	}
 	
 	//returns verified scopes Team 1, Player 2, Game Wide ect
@@ -126,13 +98,13 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 	//not sure, loading previous data maybe?
 	setLoadData(loadData) {
 		var iconTabs = this.state.modelJSON.iconTabs;
-		for(var key in loadData.soundOutputs) {
+		for(var key in loadData.videoOutputs) {
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 						if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
-							iconTabs[i].navigationContainerPages[n].url = loadData.soundOutputs[key].url;
-							this.playSoundPage = iconTabs[i].navigationContainerPages[n];
+							iconTabs[i].navigationContainerPages[n].url = loadData.videoOutputs[key].url;
+							this.playVideoPage = iconTabs[i].navigationContainerPages[n];
 						}
 					}
 					
@@ -157,7 +129,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			}
 		}
 		return {
-			soundOutputs : outputStateData
+			videoOutputs : outputStateData
 		};
 	}
 }

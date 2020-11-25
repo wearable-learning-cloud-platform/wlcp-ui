@@ -16,6 +16,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	restartDebug : null,
 	recievedDisplayText : false,
 	recievedDisplayPhoto : false,
+	recievedPlayVideo : false,
 	
 	socket : null,
 	stompClient : null,
@@ -170,8 +171,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			var parsedJson = JSON.parse(response.body);
 			that.recievedDisplayText = true
 			//photo already initialized
-			if(that.recievedDisplayText && that.recievedDisplayPhoto){
+			if(that.recievedDisplayText && (that.recievedDisplayPhoto || that.recievedPlayVideo)){
 				var displayTextBox = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel");
+				displayTextBox.setText(parsedJson.displayText); //this becomes id of displayTextPhoto Label
+				displayTextBox = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayVideoTextLabel");
 				displayTextBox.setText(parsedJson.displayText); //this becomes id of displayTextPhoto Label
 			}
 			else {
@@ -185,8 +188,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/displayPhoto/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
-			console.log(parsedJson);
-			that.recievedDisplayPhotoText = true;
+			//console.log(parsedJson);
+			that.recievedDisplayPhoto = true;
 			//load text if exists
 			if(that.recievedDisplayText) {
 				var displayTextLabel = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel");
@@ -210,6 +213,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.playSound = new Audio(parsedJson.url);
 			that.playSound.play();
 		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/playVideo/" + this.username + "/" + team + "/" + player, function(response) {
+			var parsedJson = JSON.parse(response.body);
+			that.recievedPlayVideo = true;
+			//load text if exists
+			if(that.recievedDisplayText) {
+				var displayTextLabel = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayVideoTextLabel");
+				displayTextLabel.setText(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").getValue());
+			}
+			that.waitForElementToDisplay("#videoPlayer", function() {
+				that.videoPlayer = document.getElementById("videoPlayer");
+				that.videoPlayer.src = parsedJson.url;
+			}, 100, 9000);
+			that.switchToStateType("DisplayTextVideo");
+			that.stopAudio();
+		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noTransition/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("NoTransition");
 		});
@@ -227,6 +245,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	stopAudio : function() {
 		if(typeof this.playSound !== "undefined") {
 			this.playSound.pause();
+		}
+		if(typeof this.videoPlayer !== "undefined") {
+			this.videoPlayer.pause();
 		}
 	},
 	
@@ -263,6 +284,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		case "DisplayTextPhoto":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextPhotoPage"));
 			break;
+		case "DisplayTextVideo":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextVideoPage"));
+			break;
 		}
 	},
 	
@@ -290,11 +314,31 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	resetStateDisplayTypes : function() {
 		this.recievedDisplayText = false;
 		this.recievedDisplayPhoto = false;	
+		this.recievedPlayVideo = false;
 	},
 
 	onHomeButtonPress : function() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 	},
+
+	waitForElementToDisplay : function(selector, callback, checkFrequencyInMs, timeoutInMs) {
+		var startTimeInMs = Date.now();
+		(function loopSearch() {
+		  if (document.querySelector(selector) != null) {
+			callback();
+			return;
+		  }
+		  else {
+			setTimeout(function () {
+			  if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs)
+				return;
+			  loopSearch();
+			}, checkFrequencyInMs);
+		  }
+		})();
+	},
+	
+	  
 
 /**
  * Called when a controller is instantiated and its View controls (if available)

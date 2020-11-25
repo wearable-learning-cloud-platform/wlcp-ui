@@ -69,6 +69,16 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="displayTextVideoPage" showHeader="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<VBox alignItems="Center" justifyContent="Center">
+									<Label id="displayVideoTextLabel" textAlign="Center" wrapping="true" class="sapUiMediumMargin displayTextPhotoColor"></Label>
+									<core:HTML content="&lt;video id=videoPlayer width=320 height=240 class=video-js controls preload=auto data-setup={}&gt;&lt;source&gt;&lt;/source&gt;&lt;/video&gt;"></core:HTML>
+								</VBox>
+							</items>
+						</FlexBox>
+					</Page>
 					<Page id="noState" showHeader="false">
 						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
 							<items>
