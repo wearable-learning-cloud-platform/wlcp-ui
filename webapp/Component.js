@@ -71,6 +71,8 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfig");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigDisplayText");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigDisplayPhoto");
+			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigPlaySound");
+			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigPlayVideo");
 			
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
@@ -90,6 +92,8 @@ sap.ui.define([
 			jQuery.sap.require("javascript/stomp");
 			jQuery.sap.require("javascript/jwt-decode");
 			jQuery.sap.require("javascript/md5");
+			jQuery.sap.require("javascript/video");
+			
 		},
 
 		getCookie : function(cname) {

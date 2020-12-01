@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+    xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.playVideo.help}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<TextArea rows="2" value="{url}" liveChange="urlUpdated" valueLiveUpdate="true" width="500px"/>
+		</items>
+	</FlexBox>
+    <FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<u:FileUploader
+				name="file"
+				buttonOnly="true"
+				buttonText="{i18n>gameEditor.outputState.playVideo.upload}"
+				change="handleUploadPress"
+				uploadComplete="handleUploadComplete"/>
+		</items>
+	</FlexBox>
+    <FlexBox alignItems="Start" justifyContent="Center">
+        <items>
+            <core:HTML content="&lt;video width=320 height=240 class=video-js controls preload=auto data-setup={}&gt;&lt;source src={url}&gt;&lt;/source&gt;&lt;/video&gt;"></core:HTML>
+        </items>
+    </FlexBox>
+</core:FragmentDefinition>

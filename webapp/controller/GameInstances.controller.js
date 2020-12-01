@@ -112,6 +112,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		var oTileContainer = this.getView().byId("gameInstanceTileContainer");
 		oTileContainer.setEditable(false);
 	},
+
+	onTilePress : function(oEvent) {
+		var gameInstanceId = oEvent.getSource().getProperty("number");
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/getPlayerUserMap/" + gameInstanceId, true, function(success) {
+			var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.GameInstanceInfo", this);
+			fragment.setModel(new sap.ui.model.json.JSONModel({list : success}));
+			fragment.open();
+			this.dialog = fragment;
+		}.bind(this), function(error){});
+	},
 	
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
