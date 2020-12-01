@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	
+	<Dialog id="gameInstanceInfo" title = "Game Instance Info">
+		<buttons>
+			<Button text="Close" type="Accept" press="onCancel"/>
+		</buttons>
+
+		<content>
+			<List items="{/list}">
+				<StandardListItem title="{key}"/>
+			</List>
+		</content>	
+	</Dialog>
+</core:FragmentDefinition>
