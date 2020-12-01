@@ -31,7 +31,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 			usernameId : this.model.getData().username,
 			password : this.model.getData().password
 		}
-		RestAPIHelper.post("/login", loginDto, true, this.success, this.eror, this);
+		RestAPIHelper.post("/login", loginDto, true, this.success, this.error, this);
 	},
 	
 	success : function() {
@@ -44,8 +44,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		this.resetDataModel();
 	},
 	
-	error : function() {
-		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
+	error : function(error) {
+		//sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
 	},
 	
 	registerNewUser : function() {
