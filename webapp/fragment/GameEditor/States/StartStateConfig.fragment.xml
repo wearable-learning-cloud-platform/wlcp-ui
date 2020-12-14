@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	
+	<Dialog id="outputStateDialog" title="{i18n>gameEditor.outputState.title}" contentWidth="50%" contentHeight="50%">
+		<buttons>
+			<Button text="{i18n>button.accept}" type="Accept" press="acceptDialog"/>
+			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
+		</buttons>
+        <l:Splitter>					
+            <tnt:NavigationList class="navList" items="{/navigationListItems}">
+                <tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
+                <tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
+            </tnt:NavigationList>
+            <NavContainer id="navContainer" width="100%" height="500px" pages="{/navigationContainerPages}">
+                <layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
+                <Page/>
+            </NavContainer>
+        </l:Splitter>
+	</Dialog>
+</core:FragmentDefinition>

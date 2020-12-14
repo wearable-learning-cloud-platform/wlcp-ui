@@ -73,11 +73,14 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigDisplayPhoto");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigPlaySound");
 			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigPlayVideo");
+			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StateConfigGlobalVariable");
 			
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSequenceButtonPress");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigKeyboardInput");
+
+			jQuery.sap.require("javascript/GameEditor/state/StateConfig/StartStateConfigGlobalVariables");
 			
 			jQuery.sap.require("javascript/GameEditor/GameEditor");
 			jQuery.sap.require("javascript/ServerConfig");
