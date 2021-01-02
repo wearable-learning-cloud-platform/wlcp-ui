@@ -37,14 +37,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	},
 	
 	/**
-	 * This is called when the create button is pressed on the Create Game
-	 * Dialog. If it succeeds, createGameSuccess will be called.
+	 * This is called when the create button is pressed on the Create Game Dialog.
+	 * If it succeeds, createGameSuccess() will be called.
 	 */
 	createGame : function() {
 		// if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
 		// 	sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 		// 	return;
 		// }
+
+		// Log event
+		console.log("Create Game dialog: Create pressed (NOT LOGGED)")
+
 		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
@@ -67,12 +71,20 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		this.cancelLoadGame();
 	},
 	
+
 	/**
 	 * Called when the user wants to cancel creating a game.
 	 * They will be returned to main editor screen with all controls disabled
 	 * except for the main toolbar.
 	 */
 	cancelCreateGame : function() {
+
+		// Log event
+		console.log("Create Game dialog: Cancel pressed (NOT LOGGED)");
+
+		// THIS DOESN'T WORK BECAUSE this.gameModel.gameId IS UNDEFINED HERE
+		//MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "cancel-new-game-button")); 
+
 		sap.ui.getCore().byId("createGame").close();
 		sap.ui.getCore().byId("createGame").destroy();
 	},

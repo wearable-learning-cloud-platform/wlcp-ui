@@ -94,6 +94,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}, 500, this);
 	},	
 	
+
+	/**
+	 * WHAT IS THIS FOR? I ASSUME IT'S FOR WHEN THE START STATE IS DRAGGED, BUT IT DOESN'T REGISTER WHEN I LOG IN THE CONSOLE.
+	 */
 	dragStart : function() {
 		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-0").style.overflow = "visible";
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "visible";
@@ -112,6 +116,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		outputState.draw();
 		this.stateList.push(outputState);
 		DataLogger.logGameEditor();
+
+		// Log event
+		console.log("New state created");
+		MetricsHelper.saveLogEvent(MetricsHelper.createBasicPayload(MetricsHelper.LogEventType.STATE, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId));
 	},
 	
 	transitionDragStop : function(event, ui) {
@@ -149,6 +157,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				}
 			}
 			DataLogger.logGameEditor();
+
+			// Log event
+			console.log("Transition created successfully");
+			/*MetricsHelper.saveLogEvent(
+				MetricsHelper.createBasicPayload(
+					MetricsHelper.LogEventType.TRANSITION, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId
+				)
+			);*/
+
 		} else {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotPlaceTransition"));
 		}
@@ -181,6 +198,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var connection = new Connection( this.createConnectionId(), oEvent.sourceId, oEvent.targetId);
 		this.connectionList.push(connection);
 		connection.validate();
+
+		// Log event
+		console.log("Connection created successfully (NOT LOGGED)");
+		//MetricsHelper.saveLogEvent(MetricsHelper.createBasicPayload(MetricsHelper.LogEventType.CONNECTION, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId))
+
 		return false;
 	},
 	
@@ -238,8 +260,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		
 		var test = oEvent.getSource();
 		console.log(test.getId())
+		
 		// Log event: New button pressed
-		console.log("New button pressed")
+		console.log("Game Editor window: New button pressed")
 		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "new-game-button")); 
 	},
 	
@@ -286,7 +309,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}, this);
 
 		// Log event: Load button pressed
-		console.log("Load button pressed")
+		console.log("Load button pressed");
 		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "load-game-button"));
 	},
 	
@@ -690,6 +713,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	onHomeButtonPress : function() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+
+		// Log event: Home button pressed
+		console.log("Home button pressed")
+		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "home-button"));
 	},
 	
 
@@ -701,7 +728,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.quickStartHelpDialog.open();
 
 		// Log event: Quick Start button pressed
-		console.log("Quick Start button pressed")
+		console.log("Quick Start button pressed");
 		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "quickstart-open-button"));
 	},
 
