@@ -47,6 +47,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.transitionConfigs.push(new TransitionConfigSingleButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigSequenceButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigKeyboardInput(this));
+		this.transitionConfigs.push(new TransitionConfigGlobalVariable(this));
 	}
 	
 	setupValidationRules() {
