@@ -63,7 +63,8 @@ var RestAPIHelper = {
 		var controller = sap.ui.controller("org.wlcp.wlcp-ui.controller.ErrorResponse");
 		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.ErrorResponse", controller);
 		controller.dialog = fragment;
-		error.responseJSON.timestamp = new Date(error.responseJSON.timestamp.year.toString() + "-" + error.responseJSON.timestamp.monthValue.toString() + "-" + error.responseJSON.timestamp.dayOfMonth.toString() + " " + error.responseJSON.timestamp.hour + ":"  +error.responseJSON.timestamp.minute + ":" + error.responseJSON.timestamp.second);
+		if(typeof error.responseJSON.timestamp === "string") { error.responseJSON.timestamp = new Date(error.responseJSON.timestamp) }
+		else { error.responseJSON.timestamp = new Date(error.responseJSON.timestamp.year.toString() + "-" + error.responseJSON.timestamp.monthValue.toString() + "-" + error.responseJSON.timestamp.dayOfMonth.toString() + " " + error.responseJSON.timestamp.hour + ":"  +error.responseJSON.timestamp.minute + ":" + error.responseJSON.timestamp.second); }
 		controller.errorResponseDataModel = new sap.ui.model.json.JSONModel(error.responseJSON);
 		fragment.setModel(controller.errorResponseDataModel);
 		fragment.open();
