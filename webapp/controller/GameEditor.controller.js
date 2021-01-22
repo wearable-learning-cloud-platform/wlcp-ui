@@ -117,9 +117,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(outputState);
 		DataLogger.logGameEditor();
 
-		// Log event
+		// Log STATE event
 		console.log("New state created");
-		MetricsHelper.saveLogEvent(MetricsHelper.createBasicPayload(MetricsHelper.LogEventType.STATE, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId));
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createBasicPayload(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId
+			)
+		);
+
 	},
 	
 	transitionDragStop : function(event, ui) {
@@ -158,13 +165,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 			DataLogger.logGameEditor();
 
-			// Log event
+			// Log TRANSITION event: Create transition
 			console.log("Transition created successfully");
-			/*MetricsHelper.saveLogEvent(
+			MetricsHelper.saveLogEvent(
 				MetricsHelper.createBasicPayload(
-					MetricsHelper.LogEventType.TRANSITION, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					this.gameModel.gameId
 				)
-			);*/
+			);
 
 		} else {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotPlaceTransition"));
@@ -199,16 +208,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.connectionList.push(connection);
 		connection.validate();
 
-		// Log event
-		console.log("Connection created successfully (NOT LOGGED)");
-		//MetricsHelper.saveLogEvent(MetricsHelper.createBasicPayload(MetricsHelper.LogEventType.CONNECTION, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId))
+		// Log CONNECTION event
+		console.log("Connection created successfully");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createBasicPayload(
+				MetricsHelper.LogEventType.CONNECTION, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId
+			)
+		);
 
 		return false;
 	},
 	
 	connectionDetached : function(oEvent) {
+
 		var i = 0;
 		var that = this;
+		
 		if(oEvent.suspendedElementId == oEvent.targetId || typeof oEvent.suspendedElementId === "undefined") {
 			for(var i = 0; i < this.connectionList.length; i++) {
 				if(this.connectionList[i].connectionId == oEvent.id) {
@@ -221,10 +238,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], {fireEvent : false, force : true});
 								DataLogger.logGameEditor();
 						}}});
+
+						// TEST LOG REMOVE CONNECTION CANCEL
+						console.log("Connection removed cancel TEST")
+
 						return false;
 					} else {
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
+
+						// TEST LOG REMOVE CONNECTION CONFIRM
+						console.log("Connection removed confirm TEST")
+
 						return true;
 					}
 				}
@@ -261,9 +286,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var test = oEvent.getSource();
 		console.log(test.getId())
 		
-		// Log event: New button pressed
+		// Log BUTTON_PRESS event
 		console.log("Game Editor window: New button pressed")
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "new-game-button")); 
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"new-game-button"
+			)
+		); 
 	},
 	
 	initNewGame : function() {
@@ -308,9 +340,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			//Allow default error handling
 		}, this);
 
-		// Log event: Load button pressed
+		// Log BUTTON_PRESS event: Load button pressed
 		console.log("Load button pressed");
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "load-game-button"));
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"load-game-button"
+			)
+		);
 	},
 	
 	load : function() {
@@ -714,9 +753,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	onHomeButtonPress : function() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 
-		// Log event: Home button pressed
+		// Log BUTTON_PRESS event: Home button pressed
 		console.log("Home button pressed")
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "home-button"));
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"home-button"
+			)
+		);
+
 	},
 	
 
@@ -727,9 +774,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.quickStartHelpDialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.QuickStartHelp", this);
 		this.quickStartHelpDialog.open();
 
-		// Log event: Quick Start button pressed
+		// Log BUTTON_PRESS event: Quick Start button pressed
 		console.log("Quick Start button pressed");
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "quickstart-open-button"));
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"quickstart-open-button"
+			)
+		);
+
 	},
 
 	/**
@@ -750,9 +805,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.quickStartHelpDialog.close();
 		this.quickStartHelpDialog.destroy();
 
-		// Log event: Quick Start Close button pressed
+		// Log BUTTON_PRESS event: Quick Start Close button pressed
 		console.log("Quick Start Close dialog button pressed")
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId, "quickstart-close-button"));
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"quickstart-close-button"
+			)
+		);
 	},
 	
 	quickStartCookie : function() {

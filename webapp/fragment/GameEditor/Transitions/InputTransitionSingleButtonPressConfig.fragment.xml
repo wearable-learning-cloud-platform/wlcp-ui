@@ -7,6 +7,9 @@
     <FlexBox alignItems="Start" justifyContent="Center">
 		<items>
 			<VBox>
+				<!--<Text text="test entry" />-->
+			</VBox>
+			<VBox>
 				<CheckBox text="{i18n>gameEditor.color.red}" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"/>
 				<CheckBox text="{i18n>gameEditor.color.green}" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"/>
 				<CheckBox text="{i18n>gameEditor.color.blue}" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"/>
