@@ -120,10 +120,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		// Log STATE event
 		console.log("New state created");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createBasicPayload(
+			MetricsHelper.createStatePayload(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
-				this.gameModel.gameId
+				this.gameModel.gameId,
+				"create-state"
 			)
 		);
 
@@ -168,10 +169,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			// Log TRANSITION event: Create transition
 			console.log("Transition created successfully");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createBasicPayload(
+				MetricsHelper.createTransitionPayload(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
-					this.gameModel.gameId
+					this.gameModel.gameId,
+					"create-transition"
 				)
 			);
 
@@ -211,10 +213,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		// Log CONNECTION event
 		console.log("Connection created successfully");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createBasicPayload(
+			MetricsHelper.createConnectionPayload(
 				MetricsHelper.LogEventType.CONNECTION, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
-				this.gameModel.gameId
+				this.gameModel.gameId,
+				"create-connection"
 			)
 		);
 
@@ -230,25 +233,65 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			for(var i = 0; i < this.connectionList.length; i++) {
 				if(this.connectionList[i].connectionId == oEvent.id) {
 					if(this.connectionList[i].connectionFrom.getActiveScopes().length > 0) {
+
+						// Display confirmation dialog to user on attempt to remove a connection
 						sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : function (oEvent2) {
+							
+							// CASE: User attempts to remove a connection -> confirmation box displayed -> user confirms "OK"
 							if(oEvent2 == sap.m.MessageBox.Action.OK) {
 								var connectionFrom = that.connectionList[i].connectionFrom.htmlId;
 								var connectionTo = that.connectionList[i].connectionTo.htmlId;
 								that.connectionList[i].detach();
 								GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], {fireEvent : false, force : true});
 								DataLogger.logGameEditor();
-						}}});
+								
+								// Log CONNECTION event: remove-connection-withconfirm-ok
+								// Connection is removed after triggering then confirming the confirmation dialog
+								console.log("Connection removal: confirmed")
+								MetricsHelper.saveLogEvent(
+									MetricsHelper.createConnectionPayload(
+										MetricsHelper.LogEventType.CONNECTION,
+										MetricsHelper.LogContext.GAME_EDITOR,
+										GameEditor.getEditorController().newGameModel.gameId,
+										"remove-connection-withconfirm-ok"
+									)
+								);
 
-						// TEST LOG REMOVE CONNECTION CANCEL
-						console.log("Connection removed cancel TEST")
+							}
+							// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
+							else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
 
+								// Log CONNECTION event: remove-connection-withconfirm-cancel
+								// Connection removal is canceled after triggering then canceling the confirmation dialog
+								console.log("Connection removal: canceled")
+								MetricsHelper.saveLogEvent(
+									MetricsHelper.createConnectionPayload(
+										MetricsHelper.LogEventType.CONNECTION,
+										MetricsHelper.LogContext.GAME_EDITOR,
+										GameEditor.getEditorController().newGameModel.gameId,
+										"remove-connection-withconfirm-cancel"
+									)
+								);
+
+							}
+						
+						}});
 						return false;
 					} else {
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
 
-						// TEST LOG REMOVE CONNECTION CONFIRM
-						console.log("Connection removed confirm TEST")
+						// Log CONNECTION event: remove-connection-noconfirm
+						// Connection is removed without triggering the confirmation dialog
+						console.log("Connection removal: no confirmation")
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createConnectionPayload(
+								MetricsHelper.LogEventType.CONNECTION,
+								MetricsHelper.LogContext.GAME_EDITOR,
+								this.gameModel.gameId,
+								"remove-connection-noconfirm"
+							)
+						);
 
 						return true;
 					}
@@ -286,7 +329,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var test = oEvent.getSource();
 		console.log(test.getId())
 		
-		// Log BUTTON_PRESS event
+		// Log BUTTON_PRESS event: New game button
 		console.log("Game Editor window: New button pressed")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
@@ -555,6 +598,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
 		}
+
+		// BUG: IS THERE A WAY TO DIFFERENTIATE BETWEEN PRESSING THE BUTTON AND AUTOSAVES FROM RUN AND DEBUG?
+		// Log BUTTON_PRESS event: Save button pressed
+		console.log("Game saved")
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS,
+				MetricsHelper.LogContext.GAME_EDITOR,
+				this.gameModel.gameId,
+				"save-game-button"
+			)
+		);
+
 		//MetricsHelper.saveLogEvent(MetricsHelper.createBasicPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, this.gameModel.gameId));
 	},
 	
@@ -565,6 +621,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	runGame : function() {
 		this.saveRun = true;
 		this.save();
+
+		// Log BUTTON_PRESS event: Run and Debug button pressed
+		console.log("Run and debug clicked")
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS,
+				MetricsHelper.LogContext.GAME_EDITOR,
+				this.gameModel.gameId,
+				"run-debug-button"
+			)
+		);
 	},
 	
 	checkForRunningDebugInstanceSuccess : function(data) {

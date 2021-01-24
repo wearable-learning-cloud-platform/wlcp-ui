@@ -408,6 +408,7 @@ var InputTransition = class InputTransition extends Transition {
 	removeTransition(oAction) {
 		
 		//If they click OK, delete
+		// CASE: User attempts to remove a transition -> confirmation box displayed -> user confirms "OK"
 		if(oAction == sap.m.MessageBox.Action.OK) {
 			
 			//Remove the overlay
@@ -436,7 +437,37 @@ var InputTransition = class InputTransition extends Transition {
 	    	}
 	    	
 	    	//Log it
-	    	DataLogger.logGameEditor();
+			DataLogger.logGameEditor();
+			
+			// BUG: THIS IS NOT RETRIEVING THE GAME ID
+			// Log TRANSITION event: remove-transition-withconfirm-ok
+			// Transition is removed after triggering then confirming the confirmation dialog
+			console.log("Transition removal: confirmed");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayload(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().newGameModel.gameId,
+					"remove-transition-withconfirm-ok"
+				)
+			);
+		}
+		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
+		else if(oAction == sap.m.MessageBox.Action.CANCEL) {
+
+			// BUG: THIS IS NOT RETRIEVING THE GAME ID
+			// Log TRANSITION event: remove-transition-withconfirm-cancel
+			// Transition removal is canceled after triggering then canceling the confirmation dialog
+			console.log("Transition removal: canceled");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayload(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().newGameModel.gameId,
+					"remove-transition-withconfirm-cancel"
+				)
+			);
+			
 		}
 	}
 	

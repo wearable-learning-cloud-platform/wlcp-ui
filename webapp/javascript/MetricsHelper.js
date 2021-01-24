@@ -70,7 +70,70 @@ var MetricsHelper = {
 
 
 	/**
-	 * 
+	 * Payload for STATE events
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} stateEvent 
+	 */
+	createStatePayload : function(logEventType, logContext, gameId, stateEvent) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"stateEvent" : stateEvent
+		};
+		return payload;
+	},
+
+
+	/**
+	 * Payload for CONNECTION events
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} connectionEvent 
+	 */
+	createConnectionPayload : function(logEventType, logContext, gameId, connectionEvent) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"connectionEvent" : connectionEvent
+		};
+		return payload;
+	},
+
+
+	/**
+	 * Payload for TRANSITION events
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} transitionEvent 
+	 */
+	createTransitionPayload : function(logEventType, logContext, gameId, transitionEvent) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"transitionEvent" : transitionEvent
+		};
+		return payload;
+	},
+
+
+	/**
+	 * Payload for BUTTON_PRESS events
 	 */
 	createButtonPayload : function(logEventType, logContext, gameId, buttonPressed) {
 		var payload = {

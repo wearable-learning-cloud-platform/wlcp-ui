@@ -137,7 +137,18 @@ var State = class State {
 	    	}
 	    	
 	    	//Log it
-	    	DataLogger.logGameEditor();
+			DataLogger.logGameEditor();
+			
+			// Log STATE event
+			console.log("State removed");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().newGameModel.gameId, 
+					"remove-state"
+				)
+			);
 		}
 	}
 	

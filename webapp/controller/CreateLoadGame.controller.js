@@ -46,9 +46,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		// 	return;
 		// }
 
-		// Log event
-		console.log("Create Game dialog: Create pressed (TESTING)")
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, GameEditor.getEditorController().newGameModel.gameId, "create-new-game-button")); 
+		// Log BUTTON_PRESS event: create-new-game-button
+		console.log("Create Game dialog: Create pressed")
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().newGameModel.gameId, 
+				"create-new-game-button"
+			)
+		); 
 
 		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
 	},
@@ -83,11 +90,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		var test = oEvent.getSource();
 		console.log(test.getId())
 
-		// Log event
-		console.log("Create Game dialog: Cancel pressed (TESTING)");
-
-		// THIS DOESN'T WORK BECAUSE this.gameModel.gameId IS UNDEFINED HERE
-		MetricsHelper.saveLogEvent(MetricsHelper.createButtonPayload(MetricsHelper.LogEventType.BUTTON_PRESS, MetricsHelper.LogContext.GAME_EDITOR, GameEditor.getEditorController().newGameModel.gameId, "cancel-new-game-button")); 
+		// Log BUTTON_PRESS event: cancel-new-game-button
+		console.log("Create Game dialog: Cancel pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().newGameModel.gameId, 
+				"cancel-new-game-button"
+			)
+		); 
 
 		sap.ui.getCore().byId("createGame").close();
 		sap.ui.getCore().byId("createGame").destroy();
