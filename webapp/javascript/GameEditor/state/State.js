@@ -139,16 +139,30 @@ var State = class State {
 	    	//Log it
 			DataLogger.logGameEditor();
 			
-			// Log STATE event
-			console.log("State removed");
+			// Log STATE event: remove-state-confirm
+			console.log("State removal: confirmed");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayload(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().newGameModel.gameId, 
-					"remove-state"
+					"remove-state-confirm"
 				)
 			);
+		}
+		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
+
+			// Log STATE event: remove-state-cancel
+			console.log("State removal: canceled");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().newGameModel.gameId, 
+					"remove-state-cancel"
+				)
+			);
+			
 		}
 	}
 	

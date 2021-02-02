@@ -776,6 +776,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					this.saveGame();
 					dialog.close();
 					dialog.destroy();
+
+					// Log BUTTON_PRESS event: Game Properties accept button pressed
+					console.log("Game Properties: Accept button pressed");
+					MetricsHelper.saveLogEvent(
+						MetricsHelper.createButtonPayload(
+							MetricsHelper.LogEventType.BUTTON_PRESS, 
+							MetricsHelper.LogContext.GAME_EDITOR, 
+							this.gameModel.gameId, 
+							"game-properties-accept-button"
+						)
+					);
+
 				}, this)
 			}),
 			endButton : new sap.m.Button({
@@ -783,6 +795,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Reject,
 				press : function() {
 					dialog.close();
+
+					// BUG: NOT CAPTURING GAME ID
+					// Log BUTTON_PRESS event: Game Properties cancel button pressed
+					console.log("Game Properties: Cancel button pressed");
+					MetricsHelper.saveLogEvent(
+						MetricsHelper.createButtonPayload(
+							MetricsHelper.LogEventType.BUTTON_PRESS, 
+							MetricsHelper.LogContext.GAME_EDITOR, 
+							GameEditor.getEditorController().newGameModel.gameId, 
+							"game-properties-cancel-button"
+						)
+					);
 				}
 			}),
 			afterClose : function() {
@@ -791,6 +815,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		});
 		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
+
+		// Log BUTTON_PRESS event: Game Properties button pressed
+		console.log("Game Properties button pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"game-properties-button"
+			)
+		);
 	},
 	
 	resetEditor : function() {
