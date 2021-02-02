@@ -84,6 +84,12 @@ var RestAPIHelper = {
 		if(this.busyDialogRequests.length > 0) {
 			this.busyDialogRequests.push("");
 		} else {
+			this.fallback = setTimeout(function() {
+				this.busyDialog.close();
+				this.busyDialog.destroy();
+				this.busyDialog = new sap.m.BusyDialog();
+				this.busyDialogRequests = [];
+			}.bind(this), 30000);
 			this.busyDialog.open();
 		}
 	},
@@ -91,9 +97,10 @@ var RestAPIHelper = {
 	closeBusyDialog : function() {
 		this.busyDialogRequests.pop();
 		if(this.busyDialogRequests.length <= 0) {
+			clearTimeout(this.fallback);
 			this.busyDialog.close();
 			this.busyDialog.destroy();
-			this.busyDialog = new sap.m.BusyDialog()
+			this.busyDialog = new sap.m.BusyDialog();
 		}
 	}
 }
