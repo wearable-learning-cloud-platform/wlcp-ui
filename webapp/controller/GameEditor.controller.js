@@ -658,12 +658,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
 	},
 	
+
+	/**
+	 * Called when the Copy Game option within Game Options menu is pressed
+	 * @param {*} oEvent 
+	 */
 	copyGame : function(oEvent) {
+
 		var dialog = new sap.m.Dialog({
+			
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
+			
 			content : [new sap.m.Input({
 				placeholder : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.placeholder")
 			}), new sap.m.CheckBox({text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.new.public"), selected : true})],
+			
 			beginButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
 				type : sap.m.ButtonType.Accept,
@@ -686,41 +695,91 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					}, this);
 				}, this)
 			}),
+
 			endButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
 				type : sap.m.ButtonType.Reject,
 				press : function() {
+					
+					// BUG: NOT CAPTURING GAME ID
+					// Log BUTTON_PRESS event: Copy game - Cancel button pressed
+					console.log("Copy game: Cancel button pressed");
+					MetricsHelper.saveLogEvent(
+						MetricsHelper.createButtonPayload(
+							MetricsHelper.LogEventType.BUTTON_PRESS, 
+							MetricsHelper.LogContext.GAME_EDITOR, 
+							GameEditor.getEditorController().newGameModel.gameId, 
+							"copy-game-cancel-button"
+						)
+					);
+
 					dialog.close();
 				}
 			}),
+
 			afterClose : function() {
 				dialog.destroy();
 			}
+
 		});
+		
+		// Log BUTTON_PRESS event: Copy game button pressed
+		console.log("Copy game button pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"copy-game-button"
+			)
+		);
+
 		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
 	},
 	
+
+	/**
+	 * Called when the Rename Game option within Game Options menu is pressed
+	 * @param {*} oEvent 
+	 */
 	renameGame : function(oEvent) {
+
 		var dialog = new sap.m.Dialog({
+
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.rename.title"),
+			
 			content : new sap.m.Input({
 				placeholder : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.rename.placeholder")
 			}),
+			
 			beginButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.rename.title"),
 				type : sap.m.ButtonType.Accept,
 				press : $.proxy(function(oAction) {
+
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
+					
 					if(!newGameId.match(/^[a-zA-Z]+$/)) {
 						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
 						return;
 					}
-
 					
 					RestAPIHelper.post("/gameController/renameGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
 					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
+
+						// Log BUTTON_PRESS event: Rename game - Rename Game button pressed
+						console.log("Rename game: Rename confirm button pressed");
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createButtonPayload(
+								MetricsHelper.LogEventType.BUTTON_PRESS, 
+								MetricsHelper.LogContext.GAME_EDITOR, 
+								GameEditor.getEditorController().newGameModel.gameId, 
+								"rename-game-confirm-button"
+							)
+						);
+
 						dialog.close();
 						this.reloadGame(newGameId);
 					},
@@ -731,10 +790,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					}, this);
 				}, this)
 			}),
+
 			endButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
 				type : sap.m.ButtonType.Reject,
 				press : function() {
+
+					// BUG: NOT CAPTURING GAME ID
+					// Log BUTTON_PRESS event: Rename game - Cancel button pressed
+					console.log("Rename game: Cancel button pressed");
+					MetricsHelper.saveLogEvent(
+						MetricsHelper.createButtonPayload(
+							MetricsHelper.LogEventType.BUTTON_PRESS, 
+							MetricsHelper.LogContext.GAME_EDITOR, 
+							GameEditor.getEditorController().newGameModel.gameId, 
+							"rename-game-cancel-button"
+						)
+					);
+
 					dialog.close();
 				}
 			}),
@@ -742,6 +815,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				dialog.destroy();
 			}
 		});
+
+		// Log BUTTON_PRESS event: Rename game button pressed
+		console.log("Rename game button pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"rename-game-button"
+			)
+		);
+
 		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
 	},

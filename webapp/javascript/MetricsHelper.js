@@ -134,6 +134,10 @@ var MetricsHelper = {
 
 	/**
 	 * Payload for BUTTON_PRESS events
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} buttonPressed 
 	 */
 	createButtonPayload : function(logEventType, logContext, gameId, buttonPressed) {
 		var payload = {
