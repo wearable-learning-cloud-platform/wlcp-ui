@@ -765,29 +765,35 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						return;
 					}
 					
-					RestAPIHelper.post("/gameController/renameGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
-					function(data) {
-						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
+					RestAPIHelper.post(
+						"/gameController/renameGame", 
+						{oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, 
+						true, 
 
-						// Log BUTTON_PRESS event: Rename game - Rename Game button pressed
-						console.log("Rename game: Rename confirm button pressed");
-						MetricsHelper.saveLogEvent(
-							MetricsHelper.createButtonPayload(
-								MetricsHelper.LogEventType.BUTTON_PRESS, 
-								MetricsHelper.LogContext.GAME_EDITOR, 
-								GameEditor.getEditorController().newGameModel.gameId, 
-								"rename-game-confirm-button"
-							)
-						);
+						function(data) {
+							sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
 
-						dialog.close();
-						this.reloadGame(newGameId);
-					},
-					function error(error) {
-						//Default error handling.
+							// Log BUTTON_PRESS event: Rename game - Rename Game button pressed
+							console.log("Rename game: Rename confirm button pressed");
+							MetricsHelper.saveLogEvent(
+								MetricsHelper.createButtonPayload(
+									MetricsHelper.LogEventType.BUTTON_PRESS, 
+									MetricsHelper.LogContext.GAME_EDITOR, 
+									GameEditor.getEditorController().newGameModel.gameId, 
+									"rename-game-confirm-button"
+								)
+							);
 
-						dialog.close();
-					}, this);
+							dialog.close();
+							this.reloadGame(newGameId);
+						},
+
+						function error(error) {
+							//Default error handling.
+
+							dialog.close();
+						}, this
+					);
 				}, this)
 			}),
 
@@ -831,24 +837,85 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		dialog.open();
 	},
 	
+
+	/**
+	 * Called when the Delete Game option within Game Options menu is pressed
+	 * @param {*} oEvent 
+	 */
 	deleteGame : function(oEvent) {
-		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.delete.confirm"), { icon : sap.m.MessageBox.Icon.WARNING, onClose : $.proxy(function(oAction) {
-			if(oAction == sap.m.MessageBox.Action.OK) {
-				RestAPIHelper.post("/gameController/deleteGame", {oldGameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, true, 
-				function(data) {
-					this.resetEditor();
-					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
-					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
-					sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
-					sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.deleted"))
-				},
-				function error(error) {
-					//Default error handling.
-				}, this);
-			}
-		}, this)});
+
+		sap.m.MessageBox.confirm(
+
+			// The given message
+			sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.delete.confirm"), { 
+
+				// The icon to display
+				icon : sap.m.MessageBox.Icon.WARNING, 
+
+				// Callback to be called when the user closes the dialog
+				onClose : $.proxy(
+
+					function(oAction) {
+
+						// Case when the user presses the OK button on the Delete Game dialog
+						if(oAction == sap.m.MessageBox.Action.OK) {
+
+							RestAPIHelper.post(
+								"/gameController/deleteGame", 
+								{oldGameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, 
+								true, 
+							
+								function(data) {
+									this.resetEditor();
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
+									sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.deleted"))
+								},
+								
+								function error(error) {
+									//Default error handling.
+								}, this
+							);
+
+							// Log BUTTON_PRESS event: Delete Game OK button pressed
+							console.log("Delete Game: OK button pressed");
+							MetricsHelper.saveLogEvent(
+								MetricsHelper.createButtonPayload(
+									MetricsHelper.LogEventType.BUTTON_PRESS, 
+									MetricsHelper.LogContext.GAME_EDITOR, 
+									this.gameModel.gameId, 
+									"delete-game-ok-button"
+								)
+							);
+						}
+
+						// Case when the user presses the Cancel button on the Delete Game dialog
+						else if (oAction == sap.m.MessageBox.Action.CANCEL) {
+
+							// Log BUTTON_PRESS event: Delete Game cancel button pressed
+							console.log("Delete Game: Cancel button pressed");
+							MetricsHelper.saveLogEvent(
+								MetricsHelper.createButtonPayload(
+									MetricsHelper.LogEventType.BUTTON_PRESS, 
+									MetricsHelper.LogContext.GAME_EDITOR, 
+									this.gameModel.gameId, 
+									"delete-game-cancel-button"
+								)
+							);
+							
+						}
+
+					}, this
+				)
+			});
 	},
 
+
+	/**
+	 * Called when the Game Properties option within Game Options menu is pressed
+	 * @param {*} oEvent 
+	 */
 	gameProperties : function(oEvent) {
 		var dialog = new sap.m.Dialog({
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.gameOptions.gameProperties"),
