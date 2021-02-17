@@ -140,12 +140,13 @@ var State = class State {
 			DataLogger.logGameEditor();
 			
 			// Log STATE event: remove-state-confirm
+			// State is removed after triggering then confirming the confirmation dialog
 			console.log("State removal: confirmed");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayload(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().newGameModel.gameId, 
+					GameEditor.getEditorController().gameModel.gameId, 
 					"remove-state-confirm"
 				)
 			);
@@ -153,12 +154,13 @@ var State = class State {
 		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
 
 			// Log STATE event: remove-state-cancel
+			// State removal is canceled after triggering then canceling the confirmation dialog
 			console.log("State removal: canceled");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayload(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().newGameModel.gameId, 
+					GameEditor.getEditorController().gameModel.gameId, 
 					"remove-state-cancel"
 				)
 			);

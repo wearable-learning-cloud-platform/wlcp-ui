@@ -439,7 +439,6 @@ var InputTransition = class InputTransition extends Transition {
 	    	//Log it
 			DataLogger.logGameEditor();
 			
-			// BUG: THIS IS NOT RETRIEVING THE GAME ID
 			// Log TRANSITION event: remove-transition-withconfirm-ok
 			// Transition is removed after triggering then confirming the confirmation dialog
 			console.log("Transition removal: confirmed");
@@ -447,7 +446,7 @@ var InputTransition = class InputTransition extends Transition {
 				MetricsHelper.createTransitionPayload(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().newGameModel.gameId,
+					GameEditor.getEditorController().gameModel.gameId,
 					"remove-transition-withconfirm-ok"
 				)
 			);
@@ -455,7 +454,6 @@ var InputTransition = class InputTransition extends Transition {
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
 		else if(oAction == sap.m.MessageBox.Action.CANCEL) {
 
-			// BUG: THIS IS NOT RETRIEVING THE GAME ID
 			// Log TRANSITION event: remove-transition-withconfirm-cancel
 			// Transition removal is canceled after triggering then canceling the confirmation dialog
 			console.log("Transition removal: canceled");
@@ -463,7 +461,7 @@ var InputTransition = class InputTransition extends Transition {
 				MetricsHelper.createTransitionPayload(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().newGameModel.gameId,
+					GameEditor.getEditorController().gameModel.gameId,
 					"remove-transition-withconfirm-cancel"
 				)
 			);

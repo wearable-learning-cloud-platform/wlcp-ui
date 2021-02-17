@@ -701,14 +701,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Reject,
 				press : function() {
 					
-					// BUG: NOT CAPTURING GAME ID
 					// Log BUTTON_PRESS event: Copy game - Cancel button pressed
 					console.log("Copy game: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
-							GameEditor.getEditorController().newGameModel.gameId, 
+							GameEditor.getEditorController().gameModel.gameId, 
 							"copy-game-cancel-button"
 						)
 					);
@@ -802,14 +801,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Reject,
 				press : function() {
 
-					// BUG: NOT CAPTURING GAME ID
 					// Log BUTTON_PRESS event: Rename game - Cancel button pressed
 					console.log("Rename game: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
-							GameEditor.getEditorController().newGameModel.gameId, 
+							GameEditor.getEditorController().gameModel.gameId, 
 							"rename-game-cancel-button"
 						)
 					);
@@ -948,14 +946,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				press : function() {
 					dialog.close();
 
-					// BUG: NOT CAPTURING GAME ID
 					// Log BUTTON_PRESS event: Game Properties cancel button pressed
 					console.log("Game Properties: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
-							GameEditor.getEditorController().newGameModel.gameId, 
+							GameEditor.getEditorController().gameModel.gameId, 
 							"game-properties-cancel-button"
 						)
 					);
