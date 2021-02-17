@@ -80,12 +80,40 @@ var State = class State {
 		
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.stopped, this)});
+		
 		document.getElementById(this.stateDiv.id).addEventListener("mousedown", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = true;
+			
+			// Log STATE event: move-state-start
+			// Start of state being moved from its current location (mousedown event)
+			console.log("State move: Start");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"move-state-start"
+				)
+			);
+
 		}, false);
+		
 		document.getElementById(this.stateDiv.id).addEventListener("mouseup", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = false;
 			GameEditor.getEditorController().scroller.handleMousemove(event);
+			
+			// Log STATE event: move-state-end
+			// End of state being moved from its current location (mousedown event)
+			console.log("State move: End");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"move-state-end"
+				)
+			);
+
 		}, false);
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
