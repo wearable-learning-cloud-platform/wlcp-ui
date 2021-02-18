@@ -117,14 +117,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(outputState);
 		DataLogger.logGameEditor();
 
-		// Log STATE event
+		// Log STATE event: state-create
+		// Create a new state in the canvas
 		console.log("New state created");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createStatePayload(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId,
-				"create-state"
+				"state-create"
 			)
 		);
 
@@ -166,14 +167,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 			DataLogger.logGameEditor();
 
-			// Log TRANSITION event: Create transition
+			// Log TRANSITION event: transition-create
+			// Create a new transition in the canvas
 			console.log("Transition created successfully");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayload(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					this.gameModel.gameId,
-					"create-transition"
+					"transition-create"
 				)
 			);
 
@@ -210,14 +212,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.connectionList.push(connection);
 		connection.validate();
 
-		// Log CONNECTION event
+		// Log CONNECTION event: connection-create
+		// Create a new connection between states on the canvas
 		console.log("Connection created successfully");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createConnectionPayload(
 				MetricsHelper.LogEventType.CONNECTION, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId,
-				"create-connection"
+				"connection-create"
 			)
 		);
 
@@ -245,7 +248,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], {fireEvent : false, force : true});
 								DataLogger.logGameEditor();
 								
-								// Log CONNECTION event: remove-connection-withconfirm-ok
+								// Log CONNECTION event: connection-remove-confirm"
 								// Connection is removed after triggering then confirming the confirmation dialog
 								console.log("Connection removal: confirmed")
 								MetricsHelper.saveLogEvent(
@@ -253,7 +256,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 										MetricsHelper.LogEventType.CONNECTION,
 										MetricsHelper.LogContext.GAME_EDITOR,
 										GameEditor.getEditorController().newGameModel.gameId,
-										"remove-connection-withconfirm-ok"
+										"connection-remove-confirm"
 									)
 								);
 
@@ -261,7 +264,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 							// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
 							else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
 
-								// Log CONNECTION event: remove-connection-withconfirm-cancel
+								// Log CONNECTION event: connection-remove-cancel"
 								// Connection removal is canceled after triggering then canceling the confirmation dialog
 								console.log("Connection removal: canceled")
 								MetricsHelper.saveLogEvent(
@@ -269,7 +272,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 										MetricsHelper.LogEventType.CONNECTION,
 										MetricsHelper.LogContext.GAME_EDITOR,
 										GameEditor.getEditorController().newGameModel.gameId,
-										"remove-connection-withconfirm-cancel"
+										"connection-remove-cancel"
 									)
 								);
 
@@ -281,7 +284,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
 
-						// Log CONNECTION event: remove-connection-noconfirm
+						// Log CONNECTION event: connection-remove-noconfirm
 						// Connection is removed without triggering the confirmation dialog
 						console.log("Connection removal: no confirmation")
 						MetricsHelper.saveLogEvent(
@@ -289,7 +292,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								MetricsHelper.LogEventType.CONNECTION,
 								MetricsHelper.LogContext.GAME_EDITOR,
 								this.gameModel.gameId,
-								"remove-connection-noconfirm"
+								"connection-remove-noconfirm"
 							)
 						);
 
@@ -329,14 +332,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var test = oEvent.getSource();
 		console.log(test.getId())
 		
-		// Log BUTTON_PRESS event: New game button
+		// Log BUTTON_PRESS event: button-new-game
+		// New game button is pressed
 		console.log("Game Editor window: New button pressed")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"new-game-button"
+				"button-new-game"
 			)
 		); 
 	},
@@ -383,14 +387,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			//Allow default error handling
 		}, this);
 
-		// Log BUTTON_PRESS event: Load button pressed
+		// Log BUTTON_PRESS event: button-load-game
+		// Load button is pressed
 		console.log("Load button pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"load-game-button"
+				"button-load-game"
 			)
 		);
 	},
@@ -600,14 +605,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 
 		// BUG: IS THERE A WAY TO DIFFERENTIATE BETWEEN PRESSING THE BUTTON AND AUTOSAVES FROM RUN AND DEBUG?
-		// Log BUTTON_PRESS event: Save button pressed
+		// Log BUTTON_PRESS event: button-save-game
 		console.log("Game saved")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS,
 				MetricsHelper.LogContext.GAME_EDITOR,
 				this.gameModel.gameId,
-				"save-game-button"
+				"button-save-game"
 			)
 		);
 
@@ -622,14 +627,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.saveRun = true;
 		this.save();
 
-		// Log BUTTON_PRESS event: Run and Debug button pressed
+		// Log BUTTON_PRESS event: button-run-debug
+		// Run and Debug button pressed
 		console.log("Run and debug clicked")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS,
 				MetricsHelper.LogContext.GAME_EDITOR,
 				this.gameModel.gameId,
-				"run-debug-button"
+				"button-run-debug"
 			)
 		);
 	},
@@ -701,14 +707,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Reject,
 				press : function() {
 					
-					// Log BUTTON_PRESS event: Copy game - Cancel button pressed
+					// Log BUTTON_PRESS event: button-copy-game-cancel
+					// Copy game - Cancel button pressed
 					console.log("Copy game: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
 							GameEditor.getEditorController().gameModel.gameId, 
-							"copy-game-cancel-button"
+							"button-copy-game-cancel"
 						)
 					);
 
@@ -722,14 +729,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		});
 		
-		// Log BUTTON_PRESS event: Copy game button pressed
+		// Log BUTTON_PRESS event: button-copy-game
+		// Copy game button pressed
 		console.log("Copy game button pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"copy-game-button"
+				"button-copy-game"
 			)
 		);
 
@@ -772,14 +780,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						function(data) {
 							sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.renamed"));
 
-							// Log BUTTON_PRESS event: Rename game - Rename Game button pressed
+							// Log BUTTON_PRESS event: button-rename-game-confirm
+							// Rename game - Rename Game button pressed
 							console.log("Rename game: Rename confirm button pressed");
 							MetricsHelper.saveLogEvent(
 								MetricsHelper.createButtonPayload(
 									MetricsHelper.LogEventType.BUTTON_PRESS, 
 									MetricsHelper.LogContext.GAME_EDITOR, 
 									GameEditor.getEditorController().newGameModel.gameId, 
-									"rename-game-confirm-button"
+									"button-rename-game-confirm"
 								)
 							);
 
@@ -801,14 +810,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Reject,
 				press : function() {
 
-					// Log BUTTON_PRESS event: Rename game - Cancel button pressed
+					// Log BUTTON_PRESS event: button-rename-game-cancel
+					// Rename game - Cancel button pressed
 					console.log("Rename game: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
 							GameEditor.getEditorController().gameModel.gameId, 
-							"rename-game-cancel-button"
+							"button-rename-game-cancel"
 						)
 					);
 
@@ -820,14 +830,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 		});
 
-		// Log BUTTON_PRESS event: Rename game button pressed
+		// Log BUTTON_PRESS event: button-rename-game
+		// Rename game button pressed
 		console.log("Rename game button pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"rename-game-button"
+				"button-rename-game"
 			)
 		);
 
@@ -876,14 +887,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								}, this
 							);
 
-							// Log BUTTON_PRESS event: Delete Game OK button pressed
+							// Log BUTTON_PRESS event: button-delete-game-confirm
+							// Delete Game OK button pressed
 							console.log("Delete Game: OK button pressed");
 							MetricsHelper.saveLogEvent(
 								MetricsHelper.createButtonPayload(
 									MetricsHelper.LogEventType.BUTTON_PRESS, 
 									MetricsHelper.LogContext.GAME_EDITOR, 
 									this.gameModel.gameId, 
-									"delete-game-ok-button"
+									"button-delete-game-confirm"
 								)
 							);
 						}
@@ -891,14 +903,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						// Case when the user presses the Cancel button on the Delete Game dialog
 						else if (oAction == sap.m.MessageBox.Action.CANCEL) {
 
-							// Log BUTTON_PRESS event: Delete Game cancel button pressed
+							// Log BUTTON_PRESS event: button-delete-game-cancel
+							// Delete Game cancel button pressed
 							console.log("Delete Game: Cancel button pressed");
 							MetricsHelper.saveLogEvent(
 								MetricsHelper.createButtonPayload(
 									MetricsHelper.LogEventType.BUTTON_PRESS, 
 									MetricsHelper.LogContext.GAME_EDITOR, 
 									this.gameModel.gameId, 
-									"delete-game-cancel-button"
+									"button-delete-game-cancel"
 								)
 							);
 							
@@ -927,14 +940,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					dialog.close();
 					dialog.destroy();
 
-					// Log BUTTON_PRESS event: Game Properties accept button pressed
+					// Log BUTTON_PRESS event: button-game-properties-accept
+					// Game Properties Accept button pressed
 					console.log("Game Properties: Accept button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
 							this.gameModel.gameId, 
-							"game-properties-accept-button"
+							"button-game-properties-accept"
 						)
 					);
 
@@ -946,14 +960,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				press : function() {
 					dialog.close();
 
-					// Log BUTTON_PRESS event: Game Properties cancel button pressed
+					// Log BUTTON_PRESS event: button-game-properties-cancel
+					// Game Properties cancel button pressed
 					console.log("Game Properties: Cancel button pressed");
 					MetricsHelper.saveLogEvent(
 						MetricsHelper.createButtonPayload(
 							MetricsHelper.LogEventType.BUTTON_PRESS, 
 							MetricsHelper.LogContext.GAME_EDITOR, 
 							GameEditor.getEditorController().gameModel.gameId, 
-							"game-properties-cancel-button"
+							"button-game-properties-cancel"
 						)
 					);
 				}
@@ -965,14 +980,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		dialog.addStyleClass("sapUiPopupWithPadding");
 		dialog.open();
 
-		// Log BUTTON_PRESS event: Game Properties button pressed
+		// Log BUTTON_PRESS event: button-game-properties
+		// Game Properties button pressed
 		console.log("Game Properties button pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"game-properties-button"
+				"button-game-properties"
 			)
 		);
 	},
@@ -1004,14 +1020,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	onHomeButtonPress : function() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 
-		// Log BUTTON_PRESS event: Home button pressed
+		// Log BUTTON_PRESS event: button-home
+		// Home button pressed
 		console.log("Home button pressed")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"home-button"
+				"button-home"
 			)
 		);
 
@@ -1025,14 +1042,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.quickStartHelpDialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.QuickStartHelp", this);
 		this.quickStartHelpDialog.open();
 
-		// Log BUTTON_PRESS event: Quick Start button pressed
+		// Log BUTTON_PRESS event: button-quickstart-open
+		// Quick Start button pressed
 		console.log("Quick Start button pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"quickstart-open-button"
+				"button-quickstart-open"
 			)
 		);
 
@@ -1056,14 +1074,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.quickStartHelpDialog.close();
 		this.quickStartHelpDialog.destroy();
 
-		// Log BUTTON_PRESS event: Quick Start Close button pressed
+		// Log BUTTON_PRESS event: button-quickstart-close 
+		// Quick Start Close button pressed
 		console.log("Quick Start Close dialog button pressed")
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId, 
-				"quickstart-close-button"
+				"button-quickstart-close"
 			)
 		);
 	},

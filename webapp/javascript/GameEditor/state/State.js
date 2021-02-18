@@ -81,39 +81,15 @@ var State = class State {
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.stopped, this)});
 		
+		// Mouse down event listener
 		document.getElementById(this.stateDiv.id).addEventListener("mousedown", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = true;
-			
-			// Log STATE event: move-state-start
-			// Start of state being moved from its current location (mousedown event)
-			console.log("State move: Start");
-			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
-					MetricsHelper.LogEventType.STATE, 
-					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().gameModel.gameId, 
-					"move-state-start"
-				)
-			);
-
 		}, false);
 		
+		// Mouse up event listener
 		document.getElementById(this.stateDiv.id).addEventListener("mouseup", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = false;
 			GameEditor.getEditorController().scroller.handleMousemove(event);
-			
-			// Log STATE event: move-state-end
-			// End of state being moved from its current location (mousedown event)
-			console.log("State move: End");
-			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
-					MetricsHelper.LogEventType.STATE, 
-					MetricsHelper.LogContext.GAME_EDITOR, 
-					GameEditor.getEditorController().gameModel.gameId, 
-					"move-state-end"
-				)
-			);
-
 		}, false);
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
@@ -167,7 +143,7 @@ var State = class State {
 	    	//Log it
 			DataLogger.logGameEditor();
 			
-			// Log STATE event: remove-state-confirm
+			// Log STATE event: state-remove-confirm
 			// State is removed after triggering then confirming the confirmation dialog
 			console.log("State removal: confirmed");
 			MetricsHelper.saveLogEvent(
@@ -175,13 +151,13 @@ var State = class State {
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
-					"remove-state-confirm"
+					"state-remove-confirm"
 				)
 			);
 		}
 		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
 
-			// Log STATE event: remove-state-cancel
+			// Log STATE event: state-remove-cancel
 			// State removal is canceled after triggering then canceling the confirmation dialog
 			console.log("State removal: canceled");
 			MetricsHelper.saveLogEvent(
@@ -189,7 +165,7 @@ var State = class State {
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
-					"remove-state-cancel"
+					"state-remove-cancel"
 				)
 			);
 			
@@ -225,6 +201,11 @@ var State = class State {
 		}
 	}
 	
+
+	/**
+	 * Called whenever a state is dragged to a different coordinate position
+	 * @param {*} event 
+	 */
 	moved(event) {
 		
 		//Update the position
@@ -236,10 +217,27 @@ var State = class State {
 		GameEditor.getEditorController().scroller.handleMousemove(event.e);
 	}
 	
+
+	/**
+	 * Called when a drag event on a state that has been initiated is stopped
+	 */
 	stopped() {
 		
 		//Log it
 		DataLogger.logGameEditor();
+		
+		// Log STATE event: state-move
+		// State moved to another part of the canvas
+		console.log("State moved");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayload(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				"state-move"
+			)
+		);
+
 	}
 	
 	save() {
