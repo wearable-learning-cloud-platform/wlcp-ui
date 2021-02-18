@@ -320,6 +320,7 @@ var OutputState = class OutputState extends State {
     
     acceptDialog() {
 
+		// CASE: State editor dialog is open, user edits state properties, then presses the Accept button
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
     		sap.m.MessageBox.confirm(
 				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), 
@@ -328,9 +329,24 @@ var OutputState = class OutputState extends State {
 					onClose : $.proxy(this.acceptRevalidation, this)
 				}
 			);
+
+			// Log STATE event: state-editor-accept-withchanges
+			// State editor dialog is currently open, user edits state properties, 
+			// then presses the Accept button in the editor dialog
+			console.log("State editor: Accept with changes");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-withchanges"
+				)
+			);
+
     		return;
 		}
 
+		// CASE: State editor dialog is open, user does not edit state properties, then presses the Accept button
 		if(this.getActiveScopes().length == 0) {
 			sap.m.MessageBox.confirm(
 				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), 
@@ -339,6 +355,20 @@ var OutputState = class OutputState extends State {
 					onClose : $.proxy(this.acceptWithoutAnyChanges, this)
 				}
 			);
+
+			// Log STATE event: state-editor-accept-nochanges
+			// State editor dialog is currently open, user does not edit state properties, 
+			// then presses the Accept button in the editor dialog
+			console.log("State editor: Accept no changes");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-nochanges"
+				)
+			);
+
     		return;
 		}
 
@@ -353,7 +383,15 @@ var OutputState = class OutputState extends State {
 		DataLogger.logGameEditor();
     }
     
+
+	/**
+	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
+	 * confirmation dialog of a state editor, with changes to state properties
+	 * @param {*} oEvent 
+	 */
     acceptRevalidation(oEvent) {
+
+		// CASE: User confirms by clicking "OK" on the "Accept" dialog
     	if(oEvent == sap.m.MessageBox.Action.OK) {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
@@ -362,13 +400,84 @@ var OutputState = class OutputState extends State {
 				this.changeText(this.newDescriptionText);
 			}
     		DataLogger.logGameEditor();
+
+			// Log STATE event: state-editor-accept-withchanges-confirm
+			// State editor dialog is currently open, user edits state properties, 
+			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
+			console.log("State editor: Accept with changes - confirm");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-withchanges-confirm"
+				)
+			);
     	}
+		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
+		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
+			
+			// Log STATE event: state-editor-accept-withchanges-cancel
+			// State editor dialog is currently open, user edits state properties, 
+			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
+			console.log("State editor: Accept with changes - cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-withchanges-cancel"
+				)
+			);
+
+		}
+
 	}
 	
+
+	/**
+	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
+	 * confirmation dialog of a state editor, without making changes to state properties
+	 * @param {*} oEvent 
+	 */
 	acceptWithoutAnyChanges(oEvent) {
+
+		// CASE: User confirms by clicking "OK" on the "Accept" dialog
 		if(oEvent == sap.m.MessageBox.Action.OK) {
+
 			this.dialog.close();
 			this.dialog.destroy();
+
+			// Log STATE event: state-editor-accept-nochanges-confirm
+			// State editor dialog is currently open, user does not edit state properties, 
+			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
+			console.log("State editor: Accept no changes - confirm");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-nochanges-confirm"
+				)
+			);
+
+		}
+		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
+		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
+
+			// Log STATE event: state-editor-accept-nochanges-cancel
+			// State editor dialog is currently open, user does not edit state properties, 
+			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
+			console.log("State editor: Accept no changes - cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayload(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"state-editor-accept-nochanges-cancel"
+				)
+			);
+
 		}
 	}
 	
