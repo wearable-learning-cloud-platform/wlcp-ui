@@ -3,16 +3,16 @@ var RestAPIHelper = {
 	busyDialog : new sap.m.BusyDialog(),
 	busyDialogRequests : [],
 
-	getAbsolute : function(url, async, successHandler, errorHandler, context) {
-		this.genericGet(window.location.origin + url, async, successHandler, errorHandler, context);
+	getAbsolute : function(url, async, successHandler, errorHandler, context, showBusy = true) {
+		this.genericGet(window.location.origin + url, async, successHandler, errorHandler, context, undefined, showBusy);
 	},
 
-	get : function(url, async, successHandler, errorHandler, context) {
-		this.genericGet(ServerConfig.getServerAddress() + url, async, successHandler, errorHandler, context);
+	get : function(url, async, successHandler, errorHandler, context, showBusy = true) {
+		this.genericGet(ServerConfig.getServerAddress() + url, async, successHandler, errorHandler, context, undefined, showBusy);
 	},
 
-	genericGet : function(url, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}) {
-		this.requestBusyDialog();
+	genericGet : function(url, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}, showBusy) {
+		if(showBusy) { this.requestBusyDialog(); }
 		var that = this;
 		$.ajax({
 			headers : headers,
@@ -20,24 +20,24 @@ var RestAPIHelper = {
 			type: 'GET',
 			async : async,
 			success: function(data) {
-				that.callHandlerBasedOnContext(successHandler, data, context);
+				that.callHandlerBasedOnContext(successHandler, data, context, showBusy);
 			},
 			error : function(error) {
 				that.createErrorResponseDialog(error);
-				that.callHandlerBasedOnContext(errorHandler, error, context);
+				that.callHandlerBasedOnContext(errorHandler, error, context, showBusy);
 			}
 		});
 	},
 
-	postAbsolute : function(url, data, async, successHandler, errorHandler, context) {
-		this.genericPost(window.location.origin + url, data, async, successHandler, errorHandler, context);
+	postAbsolute : function(url, data, async, successHandler, errorHandler, context, showBusy = true) {
+		this.genericPost(window.location.origin + url, data, async, successHandler, errorHandler, context, undefined, showBusy);
 	},
 
-	post : function(url, data, async, successHandler, errorHandler, context) {
-		this.genericPost(ServerConfig.getServerAddress() + url, data, async, successHandler, errorHandler, context);
+	post : function(url, data, async, successHandler, errorHandler, context, showBusy = true) {
+		this.genericPost(ServerConfig.getServerAddress() + url, data, async, successHandler, errorHandler, context, undefined, showBusy);
 	},
 
-	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}) {
+	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}, showBusy) {
 		this.requestBusyDialog();
         var that = this;
 		$.ajax({
@@ -48,11 +48,11 @@ var RestAPIHelper = {
 		async : async,
 		data: JSON.stringify(data),
 		success: function(data) {
-            that.callHandlerBasedOnContext(successHandler, data, context);
+            that.callHandlerBasedOnContext(successHandler, data, context, showBusy);
 		},
 		error : function(error) {
 				that.createErrorResponseDialog(error);
-				that.callHandlerBasedOnContext(errorHandler, error, context);
+				that.callHandlerBasedOnContext(errorHandler, error, context, showBusy);
 			}
 		});
 	},
@@ -70,8 +70,8 @@ var RestAPIHelper = {
 		fragment.open();
 	},
     
-    callHandlerBasedOnContext : function(handler, data, context) {
-		this.closeBusyDialog();
+    callHandlerBasedOnContext : function(handler, data, context, showBusy) {
+		if(showBusy) { this.closeBusyDialog(); }
         if(typeof(context) !== "undefined") {
             var handler = handler.bind(context);
             handler(data);
