@@ -204,6 +204,7 @@ var State = class State {
 
 	/**
 	 * Called whenever a state is dragged to a different coordinate position
+	 * NOTE: Not recommended for logging because every single coordinate movement will be logged
 	 * @param {*} event 
 	 */
 	moved(event) {
@@ -237,6 +238,9 @@ var State = class State {
 				"state-move"
 			)
 		);
+
+		//console.log("X pos:" + this.getPositionX());
+		//console.log("Y pos:" + this.getPositionY());
 
 	}
 	

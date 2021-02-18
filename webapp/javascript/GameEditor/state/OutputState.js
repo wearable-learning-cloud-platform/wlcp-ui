@@ -96,7 +96,7 @@ var OutputState = class OutputState extends State {
 			return;
 		}
 		
-		//Create an instance of the dialog
+		//Create an instance of the State editor dialog
 		this.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStateConfig", this);
 		
 		//Set the model for the dialog
@@ -126,6 +126,19 @@ var OutputState = class OutputState extends State {
 		
 		//Open the dialog
 		this.dialog.open();
+
+		// Log STATE event: state-editor-dialog-open-success
+		// User attempts to open the State editor dialog and is successful
+		console.log("State editor: Dialog successfully opened");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayload(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				"state-editor-dialog-open-success"
+			)
+		);
+
 	}
 
 	//This is supposed to focus on the text box, but it no longer works and has been commented
@@ -306,20 +319,37 @@ var OutputState = class OutputState extends State {
     }
     
     acceptDialog() {
+
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
-    		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : $.proxy(this.acceptRevalidation, this)});
+    		sap.m.MessageBox.confirm(
+				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), 
+				{
+					title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), 
+					onClose : $.proxy(this.acceptRevalidation, this)
+				}
+			);
     		return;
 		}
+
 		if(this.getActiveScopes().length == 0) {
-			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges.title"), onClose : $.proxy(this.acceptWithoutAnyChanges, this)});
+			sap.m.MessageBox.confirm(
+				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), 
+				{
+					title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges.title"), 
+					onClose : $.proxy(this.acceptWithoutAnyChanges, this)
+				}
+			);
     		return;
 		}
+
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
+		
 		if(typeof this.newDescriptionText !== "undefined") {
 			this.changeText(this.newDescriptionText);
 		}
+		
 		DataLogger.logGameEditor();
     }
     
@@ -342,12 +372,29 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
+
+	/**
+	 * Called when the state editor dialog Cancel button is clicked
+	 */
 	closeDialog() {
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
 		DataLogger.logGameEditor();
+		
+		// Log STATE event: state-editor-cancel
+		// State editor dialog is currently open, then the Cancel button in the editor dialog is pressed
+		console.log("State editor: Cancel");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayload(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				"state-editor-cancel"
+			)
+		);
+
 	}
 	
 	navigationSelected(oEvent) {
