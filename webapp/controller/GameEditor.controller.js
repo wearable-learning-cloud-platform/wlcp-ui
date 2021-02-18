@@ -248,14 +248,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], {fireEvent : false, force : true});
 								DataLogger.logGameEditor();
 								
-								// Log CONNECTION event: connection-remove-confirm"
+								// Log CONNECTION event: connection-remove-confirm
 								// Connection is removed after triggering then confirming the confirmation dialog
 								console.log("Connection removal: confirmed")
 								MetricsHelper.saveLogEvent(
 									MetricsHelper.createConnectionPayload(
 										MetricsHelper.LogEventType.CONNECTION,
 										MetricsHelper.LogContext.GAME_EDITOR,
-										GameEditor.getEditorController().newGameModel.gameId,
+										GameEditor.getEditorController().gameModel.gameId,
 										"connection-remove-confirm"
 									)
 								);
@@ -264,14 +264,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 							// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
 							else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
 
-								// Log CONNECTION event: connection-remove-cancel"
+								// Log CONNECTION event: connection-remove-cancel
 								// Connection removal is canceled after triggering then canceling the confirmation dialog
 								console.log("Connection removal: canceled")
 								MetricsHelper.saveLogEvent(
 									MetricsHelper.createConnectionPayload(
 										MetricsHelper.LogEventType.CONNECTION,
 										MetricsHelper.LogContext.GAME_EDITOR,
-										GameEditor.getEditorController().newGameModel.gameId,
+										GameEditor.getEditorController().gameModel.gameId,
 										"connection-remove-cancel"
 									)
 								);
