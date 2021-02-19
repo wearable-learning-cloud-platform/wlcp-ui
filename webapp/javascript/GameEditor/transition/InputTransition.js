@@ -5,22 +5,33 @@
 var InputTransition = class InputTransition extends Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
+
 		super(cssClass, connection, overlayId, gameEditor);
+
 		this.create();
+
 		this.modelJSON = {
 				iconTabs : []
 		}
+
 		this.oldModelJSON = {};
 		this.transitionConfigs = [];
 		this.setupTransitionConfigs();
-		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
+		
+		this.modelJSON.iconTabs = this.generateData(
+			GameEditor.getEditorController().gameModel.teamCount, 
+			GameEditor.getEditorController().gameModel.playersPerTeam
+		);
+		
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.validationRules = [];
 		this.setupValidationRules();
 		this.scopeMask = 0xffffffff;
 		this.oldActiveScopes = [];
+
 	}
 	
+
 	create() {
 		
 		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom.htmlId, target : this.connection.connectionTo.htmlId})[0];
@@ -43,17 +54,20 @@ var InputTransition = class InputTransition extends Transition {
 		$("#" + this.overlayId + "_delete").click($.proxy(this.remove, this));
 	}
 	
+
 	setupTransitionConfigs() {
 		this.transitionConfigs.push(new TransitionConfigSingleButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigSequenceButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigKeyboardInput(this));
 	}
 	
+
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
 		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
+
 	onChange(oEvent) {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
@@ -65,6 +79,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+
 	revalidate() {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this, true, true);
@@ -76,6 +91,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+
 	setScope(bitMask, teamCount, playersPerTeam) {
 		
 		this.scopeMask = bitMask;
@@ -201,6 +217,7 @@ var InputTransition = class InputTransition extends Transition {
 		inputTransition.loadComponents(loadData);
 	}
 	
+
 	loadComponents(loadData) {
 		for(var key in loadData.activeTransitions) {
 			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
@@ -214,6 +231,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+
 	save() {
 		var activeTransitions = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
@@ -237,6 +255,7 @@ var InputTransition = class InputTransition extends Transition {
 		return saveData;
 	}
 	
+
 	doubleClick() {
 		if(this.scopeMask == 0){
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.emptyState"));
@@ -279,6 +298,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.dialog.open();
 	}
 	
+
 	onAfterRenderingDialog() {
 		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
 			var navContainer = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1];
@@ -302,6 +322,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+
 	createData() {
 		var tempNavigationListItems = [];
 		var tempNavigationContainerPages = [];
@@ -318,6 +339,7 @@ var InputTransition = class InputTransition extends Transition {
 			navigationContainerPages : tempNavigationContainerPages
 		}
 	}
+	
 	
 	generateData(teams, playersPerTeam) {
 		

@@ -5,15 +5,23 @@
 var OutputState = class OutputState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
+
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
+		
 		this.modelJSON = {
 				description : this.text,
 				iconTabs : []
 		}
+		
 		this.oldModelJSON = {};
 		this.stateConfigs = [];
 		this.setupStateConfigs();
-		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
+		
+		this.modelJSON.iconTabs = this.generateData(
+			GameEditor.getEditorController().gameModel.teamCount, 
+			GameEditor.getEditorController().gameModel.playersPerTeam
+		);
+		
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
 		this.validationRules = [];
@@ -23,6 +31,7 @@ var OutputState = class OutputState extends State {
 		this.stateType = "OUTPUT_STATE";
 	}
 	
+
 	create() {
 		
 		//Call the super method
@@ -56,6 +65,7 @@ var OutputState = class OutputState extends State {
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
 	}
 	
+
 	setupStateConfigs() {
 		this.stateConfigs.push(new StateConfigDisplayText(this));
 		this.stateConfigs.push(new StateConfigDisplayPhoto(this));
@@ -63,10 +73,12 @@ var OutputState = class OutputState extends State {
 		this.stateConfigs.push(new StateConfigPlayVideo(this));
 	}
 	
+
 	setupValidationRules() {
 		this.validationRules.push(new StateScopeValidationRule());
 	}
 	
+
 	doubleClick() {
 		
 		//Check to see if we have a connection to us
@@ -154,10 +166,12 @@ var OutputState = class OutputState extends State {
 //		}
 	}
 	
+
 	descriptionChanged(oEvent) {
 		this.newDescriptionText = oEvent.getParameter("newValue");
 	}
 	
+
 	createData() {
 		var tempNavigationListItems = [];
 		var tempNavigationContainerPages = [];
@@ -174,6 +188,7 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
+
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data
@@ -212,11 +227,13 @@ var OutputState = class OutputState extends State {
 		return baseData;
 	}
 	
+
 	validate() {
 		console.log("validating...");
 		this.onChange();
 	}
 	
+
 	setScope(bitMask, teamCount, playersPerTeam) {
 		
 		this.scopeMask = bitMask;
@@ -306,18 +323,21 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
+
     onChange(oEvent) {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this);
     	}
     }
     
+
     revalidate() {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this, true, true);
     	}
     }
     
+
     acceptDialog() {
 
 		// CASE: State editor dialog is open, user edits state properties, then presses the Accept button
@@ -461,6 +481,12 @@ var OutputState = class OutputState extends State {
 				)
 			);
 
+			console.log("TEST ICONTABS");
+			this.modelJSON.iconTabs.forEach(element => {
+				console.log("Scope: " + element.scope);
+				console.log(element.navigationContainerPages);
+			});
+
 		}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -506,6 +532,7 @@ var OutputState = class OutputState extends State {
 
 	}
 	
+
 	navigationSelected(oEvent) {
 		var key = oEvent.getParameter("item").getKey();
 		var navContainer = oEvent.oSource.getParent().getParent().getContentAreas()[1];
@@ -517,6 +544,7 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
+
 	static load(loadData) {
 		//Create a new display state
 		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", loadData.description, loadData.stateId, GameEditor.getEditorController().jsPlumbInstance);
@@ -534,12 +562,14 @@ var OutputState = class OutputState extends State {
 		outputState.loadComponents(loadData);
 	}
 	
+
 	loadComponents(loadData) {
 		for(var i = 0; i < this.stateConfigs.length; i++) {
 			this.stateConfigs[i].setLoadData(loadData, this.modelJSON.iconTabs);
 		}
 	}
 	
+
 	save() {
 		var tempInputConnections = [];
 		for(var i = 0; i < this.inputConnections.length; i++) {
@@ -572,6 +602,7 @@ var OutputState = class OutputState extends State {
 		return saveData;
 	}
 	
+
 	getActiveScopes() {
 		var activeScopes = [];
 		for(var i = 0; i < this.stateConfigs.length; i++) {
