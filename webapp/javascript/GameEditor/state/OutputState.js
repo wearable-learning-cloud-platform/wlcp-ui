@@ -473,18 +473,25 @@ var OutputState = class OutputState extends State {
 			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
 			console.log("State editor: Accept no changes - confirm");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadDraft(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					"test",
 					"state-editor-accept-nochanges-confirm"
 				)
 			);
 
 			console.log("TEST ICONTABS");
+			//console.log(JSON.stringify(this.modelJSON.iconTabs[0]));
+			console.log(JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages))
 			this.modelJSON.iconTabs.forEach(element => {
 				console.log("Scope: " + element.scope);
-				console.log(element.navigationContainerPages);
+				console.log("Full item: ");
+				console.log(element);
+				console.log("navigationContainerPages: ");
+				console.log(element.navigationContainerPages)
 			});
 
 		}

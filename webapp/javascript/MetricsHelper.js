@@ -89,6 +89,20 @@ var MetricsHelper = {
 		return payload;
 	},
 
+	createStatePayloadDraft : function(logEventType, logContext, gameId, componentProperties, stateEvent) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"componentProperties" : componentProperties,
+			"stateEvent" : stateEvent
+		};
+		return payload;
+	},
+
 
 	/**
 	 * Payload for CONNECTION events

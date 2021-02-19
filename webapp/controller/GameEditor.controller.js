@@ -365,27 +365,45 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	 * Called when the Load game editor button is pressed
 	 */
 	loadGame : function() {
+
 		var loadGameDialogModel = {
 			privateGames : null,
 			publicGames : null
 		};
-		RestAPIHelper.get("/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, false,
-		function(data) {
-			loadGameDialogModel.privateGames = data;
-			RestAPIHelper.get("/gameController/getPublicGames", false,
+
+		RestAPIHelper.get(
+			"/gameController/getPrivateGames?usernameId=" + sap.ui.getCore().getModel("user").oData.username, 
+			false,
+			
 			function(data) {
-				loadGameDialogModel.publicGames = data;
-				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
-				fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
-				fragment.open();
+				loadGameDialogModel.privateGames = data;
+
+				RestAPIHelper.get(
+					"/gameController/getPublicGames", 
+					false,
+
+					function(data) {
+						loadGameDialogModel.publicGames = data;
+						
+						var fragment = sap.ui.xmlfragment(
+							"org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", 
+							sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame")
+						);
+						
+						fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+						fragment.open();
+					}, 
+
+					function(error) {
+						//Allow default error handling
+					}, this
+				);
 			}, 
+			
 			function(error) {
 				//Allow default error handling
-			}, this);
-		}, 
-		function(error) {
-			//Allow default error handling
-		}, this);
+			}, this
+		);
 
 		// Log BUTTON_PRESS event: button-load-game
 		// Load button is pressed
@@ -400,10 +418,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		);
 	},
 	
+
 	load : function() {
-		RestAPIHelper.get("/gameController/loadGame?gameId=" + encodeURIComponent(this.gameModel.gameId), true, this.loadSuccess, this.loadError, this);
+		RestAPIHelper.get(
+			"/gameController/loadGame?gameId=" + encodeURIComponent(this.gameModel.gameId), 
+			true, this.loadSuccess, this.loadError, this
+		);
 	},
 	
+
 	loadSuccess(loadedData) {
 
 		//Open the busy dialog
