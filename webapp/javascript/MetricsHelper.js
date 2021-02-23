@@ -19,7 +19,7 @@ var MetricsHelper = {
 		
 		if(this.loggingEnabled) {
 			
-			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventController/saveLogEvent", saveJSON, true, logSuccess, logError, this);
+			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventController/saveLogEvent", saveJSON, true, logSuccess, logError, this, false);
 
 		}
 	},
