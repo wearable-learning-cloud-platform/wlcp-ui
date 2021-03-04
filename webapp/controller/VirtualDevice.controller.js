@@ -134,8 +134,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				that.connectToGameInstance(that.gameInstanceId, team, player);
 			};
 			this.stompClient.onStompError = function (frame) {
-				console.log("error connecting");
-				console.log(frame);
+				Logger.error("error connecting");
+				Logger.error(frame);
 			};
 			this.stompClient.activate();
 	},
@@ -188,7 +188,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/displayPhoto/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
-			//console.log(parsedJson);
+			//Logger.debug(parsedJson);
 			that.recievedDisplayPhoto = true;
 			//load text if exists
 			if(that.recievedDisplayText) {

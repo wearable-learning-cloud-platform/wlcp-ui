@@ -200,7 +200,6 @@ var OutputState = class OutputState extends State {
 	}
 	
 	validate() {
-		console.log("validating...");
 		this.onChange();
 	}
 	

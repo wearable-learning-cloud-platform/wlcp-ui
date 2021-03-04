@@ -141,9 +141,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.MainToolpage", {
 		this.one = sap.ui.xmlview("wlcpfrontend.views.Classes");
 		this.two = sap.ui.xmlview("wlcpfrontend.views.Classes");
 		this.one.destroy(true);
-		
-		//Does the parent view already exist?
-		console.log("child");
 	},
 	
 	/**
