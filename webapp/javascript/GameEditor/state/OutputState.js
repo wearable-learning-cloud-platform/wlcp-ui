@@ -477,11 +477,13 @@ var OutputState = class OutputState extends State {
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
-					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
-					"test",
+					JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					//"test",
 					"state-editor-accept-nochanges-confirm"
 				)
 			);
+
+			// Create equivalent of a map object here
 
 			console.log("TEST ICONTABS");
 			//console.log(JSON.stringify(this.modelJSON.iconTabs[0]));

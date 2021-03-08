@@ -259,6 +259,7 @@ var InputTransition = class InputTransition extends Transition {
 	doubleClick() {
 		if(this.scopeMask == 0){
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.emptyState"));
+			// , {title:"test"} // For title of error box
 			return;
 		}
 		
@@ -340,7 +341,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-	
+
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data

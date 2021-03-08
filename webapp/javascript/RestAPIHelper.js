@@ -38,7 +38,7 @@ var RestAPIHelper = {
 	},
 
 	genericPost : function(url, data, async, successHandler, errorHandler, context, headers = {Authorization: "Bearer " + SessionHelper.getCookie("wlcp.userSession")}, showBusy) {
-		this.requestBusyDialog();
+		if(showBusy) { this.requestBusyDialog(); }
         var that = this;
 		$.ajax({
 		headers : headers,
