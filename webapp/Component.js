@@ -3,7 +3,8 @@ sap.ui.define([
 	"sap/ui/Device",
 	"sap/ui/core/routing/HashChanger",
 	"org/wlcp/wlcp-ui/model/models",
-], function(UIComponent, Device, HashChanger, models) {
+	"sap/base/Log"
+], function(UIComponent, Device, HashChanger, models, Log) {
 	"use strict";
 
 	return UIComponent.extend("org.wlcp.wlcp-ui.Component", {
@@ -38,6 +39,9 @@ sap.ui.define([
 	
 			// load external resources such as JavaScript
 			this.loadExternalResources();
+
+			// set the logger
+			Logger.init(Log);
 		},
 
 		loadExternalResources : function() {
@@ -85,6 +89,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/SessionHelper");
 			jQuery.sap.require("javascript/MetricsHelper");
 			jQuery.sap.require("javascript/DataLogger");
+			jQuery.sap.require("javascript/Logger");
 			
 			jQuery.sap.require("javascript/jsplumb-2-13-1");
 			jQuery.sap.require("javascript/path-data-polyfill");

@@ -1117,7 +1117,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				this.quickStartHelp();
 			}
 		} else {
-			console.log(document.cookie)
 			this.quickStartHelp();
 		}
 		document.cookie = "lastAccess=" + new Date().toString();

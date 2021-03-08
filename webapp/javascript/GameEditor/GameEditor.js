@@ -40,7 +40,7 @@ var GameEditorScroller = class GameEditorScrollHelper {
 		var edgeSize = 150;
 		var viewportX = event.clientX - document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width;
 		var viewportY = event.clientY - document.getElementById("__header0").getBoundingClientRect().height;
-		//console.log(viewportX + " " + viewportY);
+		//Logger.debug(viewportX + " " + viewportY);
 		var viewportWidth = document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth;
 		var viewportHeight = document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight;
 		var edgeTop = edgeSize;
@@ -51,7 +51,7 @@ var GameEditorScroller = class GameEditorScrollHelper {
 		var isInRightEdge = ( viewportX > edgeRight );
 		var isInTopEdge = ( viewportY < edgeTop );
 		var isInBottomEdge = ( viewportY > edgeBottom );
-		//console.log("left: " + isInLeftEdge + " right: " + isInRightEdge + " top: " + isInTopEdge + " bottom: " + isInBottomEdge);
+		//Logger.debug("left: " + isInLeftEdge + " right: " + isInRightEdge + " top: " + isInTopEdge + " bottom: " + isInBottomEdge);
 		if ( ! ( isInLeftEdge || isInRightEdge || isInTopEdge || isInBottomEdge) ) {
 			clearTimeout(this.timer);
 			return;
@@ -98,7 +98,7 @@ var GameEditorScroller = class GameEditorScrollHelper {
 			}
 			nextScrollX = Math.max( 0, Math.min( maxScrollX, nextScrollX ) );
 			nextScrollY = Math.max( 0, Math.min( maxScrollY, nextScrollY ) );
-			//console.log("X: " + nextScrollX + " Y: " +nextScrollY);
+			//Logger.debug("X: " + nextScrollX + " Y: " +nextScrollY);
 			if (
 				( nextScrollX !== currentScrollX ) ||
 				( nextScrollY !== currentScrollY )
