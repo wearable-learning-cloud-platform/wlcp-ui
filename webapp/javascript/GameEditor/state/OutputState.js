@@ -113,10 +113,9 @@ var OutputState = class OutputState extends State {
 				iconTabBarPage.setTitle(iconTabBar[i].getProperty("text") + " " + this.stateConfigs[n].getNavigationContainerPage().title);
 			}
 		}
-			
-		this.dialog.getContent()[0].addEventDelegate({
-			onAfterRendering : $.proxy(this.tabRendered, this)
-		});
+
+		//Set the on after rendering
+		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
 		
 		//Set the old scope mask
 		this.oldModelJSON = JSON.parse(JSON.stringify(this.modelJSON));
@@ -126,19 +125,6 @@ var OutputState = class OutputState extends State {
 		
 		//Open the dialog
 		this.dialog.open();
-	}
-
-	//This is supposed to focus on the text box, but it no longer works and has been commented
-	tabRendered() {
-//		for(var i = 0; i < this.dialog.getContent()[0].getItems().length; i++) {
-//			if(this.dialog.getContent()[0].getItems()[i].getKey() == this.dialog.getContent()[0].getSelectedKey()) {
-//				var info = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getFocusInfo();
-//				info.selectionStart = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
-//				info.selectionEnd = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
-//				this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].applyFocusInfo(info);
-//				break;
-//			}
-//		}
 	}
 	
 	descriptionChanged(oEvent) {
@@ -156,6 +142,7 @@ var OutputState = class OutputState extends State {
 			icon : "",
 			scope : "",
 			scopeText : "",
+			activeState : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayText"),
 			navigationListItems : tempNavigationListItems,
 			navigationContainerPages : tempNavigationContainerPages,
 		}
@@ -295,7 +282,12 @@ var OutputState = class OutputState extends State {
     onChange(oEvent) {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this);
-    	}
+		}
+		if(typeof this.dialog !== "undefined") { 
+			if(this.dialog.isOpen()) { 
+				this.onAfterRenderingDialog(); 
+			}
+		}
     }
     
     revalidate() {
@@ -350,12 +342,28 @@ var OutputState = class OutputState extends State {
 	}
 	
 	navigationSelected(oEvent) {
+		this.model.setProperty(oEvent.getSource().getParent().getBindingContext().getPath() + "/activeState", oEvent.getParameters().item.mProperties.text);
 		var key = oEvent.getParameter("item").getKey();
 		var navContainer = oEvent.oSource.getParent().getParent().getContentAreas()[1];
 		for(var i = 0; i < navContainer.getPages().length; i++) {
 			if(navContainer.getPages()[i].getTitle().includes(key)) {
 				navContainer.to(navContainer.getPages()[i]);
 				break;
+			}
+		}
+	}
+
+	onAfterRenderingDialog() {
+		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems().length; i++) {
+			var navContainer = sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems()[i].getContent()[0].getContentAreas()[1];
+			var path = sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems()[i].getBindingContext().getPath() + "/activeState";
+			var activeState = this.model.getProperty(path);
+			sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems()[i].getContent()[0].getContentAreas()[0].setSelectedKey(activeState);
+			for(var n = 0; n < navContainer.getPages().length; n++) {
+				if(navContainer.getPages()[n].getTitle().includes(activeState)) {
+					navContainer.to(navContainer.getPages()[n]);
+					break;
+				}
 			}
 		}
 	}
