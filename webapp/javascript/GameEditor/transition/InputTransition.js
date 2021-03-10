@@ -77,6 +77,11 @@ var InputTransition = class InputTransition extends Transition {
 				this.transitionConfigs[i].validationRules[n].validate(this);
 			}
 		}
+		if(typeof this.dialog !== "undefined") { 
+			if(this.dialog.isOpen()) { 
+				this.onAfterRenderingDialog(); 
+			}
+		}
 	}
 	
 
