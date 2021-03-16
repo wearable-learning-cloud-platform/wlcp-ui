@@ -82,6 +82,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigSequenceButtonPress");
 			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigKeyboardInput");
+			jQuery.sap.require("javascript/GameEditor/transition/TransitionConfig/TransitionConfigTimer");
 			
 			jQuery.sap.require("javascript/GameEditor/GameEditor");
 			jQuery.sap.require("javascript/ServerConfig");
