@@ -240,6 +240,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/keyboardInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("KeyboardInput");
 		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/timerDurationRequest/" + this.username + "/" + team + "/" + player, function(response) {
+			var parsedJson = JSON.parse(response.body);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration").getContent()[0].getItems()[0].setText("Timer Duration: " + parsedJson.duration);
+			that.switchToTransitionType("TimerDuration");
+			var timeleft = parsedJson.duration;
+			var timer = setInterval(function(){
+				if(timeleft <= 0){
+				  clearInterval(timer);
+				}
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration").getContent()[0].getItems()[0].setText("Timer Duration: " + timeleft);
+				timeleft -= 1;
+			  }, 1000);
+		});
 	},
 
 	stopAudio : function() {
@@ -307,6 +320,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			break;
 		case "KeyboardInput":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInput"));
+			break;
+		case "TimerDuration":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration"));
 			break;
 		}
 	},

@@ -87,7 +87,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].navigationListItems;
 						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
 							for(var l = 0; l < transitionTypes.length; l++) {
-								if(activeList.includes("") && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"))) {
+								if(activeList.includes("") && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer"))) {
 									transitionTypes[l].visible = true;
 								} else if(activeList.includes(transitionTypes[l].title)) {
 									transitionTypes[l].visible = true;
@@ -121,6 +121,10 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
 						if(iconTabs[i].navigationContainerPages[n].keyboardField.length > 0) {
 							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput");
+						}
+					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
+						if(iconTabs[i].navigationContainerPages[n].duration > 0) {
+							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer");
 						}
 					}
 				}

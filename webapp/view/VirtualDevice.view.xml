@@ -146,6 +146,13 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="timerDuration" showHeader="false" enableScrolling="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<Text class="noStateNoTransition"/>
+							</items>
+						</FlexBox>
+					</Page>
 				</NavContainer>
 			</l:Splitter>
 			</Page>
