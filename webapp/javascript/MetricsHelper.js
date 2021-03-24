@@ -158,6 +158,29 @@ var MetricsHelper = {
 
 
 	/**
+	 * Payload for TRANSITION events with transition properties
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} transitionEvent 
+	 */
+	 createTransitionPayloadFull : function(logEventType, logContext, gameId, transitionId, transitionProperties, transitionEvent) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"transitionId" : transitionId,
+			"transitionProperties" : transitionProperties,
+			"transitionEvent" : transitionEvent
+		};
+		return payload;
+	},
+
+
+	/**
 	 * Payload for BUTTON_PRESS events
 	 * @param {*} logEventType 
 	 * @param {*} logContext 

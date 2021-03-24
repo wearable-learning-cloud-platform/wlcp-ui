@@ -69,6 +69,10 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 
+	/**
+	 * 
+	 * @param {*} oEvent 
+	 */
 	onChange(oEvent) {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
@@ -400,6 +404,11 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+
+	/**
+	 * 
+	 * @returns 
+	 */
     acceptDialog() {
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
     		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : $.proxy(this.acceptRevalidation, this)});
@@ -472,10 +481,12 @@ var InputTransition = class InputTransition extends Transition {
 			// Transition is removed after triggering then confirming the confirmation dialog
 			console.log("Transition removal: confirmed");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createTransitionPayload(
+				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId,
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"transition-remove-confirm"
 				)
 			);
@@ -487,10 +498,12 @@ var InputTransition = class InputTransition extends Transition {
 			// Transition removal is canceled after triggering then canceling the confirmation dialog
 			console.log("Transition removal: canceled");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createTransitionPayload(
+				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId,
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"transition-remove-cancel"
 				)
 			);

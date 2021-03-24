@@ -1,5 +1,12 @@
 /**
+ * Location of state events logging
  * 
+ * InputTransition.js
+ * - transition-remove-confirm
+ * - transition-remove-cancel
+ * 
+ * ADDITIONAL NOTES:
+ * - Transition ids are captured by overlayId 
  */
 var Transition = class Transition {
 	
