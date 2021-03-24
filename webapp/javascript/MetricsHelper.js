@@ -89,7 +89,17 @@ var MetricsHelper = {
 		return payload;
 	},
 
-	createStatePayloadDraft : function(logEventType, logContext, gameId, componentProperties, stateEvent) {
+
+	/**
+	 * Payload for STATE events with state properties
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} componentProperties 
+	 * @param {*} stateEvent 
+	 * @returns 
+	 */
+	createStatePayloadFull : function(logEventType, logContext, gameId, stateId, componentProperties, stateEvent) {
 		var payload = {
 			"logEventType" : logEventType,
 			"logContext" : logContext,
@@ -97,6 +107,7 @@ var MetricsHelper = {
 			"gameId" : gameId,
 			"gameInstanceId" : null,
 			"timeStamp" : Date.now(), 
+			"stateId" : stateId,
 			"componentProperties" : componentProperties,
 			"stateEvent" : stateEvent
 		};

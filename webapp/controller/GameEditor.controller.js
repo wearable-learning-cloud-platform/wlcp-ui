@@ -109,22 +109,44 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "hidden";
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "auto";
 		
-		if(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset() < 0 || State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset() < 0) {sap.m.MessageBox.error("A state could not be placed there!"); return;}
-		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState") , this.createStateId(), this.jsPlumbInstance);
-		outputState.setPositionX(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
+		if(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset() < 0 || 
+			State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset() < 0) {
+			sap.m.MessageBox.error("A state could not be placed there!"); 
+			return;
+		}
+
+		var outputState = new OutputState(
+			"toolboxOutputStateTopColor", 
+			"toolboxOutputStateBottomColor", 
+			sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState"), 
+			this.createStateId(), 
+			this.jsPlumbInstance
+		);
+
+		outputState.setPositionX(
+			State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()
+		); 
+		
+		outputState.setPositionY(
+			State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset()
+		);
+		
 		outputState.addPadSpace();
 		outputState.draw();
 		this.stateList.push(outputState);
+		
 		DataLogger.logGameEditor();
 
 		// Log STATE event: state-create
 		// Create a new state in the canvas
 		console.log("New state created");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createStatePayload(
+			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId,
+				outputState.htmlId, 
+				JSON.stringify(outputState.modelJSON.iconTabs),
 				"state-create"
 			)
 		);

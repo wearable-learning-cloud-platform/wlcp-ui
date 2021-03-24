@@ -17,6 +17,14 @@ var OutputState = class OutputState extends State {
 		this.stateConfigs = [];
 		this.setupStateConfigs();
 		
+		/* 
+		FRANCIS-NOTE: 
+		- Each iconTabs element corresponds to a tracked item/object
+		within a state -> Game Wide, Team 1, Team 2, Team 1 Player 1, Team 1 Player 2, etc.
+		- Each iconTabs element has properties -> scope, navigationContainerPages, etc.
+		- The navigationContainerPages has all the elements editable by 
+		a player -> Display Text, Display Photo, etc.
+		*/
 		this.modelJSON.iconTabs = this.generateData(
 			GameEditor.getEditorController().gameModel.teamCount, 
 			GameEditor.getEditorController().gameModel.playersPerTeam
@@ -79,6 +87,10 @@ var OutputState = class OutputState extends State {
 	}
 	
 
+	/**
+	 * Called when the user double-clicks a state
+	 * @returns 
+	 */
 	doubleClick() {
 		
 		//Check to see if we have a connection to us
@@ -139,13 +151,15 @@ var OutputState = class OutputState extends State {
 		this.dialog.open();
 
 		// Log STATE event: state-editor-dialog-open-success
-		// User attempts to open the State editor dialog and is successful
+		// User attempts to open the State editor dialog by double-clicking and is successful
 		console.log("State editor: Dialog successfully opened");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createStatePayload(
+			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.modelJSON.iconTabs),
 				"state-editor-dialog-open-success"
 			)
 		);
@@ -176,6 +190,12 @@ var OutputState = class OutputState extends State {
 	}
 	
 
+	/**
+	 * Called to set the iconTabs object within a state
+	 * @param {*} teams 
+	 * @param {*} playersPerTeam 
+	 * @returns 
+	 */
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data
@@ -346,10 +366,12 @@ var OutputState = class OutputState extends State {
 			// then presses the Accept button in the editor dialog
 			console.log("State editor: Accept with changes");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-editor-accept-withchanges"
 				)
 			);
@@ -372,10 +394,12 @@ var OutputState = class OutputState extends State {
 			// then presses the Accept button in the editor dialog
 			console.log("State editor: Accept no changes");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-editor-accept-nochanges"
 				)
 			);
@@ -417,10 +441,12 @@ var OutputState = class OutputState extends State {
 			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
 			console.log("State editor: Accept with changes - confirm");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-editor-accept-withchanges-confirm"
 				)
 			);
@@ -433,10 +459,12 @@ var OutputState = class OutputState extends State {
 			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
 			console.log("State editor: Accept with changes - cancel");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-editor-accept-withchanges-cancel"
 				)
 			);
@@ -464,11 +492,13 @@ var OutputState = class OutputState extends State {
 			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
 			console.log("State editor: Accept no changes - confirm");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayloadDraft(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
-					JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
 					//"test",
 					"state-editor-accept-nochanges-confirm"
 				)
@@ -476,9 +506,15 @@ var OutputState = class OutputState extends State {
 
 			// Create equivalent of a map object here
 
-			console.log("TEST ICONTABS");
+			console.log("ICONTABS FULL:");
+			console.log(JSON.stringify(this.modelJSON.iconTabs));
+			console.log(this.modelJSON.iconTabs);
 			//console.log(JSON.stringify(this.modelJSON.iconTabs[0]));
-			console.log(JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages))
+			//console.log(JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages))
+			
+			// FRANCIS-NOTE: This expands each iconTabs element within modelJSON
+			/*
+			console.log("ICONTABS INDIVIDUAL");
 			this.modelJSON.iconTabs.forEach(element => {
 				console.log("Scope: " + element.scope);
 				console.log("Full item: ");
@@ -486,6 +522,7 @@ var OutputState = class OutputState extends State {
 				console.log("navigationContainerPages: ");
 				console.log(element.navigationContainerPages)
 			});
+			*/
 
 		}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
@@ -496,10 +533,14 @@ var OutputState = class OutputState extends State {
 			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
 			console.log("State editor: Accept no changes - cancel");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					//"test",
 					"state-editor-accept-nochanges-cancel"
 				)
 			);
@@ -512,6 +553,11 @@ var OutputState = class OutputState extends State {
 	 * Called when the state editor dialog Cancel button is clicked
 	 */
 	closeDialog() {
+
+		// modelJSON is always current state
+		// oldModelJSON is the initial data state before editing
+		// LOG modelJSON here
+
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
@@ -522,10 +568,12 @@ var OutputState = class OutputState extends State {
 		// State editor dialog is currently open, then the Cancel button in the editor dialog is pressed
 		console.log("State editor: Cancel");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createStatePayload(
+			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.modelJSON.iconTabs),
 				"state-editor-cancel"
 			)
 		);

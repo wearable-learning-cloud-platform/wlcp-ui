@@ -147,10 +147,12 @@ var State = class State {
 			// State is removed after triggering then confirming the confirmation dialog
 			console.log("State removal: confirmed");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-remove-confirm"
 				)
 			);
@@ -161,10 +163,12 @@ var State = class State {
 			// State removal is canceled after triggering then canceling the confirmation dialog
 			console.log("State removal: canceled");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createStatePayload(
+				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
 					"state-remove-cancel"
 				)
 			);
@@ -231,10 +235,12 @@ var State = class State {
 		// State moved to another part of the canvas
 		console.log("State moved");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createStatePayload(
+			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.modelJSON.iconTabs),
 				"state-move"
 			)
 		);
