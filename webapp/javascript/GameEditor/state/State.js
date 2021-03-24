@@ -1,5 +1,23 @@
 /**
+ * Location of state events logging
  * 
+ * State.js:
+ * - state-move
+ * - state-remove-confirm
+ * - state-remove-cancel
+ * 
+ * OutputState.js:
+ * - state-editor-dialog-open-success
+ * - state-editor-accept-withchanges
+ * - state-editor-accept-nochanges
+ * - state-editor-accept-withchanges-confirm
+ * - state-editor-accept-withchanges-cancel
+ * - state-editor-accept-nochanges-confirm
+ * - state-editor-accept-nochanges-cancel
+ * - state-editor-cancel
+ * 
+ * GameEditor.controller.js
+ * - state-create
  */
 
 var StateType = {
@@ -230,20 +248,43 @@ var State = class State {
 		
 		//Log it
 		DataLogger.logGameEditor();
-		
-		// Log STATE event: state-move
-		// State moved to another part of the canvas
-		console.log("State moved");
-		MetricsHelper.saveLogEvent(
-			MetricsHelper.createStatePayloadFull(
-				MetricsHelper.LogEventType.STATE, 
-				MetricsHelper.LogContext.GAME_EDITOR, 
-				GameEditor.getEditorController().gameModel.gameId, 
-				this.htmlId, 
-				JSON.stringify(this.modelJSON.iconTabs),
-				"state-move"
-			)
-		);
+
+		// Check first what kind of state is being moved;
+		// The start state does not have a modelJSON component
+		if (this.stateType === StateType.START_STATE) {
+
+			// Log STATE event: state-move
+			// State moved to another part of the canvas
+			console.log("State moved - start state");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					"start-state",
+					"state-move"
+				)
+			);
+
+		} 
+		else if (this.stateType === StateType.OUTPUT_STATE) {
+
+			// Log STATE event: state-move
+			// State moved to another part of the canvas
+			console.log("State moved - regular state");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-move"
+				)
+			);
+
+		}
 
 		//console.log("X pos:" + this.getPositionX());
 		//console.log("Y pos:" + this.getPositionY());
