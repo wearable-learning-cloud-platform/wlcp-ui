@@ -154,6 +154,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	transitionDragStop : function(event, ui) {
+
 		document.getElementById("container-wlcp-ui---gameEditor--mainSplitter-content-0").style.overflow = "auto";
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-x"] = "hidden";
 		document.getElementById("container-wlcp-ui---gameEditor--toolbox").style["overflow-y"] = "auto";
@@ -161,19 +162,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
 		
 		if(connection != null) {
+			
 			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
 				if(GameEditor.getEditorController().connectionList[i].connectionId == connection.id) {
 					connection = GameEditor.getEditorController().connectionList[i];
 					break;
 				}
 			}
+			
 			if(connection.connectionFrom.stateType === "START_STATE") {
 				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotPlaceTransitionAfterStartState"));
 				return;
 			}
+
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
+			
 			inputTransition.connection.transition = inputTransition;
 			this.transitionList.push(inputTransition);
+			
 			for(var i = 0; i < this.connectionList.length; i++) {
 				if(this.connectionList[i].connectionId == connection.id) {
 					this.connectionList[i].transition = inputTransition;
@@ -181,22 +187,27 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					break;
 				}
 			}
+			
 			inputTransition.onChange(connection);
+			
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.connectionTo.htmlId) {
 					this.stateList[i].onChange();
 				}
 			}
+
 			DataLogger.logGameEditor();
 
 			// Log TRANSITION event: transition-create
 			// Create a new transition in the canvas
-			console.log("Transition created successfully");
+			console.log("Transition: created");
 			MetricsHelper.saveLogEvent(
-				MetricsHelper.createTransitionPayload(
+				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					this.gameModel.gameId,
+					inputTransition.overlayId, 
+					JSON.stringify(inputTransition.modelJSON.iconTabs),
 					"transition-create"
 				)
 			);

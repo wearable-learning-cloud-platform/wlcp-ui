@@ -152,7 +152,7 @@ var OutputState = class OutputState extends State {
 
 		// Log STATE event: state-editor-dialog-open-success
 		// User attempts to open the State editor dialog by double-clicking and is successful
-		console.log("State editor: Dialog successfully opened");
+		console.log("State editor: dialog opened");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
