@@ -257,10 +257,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId,
 				connection.connectionId, 
-				"testFrom", 
-				//connection.connectionFrom, 
-				"testTo", 
-				//connection.connectionTo, 
+				connection.connectionFrom.htmlId, 
+				connection.connectionTo.htmlId, 
 				"connection-create"
 			)
 		);
