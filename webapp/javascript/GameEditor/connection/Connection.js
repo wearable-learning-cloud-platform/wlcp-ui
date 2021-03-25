@@ -1,5 +1,13 @@
 /**
+ * Location of CONNECTION events logging
  * 
+ * 
+ * GameEditor.controller.js
+ * - connection-create
+ * - connection-remove-noconfirm
+ * 
+ * ADDITIONAL NOTES:
+ * - Connection ids are captured by connectionId 
  */
 
 var Connection = class Connection {

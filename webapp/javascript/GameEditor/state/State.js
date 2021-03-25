@@ -1,5 +1,5 @@
 /**
- * Location of state events logging
+ * Location of STATE events logging
  * 
  * State.js
  * - state-move

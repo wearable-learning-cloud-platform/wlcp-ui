@@ -137,6 +137,38 @@ var MetricsHelper = {
 
 
 	/**
+	 * Payload for CONNECTION events with connection properties
+	 * @param {*} logEventType 
+	 * @param {*} logContext 
+	 * @param {*} gameId 
+	 * @param {*} connectionEvent 
+	 */
+	 createConnectionPayloadFull : function(
+		 logEventType, 
+		 logContext, 
+		 gameId, 
+		 connectionId, 
+		 connectionFrom, 
+		 connectionTo, 
+		 connectionEvent
+	) {
+		var payload = {
+			"logEventType" : logEventType,
+			"logContext" : logContext,
+			"usernameId" : sap.ui.getCore().getModel("user").oData.username,
+			"gameId" : gameId,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(), 
+			"connectionId" : connectionId, 
+			"connectionFrom" : connectionFrom, 
+			"connectionTo" : connectionTo, 
+			"connectionEvent" : connectionEvent
+		};
+		return payload;
+	},
+
+
+	/**
 	 * Payload for TRANSITION events
 	 * @param {*} logEventType 
 	 * @param {*} logContext 
@@ -164,7 +196,14 @@ var MetricsHelper = {
 	 * @param {*} gameId 
 	 * @param {*} transitionEvent 
 	 */
-	 createTransitionPayloadFull : function(logEventType, logContext, gameId, transitionId, transitionProperties, transitionEvent) {
+	 createTransitionPayloadFull : function(
+		 logEventType, 
+		 logContext, 
+		 gameId, 
+		 transitionId, 
+		 transitionProperties, 
+		 transitionEvent
+	) {
 		var payload = {
 			"logEventType" : logEventType,
 			"logContext" : logContext,

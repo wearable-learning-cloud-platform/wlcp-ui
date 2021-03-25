@@ -218,16 +218,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	connectionDropped : function(oEvent) {
+
 		//Check to see if we are trying to drag a connection to an output endpoint
 		if(oEvent.dropEndpoint.anchor.type === "Bottom") {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotDragOutputToOutput"));
 			return false;
-		} 
+		}
+
 		//Check to see if the state has an input transition
 		if(GameEditor.getJsPlumbInstance().getConnections({target : oEvent.sourceId}).length == 0 && !oEvent.sourceId.includes("start")) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.outputWithoutInput"));
 			return false;
 		}
+
 		//Check to see if the connection already exists
 		//Or if they are trying to add a second of the same source and target
 		//This can probably be moved to a validator eventually
@@ -249,10 +252,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		// Create a new connection between states on the canvas
 		console.log("Connection created successfully");
 		MetricsHelper.saveLogEvent(
-			MetricsHelper.createConnectionPayload(
+			MetricsHelper.createConnectionPayloadFull(
 				MetricsHelper.LogEventType.CONNECTION, 
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				this.gameModel.gameId,
+				connection.connectionId, 
+				"testFrom", 
+				//connection.connectionFrom, 
+				"testTo", 
+				//connection.connectionTo, 
 				"connection-create"
 			)
 		);
@@ -314,6 +322,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						}});
 						return false;
 					} else {
+
+						// Get the id of the connection to be removed before detaching
+						connectionIdToRemove = this.connectionList[i].connectionId;
+
+						connectionFromToRemove = this.connectionList[i].connectionFrom;
+
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
 
@@ -321,10 +335,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						// Connection is removed without triggering the confirmation dialog
 						console.log("Connection removal: no confirmation")
 						MetricsHelper.saveLogEvent(
-							MetricsHelper.createConnectionPayload(
+							MetricsHelper.createConnectionPayloadFull(
 								MetricsHelper.LogEventType.CONNECTION,
 								MetricsHelper.LogContext.GAME_EDITOR,
 								this.gameModel.gameId,
+								connectionIdToRemove, 
+								"testFrom", 
+								//connection.connectionFrom, 
+								"testTo", 
+								//connection.connectionTo, 
 								"connection-remove-noconfirm"
 							)
 						);

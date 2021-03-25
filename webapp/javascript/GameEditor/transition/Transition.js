@@ -1,5 +1,5 @@
 /**
- * Location of transition events logging
+ * Location of TRANSITION events logging
  * 
  * InputTransition.js
  * - transition-remove-confirm
