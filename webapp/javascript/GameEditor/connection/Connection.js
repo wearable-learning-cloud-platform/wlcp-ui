@@ -5,6 +5,8 @@
  * GameEditor.controller.js
  * - connection-create
  * - connection-remove-noconfirm
+ * - connection-remove-confirm
+ * - connection-remove-cancel
  * 
  * ADDITIONAL NOTES:
  * - Connection ids are captured by connectionId 

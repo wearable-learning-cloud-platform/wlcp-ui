@@ -272,59 +272,94 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		var that = this;
 		
 		if(oEvent.suspendedElementId == oEvent.targetId || typeof oEvent.suspendedElementId === "undefined") {
+
 			for(var i = 0; i < this.connectionList.length; i++) {
+
 				if(this.connectionList[i].connectionId == oEvent.id) {
+					
 					if(this.connectionList[i].connectionFrom.getActiveScopes().length > 0) {
 
 						// Display confirmation dialog to user on attempt to remove a connection
-						sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : function (oEvent2) {
+						sap.m.MessageBox.confirm(
+							sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), 
+							{
+								title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), 
+								onClose : function (oEvent2) {
 							
-							// CASE: User attempts to remove a connection -> confirmation box displayed -> user confirms "OK"
-							if(oEvent2 == sap.m.MessageBox.Action.OK) {
-								var connectionFrom = that.connectionList[i].connectionFrom.htmlId;
-								var connectionTo = that.connectionList[i].connectionTo.htmlId;
-								that.connectionList[i].detach();
-								GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], {fireEvent : false, force : true});
-								DataLogger.logGameEditor();
-								
-								// Log CONNECTION event: connection-remove-confirm
-								// Connection is removed after triggering then confirming the confirmation dialog
-								console.log("Connection removal: confirmed")
-								MetricsHelper.saveLogEvent(
-									MetricsHelper.createConnectionPayload(
-										MetricsHelper.LogEventType.CONNECTION,
-										MetricsHelper.LogContext.GAME_EDITOR,
-										GameEditor.getEditorController().gameModel.gameId,
-										"connection-remove-confirm"
-									)
-								);
+									// CASE: User attempts to remove a connection -> confirmation box displayed -> user confirms "OK"
+									if(oEvent2 == sap.m.MessageBox.Action.OK) {
 
+										// Get the id of the connection to be removed before detaching
+										let connectionIdToRemove = that.connectionList[i].connectionId;
+										
+										// Get the IDs of the states the connection is connected to before detaching
+										let connectionFrom = that.connectionList[i].connectionFrom.htmlId;
+										let connectionTo = that.connectionList[i].connectionTo.htmlId;
+										
+										that.connectionList[i].detach();
+										
+										GameEditor.getJsPlumbInstance().deleteConnection(
+											GameEditor.getJsPlumbInstance().getConnections({source : connectionFrom, target : connectionTo})[0], 
+											{fireEvent : false, force : true}
+										);
+										
+										DataLogger.logGameEditor();
+										
+										// Log CONNECTION event: connection-remove-confirm
+										// Connection is removed after triggering then confirming the confirmation dialog
+										console.log("Connection removal: confirmed")
+										MetricsHelper.saveLogEvent(
+											MetricsHelper.createConnectionPayloadFull(
+												MetricsHelper.LogEventType.CONNECTION,
+												MetricsHelper.LogContext.GAME_EDITOR,
+												GameEditor.getEditorController().gameModel.gameId,
+												connectionIdToRemove, 
+												connectionFrom, 
+												connectionTo, 
+												"connection-remove-confirm"
+											)
+										);
+
+									}
+									// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
+									else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
+
+										// Get the id of the connection to be removed before detaching
+										let connectionIdToRemove = that.connectionList[i].connectionId;
+										
+										// Get the IDs of the states the connection is connected to before detaching
+										let connectionFrom = that.connectionList[i].connectionFrom.htmlId;
+										let connectionTo = that.connectionList[i].connectionTo.htmlId;
+
+										// Log CONNECTION event: connection-remove-cancel
+										// Connection removal is canceled after triggering then canceling the confirmation dialog
+										console.log("Connection removal: canceled")
+										MetricsHelper.saveLogEvent(
+											MetricsHelper.createConnectionPayloadFull(
+												MetricsHelper.LogEventType.CONNECTION,
+												MetricsHelper.LogContext.GAME_EDITOR,
+												GameEditor.getEditorController().gameModel.gameId,
+												connectionIdToRemove, 
+												connectionFrom, 
+												connectionTo, 
+												"connection-remove-cancel"
+											)
+										);
+
+									}
+								}
 							}
-							// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
-							else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
-
-								// Log CONNECTION event: connection-remove-cancel
-								// Connection removal is canceled after triggering then canceling the confirmation dialog
-								console.log("Connection removal: canceled")
-								MetricsHelper.saveLogEvent(
-									MetricsHelper.createConnectionPayload(
-										MetricsHelper.LogEventType.CONNECTION,
-										MetricsHelper.LogContext.GAME_EDITOR,
-										GameEditor.getEditorController().gameModel.gameId,
-										"connection-remove-cancel"
-									)
-								);
-
-							}
-						
-						}});
+						);
 						return false;
-					} else {
+					} 
+					else {
 
 						// Get the id of the connection to be removed before detaching
 						connectionIdToRemove = this.connectionList[i].connectionId;
 
-						connectionFromToRemove = this.connectionList[i].connectionFrom;
+						// Get the IDs of the states the connection is connected to before detaching
+						connectionFromToRemove = this.connectionList[i].connectionFrom.htmlId;
+						connectionToToRemove = this.connectionList[i].connectionTo.htmlId;
 
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
@@ -338,10 +373,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								MetricsHelper.LogContext.GAME_EDITOR,
 								this.gameModel.gameId,
 								connectionIdToRemove, 
-								"testFrom", 
-								//connection.connectionFrom, 
-								"testTo", 
-								//connection.connectionTo, 
+								connectionFromToRemove, 
+								connectionToToRemove, 
 								"connection-remove-noconfirm"
 							)
 						);
