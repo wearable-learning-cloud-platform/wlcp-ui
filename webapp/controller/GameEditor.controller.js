@@ -217,6 +217,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 	},
 	
+
+	/**
+	 * Called when the user attempts to create a connection
+	 * @param {*} oEvent 
+	 * @returns 
+	 */
 	connectionDropped : function(oEvent) {
 
 		//Check to see if we are trying to drag a connection to an output endpoint
@@ -248,6 +254,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.connectionList.push(connection);
 		connection.validate();
 
+		// Retrieve the transition for this connection, if any
+		let connectionTransition = connection.transition == null ? null : connection.transition.overlayId;
+
 		// Log CONNECTION event: connection-create
 		// Create a new connection between states on the canvas
 		console.log("Connection created successfully");
@@ -259,6 +268,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				connection.connectionId, 
 				connection.connectionFrom.htmlId, 
 				connection.connectionTo.htmlId, 
+				connectionTransition, 
 				"connection-create"
 			)
 		);
@@ -266,6 +276,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		return false;
 	},
 	
+
+	/**
+	 * Called when the user attempts to remove a connection
+	 * @param {*} oEvent 
+	 * @returns 
+	 */
 	connectionDetached : function(oEvent) {
 
 		var i = 0;
@@ -295,6 +311,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 										// Get the IDs of the states the connection is connected to before detaching
 										let connectionFrom = that.connectionList[i].connectionFrom.htmlId;
 										let connectionTo = that.connectionList[i].connectionTo.htmlId;
+
+										// Retrieve the transition for this connection, if any
+										let connectionTransition = that.connectionList[i].transition == null ? null : that.connectionList[i].transition.overlayId;
 										
 										that.connectionList[i].detach();
 										
@@ -316,6 +335,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 												connectionIdToRemove, 
 												connectionFrom, 
 												connectionTo, 
+												connectionTransition, 
 												"connection-remove-confirm"
 											)
 										);
@@ -331,6 +351,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 										let connectionFrom = that.connectionList[i].connectionFrom.htmlId;
 										let connectionTo = that.connectionList[i].connectionTo.htmlId;
 
+										// Retrieve the transition for this connection, if any
+										let connectionTransition = that.connectionList[i].transition == null ? null : that.connectionList[i].transition.overlayId;
+
 										// Log CONNECTION event: connection-remove-cancel
 										// Connection removal is canceled after triggering then canceling the confirmation dialog
 										console.log("Connection removal: canceled")
@@ -342,6 +365,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 												connectionIdToRemove, 
 												connectionFrom, 
 												connectionTo, 
+												connectionTransition, 
 												"connection-remove-cancel"
 											)
 										);
@@ -361,6 +385,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						connectionFromToRemove = this.connectionList[i].connectionFrom.htmlId;
 						connectionToToRemove = this.connectionList[i].connectionTo.htmlId;
 
+						// Retrieve the transition for this connection, if any
+						let connectionTransition = this.connectionList[i].transition == null ? null : this.connectionList[i].transition.overlayId;
+
 						this.connectionList[i].detach();
 						DataLogger.logGameEditor();
 
@@ -375,6 +402,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								connectionIdToRemove, 
 								connectionFromToRemove, 
 								connectionToToRemove, 
+								connectionTransition, 
 								"connection-remove-noconfirm"
 							)
 						);

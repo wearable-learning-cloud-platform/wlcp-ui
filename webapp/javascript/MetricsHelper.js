@@ -150,6 +150,7 @@ var MetricsHelper = {
 		 connectionId, 
 		 connectionFrom, 
 		 connectionTo, 
+		 connectionTransition,
 		 connectionEvent
 	) {
 		var payload = {
@@ -162,6 +163,7 @@ var MetricsHelper = {
 			"connectionId" : connectionId, 
 			"connectionFrom" : connectionFrom, 
 			"connectionTo" : connectionTo, 
+			"connectionTransition" : connectionTransition, 
 			"connectionEvent" : connectionEvent
 		};
 		return payload;
