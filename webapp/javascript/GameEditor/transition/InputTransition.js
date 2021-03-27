@@ -90,7 +90,7 @@ var InputTransition = class InputTransition extends Transition {
 				this.onAfterRenderingDialog(); 
 			}
 		}
-		
+
 	}
 	
 
@@ -291,6 +291,7 @@ var InputTransition = class InputTransition extends Transition {
 					GameEditor.getEditorController().gameModel.gameId, 
 					this.overlayId, 
 					JSON.stringify(this.modelJSON.iconTabs),
+					this.connection.connectionId, 
 					"transition-edit-attempt-error"
 				)
 			);
@@ -343,6 +344,7 @@ var InputTransition = class InputTransition extends Transition {
 				GameEditor.getEditorController().gameModel.gameId, 
 				this.overlayId, 
 				JSON.stringify(this.modelJSON.iconTabs),
+				this.connection.connectionId, 
 				"transition-editor-dialog-open-success"
 			)
 		);
@@ -479,6 +481,7 @@ var InputTransition = class InputTransition extends Transition {
 				GameEditor.getEditorController().gameModel.gameId, 
 				this.overlayId, 
 				JSON.stringify(this.modelJSON.iconTabs),
+				this.connection.connectionId, 
 				"transition-editor-accept-noconfirm"
 			)
 		);
@@ -508,7 +511,8 @@ var InputTransition = class InputTransition extends Transition {
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
 					this.overlayId, 
-					JSON.stringify(this.modelJSON.iconTabs),
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
 					"transition-editor-accept-confirm-ok"
 				)
 			);
@@ -526,7 +530,8 @@ var InputTransition = class InputTransition extends Transition {
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId, 
 					this.overlayId, 
-					JSON.stringify(this.modelJSON.iconTabs),
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
 					"transition-editor-accept-confirm-cancel"
 				)
 			);
@@ -554,7 +559,8 @@ var InputTransition = class InputTransition extends Transition {
 				MetricsHelper.LogContext.GAME_EDITOR, 
 				GameEditor.getEditorController().gameModel.gameId, 
 				this.overlayId, 
-				JSON.stringify(this.modelJSON.iconTabs),
+				JSON.stringify(this.modelJSON.iconTabs), 
+				this.connection.connectionId, 
 				"transition-editor-cancel"
 			)
 		);
@@ -609,7 +615,8 @@ var InputTransition = class InputTransition extends Transition {
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId,
 					this.overlayId, 
-					JSON.stringify(this.modelJSON.iconTabs),
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
 					"transition-remove-confirm"
 				)
 			);
@@ -626,7 +633,8 @@ var InputTransition = class InputTransition extends Transition {
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					GameEditor.getEditorController().gameModel.gameId,
 					this.overlayId, 
-					JSON.stringify(this.modelJSON.iconTabs),
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
 					"transition-remove-cancel"
 				)
 			);

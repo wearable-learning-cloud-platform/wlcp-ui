@@ -204,6 +204,7 @@ var MetricsHelper = {
 		 gameId, 
 		 transitionId, 
 		 transitionProperties, 
+		 transitionConnection,
 		 transitionEvent
 	) {
 		var payload = {
@@ -215,6 +216,7 @@ var MetricsHelper = {
 			"timeStamp" : Date.now(), 
 			"transitionId" : transitionId,
 			"transitionProperties" : transitionProperties,
+			"transitionConnection" : transitionConnection,
 			"transitionEvent" : transitionEvent
 		};
 		return payload;

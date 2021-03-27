@@ -207,7 +207,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					MetricsHelper.LogContext.GAME_EDITOR, 
 					this.gameModel.gameId,
 					inputTransition.overlayId, 
-					JSON.stringify(inputTransition.modelJSON.iconTabs),
+					JSON.stringify(inputTransition.modelJSON.iconTabs), 
+					inputTransition.connection.connectionId, 
 					"transition-create"
 				)
 			);
