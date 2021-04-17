@@ -451,8 +451,6 @@ var InputTransition = class InputTransition extends Transition {
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
-		
-		DataLogger.logGameEditor();
 
 		// Log TRANSITION event: transition-editor-accept-noconfirm
 		// Transition editor dialog is currently open, user may/may not edit transition type, 
@@ -482,7 +480,6 @@ var InputTransition = class InputTransition extends Transition {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
     		this.dialog.destroy();
-    		DataLogger.logGameEditor();
 
 			// Log TRANSITION event: transition-editor-accept-confirm-ok
 			// Transition editor dialog is currently open, user edits transition type properties, 
@@ -530,7 +527,6 @@ var InputTransition = class InputTransition extends Transition {
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
-		DataLogger.logGameEditor();
 
 		// Log TRANSITION event: transition-editor-cancel
 		// Transition editor dialog is currently open, then the Cancel button in the editor dialog is pressed
@@ -584,9 +580,6 @@ var InputTransition = class InputTransition extends Transition {
 	        		}
 	    		}
 	    	}
-	    	
-	    	//Log it
-			DataLogger.logGameEditor();
 			
 			// Log TRANSITION event: transition-remove-confirm
 			// Transition is removed after triggering then confirming the confirmation dialog

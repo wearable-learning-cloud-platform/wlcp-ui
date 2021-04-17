@@ -45,7 +45,7 @@ const LogLevel = {
 var Logger = {
 		
     loggingEnabled : true,
-    defaultLogLevel : LogLevel.INFO,//LogLevel.ERROR,
+    defaultLogLevel : LogLevel.ERROR, //LogLevel.INFO,
     logger : null,
 
     init : function(logger) {

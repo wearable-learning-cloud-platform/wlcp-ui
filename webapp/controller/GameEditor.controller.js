@@ -130,8 +130,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		outputState.addPadSpace();
 		outputState.draw();
 		this.stateList.push(outputState);
-		
-		DataLogger.logGameEditor();
 
 		// Log STATE event: state-create
 		// Create a new state in the canvas
@@ -191,8 +189,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					this.stateList[i].onChange();
 				}
 			}
-
-			DataLogger.logGameEditor();
 
 			// Log TRANSITION event: transition-create
 			// Create a new transition in the canvas
@@ -317,8 +313,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 											{fireEvent : false, force : true}
 										);
 										
-										DataLogger.logGameEditor();
-										
 										// Log CONNECTION event: connection-remove-confirm
 										// Connection is removed after triggering then confirming the confirmation dialog
 										Logger.info("Connection removal: confirmed")
@@ -384,7 +378,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						let connectionTransition = this.connectionList[i].transition == null ? null : this.connectionList[i].transition.overlayId;
 
 						this.connectionList[i].detach();
-						DataLogger.logGameEditor();
 
 						// Log CONNECTION event: connection-remove-noconfirm
 						// Connection is removed without triggering the confirmation dialog

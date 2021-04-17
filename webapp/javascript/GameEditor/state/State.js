@@ -135,9 +135,6 @@ var State = class State {
 	        		}
 	    		}
 	    	}
-	    	
-	    	//Log it
-			DataLogger.logGameEditor();
 			
 			// Log STATE event: state-remove-confirm
 			// State is removed after triggering then confirming the confirmation dialog
@@ -221,9 +218,6 @@ var State = class State {
 	 * Called when a drag event on a state that has been initiated is stopped
 	 */
 	stopped() {
-		
-		//Log it
-		DataLogger.logGameEditor();
 
 		// Check first what kind of state is being moved;
 		// The start state does not have a modelJSON component

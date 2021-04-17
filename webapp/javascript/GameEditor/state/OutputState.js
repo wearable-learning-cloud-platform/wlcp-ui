@@ -397,8 +397,6 @@ var OutputState = class OutputState extends State {
 		if(typeof this.newDescriptionText !== "undefined") {
 			this.changeText(this.newDescriptionText);
 		}
-		
-		DataLogger.logGameEditor();
     }
     
 	/**
@@ -416,7 +414,6 @@ var OutputState = class OutputState extends State {
 			if(typeof this.newDescriptionText !== "undefined") {
 				this.changeText(this.newDescriptionText);
 			}
-    		DataLogger.logGameEditor();
 
 			// Log STATE event: state-editor-accept-withchanges-confirm
 			// State editor dialog is currently open, user edits state properties, 
@@ -522,7 +519,6 @@ var OutputState = class OutputState extends State {
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
-		DataLogger.logGameEditor();
 		
 		// Log STATE event: state-editor-cancel
 		// State editor dialog is currently open, then the Cancel button in the editor dialog is pressed
