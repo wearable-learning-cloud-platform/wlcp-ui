@@ -141,7 +141,7 @@ var State = class State {
 			
 			// Log STATE event: state-remove-confirm
 			// State is removed after triggering then confirming the confirmation dialog
-			console.log("State removal: confirmed");
+			Logger.info("State removal: confirmed");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -157,7 +157,7 @@ var State = class State {
 
 			// Log STATE event: state-remove-cancel
 			// State removal is canceled after triggering then canceling the confirmation dialog
-			console.log("State removal: canceled");
+			Logger.info("State removal: canceled");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -201,7 +201,6 @@ var State = class State {
 		}
 	}
 	
-
 	/**
 	 * Called whenever a state is dragged to a different coordinate position
 	 * NOTE: Not recommended for logging because every single coordinate movement will be logged
@@ -218,7 +217,6 @@ var State = class State {
 		GameEditor.getEditorController().scroller.handleMousemove(event.e);
 	}
 	
-
 	/**
 	 * Called when a drag event on a state that has been initiated is stopped
 	 */
@@ -233,7 +231,7 @@ var State = class State {
 
 			// Log STATE event: state-move
 			// State moved to another part of the canvas
-			console.log("State moved - start state");
+			Logger.info("State moved - start state");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -250,7 +248,7 @@ var State = class State {
 
 			// Log STATE event: state-move
 			// State moved to another part of the canvas
-			console.log("State moved - regular state");
+			Logger.info("State moved - regular state");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -263,10 +261,6 @@ var State = class State {
 			);
 
 		}
-
-		//console.log("X pos:" + this.getPositionX());
-		//console.log("Y pos:" + this.getPositionY());
-
 	}
 	
 	save() {

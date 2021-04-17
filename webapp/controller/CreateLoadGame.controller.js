@@ -1,8 +1,8 @@
 sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	
 	getMaxPlayer : function (max, teamCount) {
-		  return Math.floor(max / teamCount);
-		},
+		return Math.floor(max / teamCount);
+	},
 		
 	onPlayerChange: function (oEvent) {
 		
@@ -29,7 +29,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		}
 			
 	},
-	
 	
 	cancelCreateLoadGame : function() {
 		sap.ui.getCore().byId("createLoadGame").close();
@@ -75,7 +74,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		this.cancelLoadGame();
 	},
 	
-
 	/**
 	 * Called when the user wants to cancel creating a game.
 	 * They will be returned to main editor screen with all controls disabled

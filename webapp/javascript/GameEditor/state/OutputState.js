@@ -34,7 +34,6 @@ var OutputState = class OutputState extends State {
 		this.stateType = "OUTPUT_STATE";
 	}
 	
-
 	create() {
 		
 		//Call the super method
@@ -68,7 +67,6 @@ var OutputState = class OutputState extends State {
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
 	}
 	
-
 	setupStateConfigs() {
 		this.stateConfigs.push(new StateConfigDisplayText(this));
 		this.stateConfigs.push(new StateConfigDisplayPhoto(this));
@@ -76,12 +74,10 @@ var OutputState = class OutputState extends State {
 		this.stateConfigs.push(new StateConfigPlayVideo(this));
 	}
 	
-
 	setupValidationRules() {
 		this.validationRules.push(new StateScopeValidationRule());
 	}
 	
-
 	/**
 	 * Called when the user double-clicks a state
 	 * @returns 
@@ -147,7 +143,7 @@ var OutputState = class OutputState extends State {
 
 		// Log STATE event: state-editor-dialog-open-success
 		// User attempts to open the State editor dialog by double-clicking and is successful
-		console.log("State editor: dialog opened");
+		Logger.info("State editor: dialog opened");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
@@ -161,12 +157,10 @@ var OutputState = class OutputState extends State {
 
 	}
 	
-
 	descriptionChanged(oEvent) {
 		this.newDescriptionText = oEvent.getParameter("newValue");
 	}
 	
-
 	createData() {
 		var tempNavigationListItems = [];
 		var tempNavigationContainerPages = [];
@@ -184,7 +178,6 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
-
 	/**
 	 * Called to set the iconTabs object within a state
 	 * @param {*} teams 
@@ -229,12 +222,10 @@ var OutputState = class OutputState extends State {
 		return baseData;
 	}
 	
-
 	validate() {
 		this.onChange();
 	}
 	
-
 	setScope(bitMask, teamCount, playersPerTeam) {
 		
 		this.scopeMask = bitMask;
@@ -324,7 +315,6 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
-
     onChange(oEvent) {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this);
@@ -336,14 +326,12 @@ var OutputState = class OutputState extends State {
 		}
     }
     
-
     revalidate() {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this, true, true);
     	}
     }
     
-
     acceptDialog() {
 
 		// CASE: State editor dialog is open, user edits state properties, then presses the Accept button
@@ -359,7 +347,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-withchanges
 			// State editor dialog is currently open, user edits state properties, 
 			// then presses the Accept button in the editor dialog
-			console.log("State editor: Accept with changes");
+			Logger.info("State editor: Accept with changes");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -387,7 +375,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-nochanges
 			// State editor dialog is currently open, user does not edit state properties, 
 			// then presses the Accept button in the editor dialog
-			console.log("State editor: Accept no changes");
+			Logger.info("State editor: Accept no changes");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -413,7 +401,6 @@ var OutputState = class OutputState extends State {
 		DataLogger.logGameEditor();
     }
     
-
 	/**
 	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
 	 * confirmation dialog of a state editor, with changes to state properties
@@ -434,7 +421,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-withchanges-confirm
 			// State editor dialog is currently open, user edits state properties, 
 			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
-			console.log("State editor: Accept with changes - confirm");
+			Logger.info("State editor: Accept with changes - confirm");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -452,7 +439,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-withchanges-cancel
 			// State editor dialog is currently open, user edits state properties, 
 			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
-			console.log("State editor: Accept with changes - cancel");
+			Logger.info("State editor: Accept with changes - cancel");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -468,7 +455,6 @@ var OutputState = class OutputState extends State {
 
 	}
 	
-
 	/**
 	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
 	 * confirmation dialog of a state editor, without making changes to state properties
@@ -485,7 +471,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-nochanges-confirm
 			// State editor dialog is currently open, user does not edit state properties, 
 			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
-			console.log("State editor: Accept no changes - confirm");
+			Logger.info("State editor: Accept no changes - confirm");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -499,26 +485,6 @@ var OutputState = class OutputState extends State {
 				)
 			);
 
-			// Create equivalent of a map object here
-
-			console.log("ICONTABS FULL:");
-			console.log(JSON.stringify(this.modelJSON.iconTabs));
-			console.log(this.modelJSON.iconTabs);
-			//console.log(JSON.stringify(this.modelJSON.iconTabs[0]));
-			//console.log(JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages))
-			
-			// FRANCIS-NOTE: This expands each iconTabs element within modelJSON
-			/*
-			console.log("ICONTABS INDIVIDUAL");
-			this.modelJSON.iconTabs.forEach(element => {
-				console.log("Scope: " + element.scope);
-				console.log("Full item: ");
-				console.log(element);
-				console.log("navigationContainerPages: ");
-				console.log(element.navigationContainerPages)
-			});
-			*/
-
 		}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -526,7 +492,7 @@ var OutputState = class OutputState extends State {
 			// Log STATE event: state-editor-accept-nochanges-cancel
 			// State editor dialog is currently open, user does not edit state properties, 
 			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
-			console.log("State editor: Accept no changes - cancel");
+			Logger.info("State editor: Accept no changes - cancel");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createStatePayloadFull(
 					MetricsHelper.LogEventType.STATE, 
@@ -543,7 +509,6 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
-
 	/**
 	 * Called when the state editor dialog Cancel button is clicked
 	 */
@@ -561,7 +526,7 @@ var OutputState = class OutputState extends State {
 		
 		// Log STATE event: state-editor-cancel
 		// State editor dialog is currently open, then the Cancel button in the editor dialog is pressed
-		console.log("State editor: Cancel");
+		Logger.info("State editor: Cancel");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createStatePayloadFull(
 				MetricsHelper.LogEventType.STATE, 
@@ -575,7 +540,6 @@ var OutputState = class OutputState extends State {
 
 	}
 	
-
 	navigationSelected(oEvent) {
 		this.model.setProperty(oEvent.getSource().getParent().getBindingContext().getPath() + "/activeState", oEvent.getParameters().item.mProperties.text);
 		var key = oEvent.getParameter("item").getKey();
@@ -603,7 +567,6 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
-
 	static load(loadData) {
 		//Create a new display state
 		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", loadData.description, loadData.stateId, GameEditor.getEditorController().jsPlumbInstance);
@@ -621,14 +584,12 @@ var OutputState = class OutputState extends State {
 		outputState.loadComponents(loadData);
 	}
 	
-
 	loadComponents(loadData) {
 		for(var i = 0; i < this.stateConfigs.length; i++) {
 			this.stateConfigs[i].setLoadData(loadData, this.modelJSON.iconTabs);
 		}
 	}
 	
-
 	save() {
 		var tempInputConnections = [];
 		for(var i = 0; i < this.inputConnections.length; i++) {
@@ -661,7 +622,6 @@ var OutputState = class OutputState extends State {
 		return saveData;
 	}
 	
-
 	getActiveScopes() {
 		var activeScopes = [];
 		for(var i = 0; i < this.stateConfigs.length; i++) {

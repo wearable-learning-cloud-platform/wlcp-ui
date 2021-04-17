@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 var InputTransition = class InputTransition extends Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
@@ -31,7 +27,6 @@ var InputTransition = class InputTransition extends Transition {
 
 	}
 	
-
 	create() {
 		
 		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom.htmlId, target : this.connection.connectionTo.htmlId})[0];
@@ -54,7 +49,6 @@ var InputTransition = class InputTransition extends Transition {
 		$("#" + this.overlayId + "_delete").click($.proxy(this.remove, this));
 	}
 	
-
 	setupTransitionConfigs() {
 		this.transitionConfigs.push(new TransitionConfigSingleButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigSequenceButtonPress(this));
@@ -63,13 +57,11 @@ var InputTransition = class InputTransition extends Transition {
 		this.transitionConfigs.push(new TransitionConfigRandom(this));
 	}
 	
-
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
 		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
-
 	/**
 	 * Called when Transition Editor properties (button press) are changed
 	 * @param {*} oEvent 
@@ -94,7 +86,6 @@ var InputTransition = class InputTransition extends Transition {
 
 	}
 	
-
 	revalidate() {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this, true, true);
@@ -106,7 +97,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-
 	setScope(bitMask, teamCount, playersPerTeam) {
 		
 		this.scopeMask = bitMask;
@@ -232,7 +222,6 @@ var InputTransition = class InputTransition extends Transition {
 		inputTransition.loadComponents(loadData);
 	}
 	
-
 	loadComponents(loadData) {
 		for(var key in loadData.activeTransitions) {
 			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
@@ -246,7 +235,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-
 	save() {
 		var activeTransitions = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
@@ -270,7 +258,6 @@ var InputTransition = class InputTransition extends Transition {
 		return saveData;
 	}
 	
-
 	/**
 	 * Called when the user double-clicks a transition
 	 * @returns 
@@ -284,7 +271,7 @@ var InputTransition = class InputTransition extends Transition {
 			// Log TRANSITION event: transition-edit-attempt-error
 			// User attempts to open the Transition editor on a transition,
 			// but is shown an error because of an empty state before it
-			console.log("Transition edit attempt error");
+			Logger.info("Transition edit attempt error");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
@@ -337,7 +324,7 @@ var InputTransition = class InputTransition extends Transition {
 
 		// Log TRANSITION event: transition-editor-dialog-open-success
 		// User attempts to open the Transition editor dialog by double-clicking and is successful
-		console.log("Transition editor: dialog opened");
+		Logger.info("Transition editor: dialog opened");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createTransitionPayloadFull(
 				MetricsHelper.LogEventType.TRANSITION, 
@@ -351,7 +338,6 @@ var InputTransition = class InputTransition extends Transition {
 		);
 	}
 	
-
 	onAfterRenderingDialog() {
 		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
 			var navContainer = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1];
@@ -375,7 +361,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-
 	createData() {
 		var tempNavigationListItems = [];
 		var tempNavigationContainerPages = [];
@@ -393,7 +378,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data
@@ -446,7 +430,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
-
 	/**
 	 * Called when the user clicks the "Accept" button of the transition editor,
 	 * potentially with changes to transition properties
@@ -474,7 +457,7 @@ var InputTransition = class InputTransition extends Transition {
 		// Log TRANSITION event: transition-editor-accept-noconfirm
 		// Transition editor dialog is currently open, user may/may not edit transition type, 
 		// and finally presses the Accept button in the editor dialog
-		console.log("Transition editor: Accept - no confirm");
+		Logger.info("Transition editor: Accept - no confirm");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createTransitionPayloadFull(
 				MetricsHelper.LogEventType.TRANSITION, 
@@ -488,7 +471,6 @@ var InputTransition = class InputTransition extends Transition {
 		);
     }
     
-
 	/**
 	 * Called from acceptDialog() when the confirmation box is triggered
 	 * @param {*} oEvent 
@@ -505,7 +487,7 @@ var InputTransition = class InputTransition extends Transition {
 			// Log TRANSITION event: transition-editor-accept-confirm-ok
 			// Transition editor dialog is currently open, user edits transition type properties, 
 			// presses the Accept button in the editor dialog, and finally clicks OK to confirm changes
-			console.log("Transition editor: Accept - confirm OK");
+			Logger.info("Transition editor: Accept - confirm OK");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
@@ -524,7 +506,7 @@ var InputTransition = class InputTransition extends Transition {
 			// Log TRANSITION event: transition-editor-accept-confirm-cancel
 			// Transition editor dialog is currently open, user edits transition type properties, 
 			// presses the Accept button in the editor dialog, and finally clicks Cancel to cancel confirmation
-			console.log("Transition editor: Accept - confirm Cancel");
+			Logger.info("Transition editor: Accept - confirm Cancel");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
@@ -540,7 +522,6 @@ var InputTransition = class InputTransition extends Transition {
 		}
     }
 	
-
 	/**
 	 * Called when the transition editor dialog Cancel button is clicked
 	 */
@@ -553,7 +534,7 @@ var InputTransition = class InputTransition extends Transition {
 
 		// Log TRANSITION event: transition-editor-cancel
 		// Transition editor dialog is currently open, then the Cancel button in the editor dialog is pressed
-		console.log("Transition editor: Cancel");
+		Logger.info("Transition editor: Cancel");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createTransitionPayloadFull(
 				MetricsHelper.LogEventType.TRANSITION, 
@@ -609,7 +590,7 @@ var InputTransition = class InputTransition extends Transition {
 			
 			// Log TRANSITION event: transition-remove-confirm
 			// Transition is removed after triggering then confirming the confirmation dialog
-			console.log("Transition removal: confirmed");
+			Logger.info("Transition removal: confirmed");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
@@ -627,7 +608,7 @@ var InputTransition = class InputTransition extends Transition {
 
 			// Log TRANSITION event: transition-remove-cancel
 			// Transition removal is canceled after triggering then canceling the confirmation dialog
-			console.log("Transition removal: canceled");
+			Logger.info("Transition removal: canceled");
 			MetricsHelper.saveLogEvent(
 				MetricsHelper.createTransitionPayloadFull(
 					MetricsHelper.LogEventType.TRANSITION, 
