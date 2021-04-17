@@ -118,6 +118,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	onTeamPlayerSelected : function(oEvent) {
+		this.requestBusyDialog();
 		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
@@ -132,10 +133,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.stompClient.onConnect = function (frame) {
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gamePlayer.connecting"));
 				that.connectToGameInstance(that.gameInstanceId, team, player);
+				that.closeBusyDialog();
 			};
 			this.stompClient.onStompError = function (frame) {
 				Logger.error("error connecting");
 				Logger.error(frame);
+				that.closeBusyDialog();
 			};
 			this.stompClient.activate();
 	},
@@ -353,7 +356,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		  }
 		})();
 	},
-	
+
+	requestBusyDialog : function() {
+		if(typeof this.busyDialog === "undefined") {
+			this.busyDialog = new sap.m.BusyDialog();
+		}
+		this.fallback = setTimeout(function() {
+			this.busyDialog.close();
+		}.bind(this), 30000);
+		this.busyDialog.open();
+	},
+
+	closeBusyDialog : function() {
+		this.busyDialog.close();
+		clearTimeout(this.fallback);
+	},
 	  
 
 /**
