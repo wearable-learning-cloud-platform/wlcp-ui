@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 var OutputState = class OutputState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
@@ -18,7 +14,6 @@ var OutputState = class OutputState extends State {
 		this.setupStateConfigs();
 		
 		/* 
-		FRANCIS-NOTE: 
 		- Each iconTabs element corresponds to a tracked item/object
 		within a state -> Game Wide, Team 1, Team 2, Team 1 Player 1, Team 1 Player 2, etc.
 		- Each iconTabs element has properties -> scope, navigationContainerPages, etc.

@@ -1,3 +1,62 @@
+/**
+ * Location of CONNECTION events logging
+ * 
+ * 
+ * GameEditor.controller.js
+ * - connection-create
+ * - connection-remove-noconfirm
+ * - connection-remove-confirm
+ * - connection-remove-cancel
+ * 
+ * ADDITIONAL NOTES:
+ * - Connection ids are captured by connectionId 
+ */
+
+/**
+ * Location of STATE events logging
+ * 
+ * State.js
+ * - state-move
+ * - state-remove-confirm
+ * - state-remove-cancel
+ * 
+ * OutputState.js
+ * - state-editor-dialog-open-success
+ * - state-editor-accept-withchanges
+ * - state-editor-accept-nochanges
+ * - state-editor-accept-withchanges-confirm
+ * - state-editor-accept-withchanges-cancel
+ * - state-editor-accept-nochanges-confirm
+ * - state-editor-accept-nochanges-cancel
+ * - state-editor-cancel
+ * 
+ * GameEditor.controller.js
+ * - state-create
+ * 
+ * ADDITIONAL NOTES:
+ * - State ids are captured by htmlId 
+ */
+
+/**
+ * Location of TRANSITION events logging
+ * 
+ * InputTransition.js
+ * - transition-remove-confirm
+ * - transition-remove-cancel
+ * - transition-editor-dialog-open-success
+ * - transition-edit-attempt-error
+ * - transition-editor-accept-noconfirm
+ * - transition-editor-cancel
+ * - transition-editor-accept-confirm-ok
+ * - transition-editor-accept-confirm-cancel
+ * 
+ * GameEditor.controller.js
+ * - transition-create
+ * 
+ * ADDITIONAL NOTES:
+ * - Transition ids are captured by overlayId 
+ */
+
 var MetricsHelper = {
 		
     loggingEnabled : true,

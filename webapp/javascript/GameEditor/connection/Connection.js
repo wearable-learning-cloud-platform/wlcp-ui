@@ -1,17 +1,3 @@
-/**
- * Location of CONNECTION events logging
- * 
- * 
- * GameEditor.controller.js
- * - connection-create
- * - connection-remove-noconfirm
- * - connection-remove-confirm
- * - connection-remove-cancel
- * 
- * ADDITIONAL NOTES:
- * - Connection ids are captured by connectionId 
- */
-
 var Connection = class Connection {
 	constructor(connectionId, connectionFrom, connectionTo) {
 		this.connectionId = connectionId;

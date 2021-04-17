@@ -1,22 +1,3 @@
-/**
- * Location of TRANSITION events logging
- * 
- * InputTransition.js
- * - transition-remove-confirm
- * - transition-remove-cancel
- * - transition-editor-dialog-open-success
- * - transition-edit-attempt-error
- * - transition-editor-accept-noconfirm
- * - transition-editor-cancel
- * - transition-editor-accept-confirm-ok
- * - transition-editor-accept-confirm-cancel
- * 
- * GameEditor.controller.js
- * - transition-create
- * 
- * ADDITIONAL NOTES:
- * - Transition ids are captured by overlayId 
- */
 var Transition = class Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {

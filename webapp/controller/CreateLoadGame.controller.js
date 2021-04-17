@@ -41,13 +41,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 * If it succeeds, createGameSuccess() will be called.
 	 */
 	createGame : function() {
-		// if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
-		// 	sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
-		// 	return;
-		// }
 
 		// Log BUTTON_PRESS event: create-new-game-button
-		console.log("Create Game dialog: Create pressed")
+		Logger.info("Create Game dialog: Create pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 
@@ -87,11 +83,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 */
 	cancelCreateGame : function(oEvent) {
 
-		var test = oEvent.getSource();
-		console.log(test.getId())
-
 		// Log BUTTON_PRESS event: cancel-new-game-button
-		console.log("Create Game dialog: Cancel pressed");
+		Logger.info("Create Game dialog: Cancel pressed");
 		MetricsHelper.saveLogEvent(
 			MetricsHelper.createButtonPayload(
 				MetricsHelper.LogEventType.BUTTON_PRESS, 

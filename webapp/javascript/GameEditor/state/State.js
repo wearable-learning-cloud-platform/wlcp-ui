@@ -1,28 +1,3 @@
-/**
- * Location of STATE events logging
- * 
- * State.js
- * - state-move
- * - state-remove-confirm
- * - state-remove-cancel
- * 
- * OutputState.js
- * - state-editor-dialog-open-success
- * - state-editor-accept-withchanges
- * - state-editor-accept-nochanges
- * - state-editor-accept-withchanges-confirm
- * - state-editor-accept-withchanges-cancel
- * - state-editor-accept-nochanges-confirm
- * - state-editor-accept-nochanges-cancel
- * - state-editor-cancel
- * 
- * GameEditor.controller.js
- * - state-create
- * 
- * ADDITIONAL NOTES:
- * - State ids are captured by htmlId 
- */
-
 var StateType = {
 		START_STATE : "START_STATE",
 		OUTPUT_STATE : "OUTPUT_STATE"
