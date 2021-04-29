@@ -1,6 +1,3 @@
-/**
- * 
- */
 var Transition = class Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {

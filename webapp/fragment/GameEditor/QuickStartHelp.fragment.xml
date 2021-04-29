@@ -8,13 +8,13 @@
 		<buttons>
 			<Button text="{i18n>button.close}" type="Reject" press="closeQuickStartHelp"/>
 		</buttons>
-		<Carousel showPageIndicator="false">
+		<Carousel id="quickStartHelpCarousel" showPageIndicator="false" pageChanged="quickStartPageChanged">
 			<pages>	
-				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+				<l:VerticalLayout id="quickStartHelp-1" class="sapUiContentPadding" width="100%">
 					<Text text="{i18n>gameEditor.quickstart.step1}" textAlign="Center" width="100%"/>
 					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;resources/video/{i18n>gameEditor.quickstart.video}1.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
 				</l:VerticalLayout>	
-				<l:VerticalLayout class="sapUiContentPadding" width="100%">
+				<l:VerticalLayout id="quickStartHelp-2" class="sapUiContentPadding" width="100%">
 					<Text text="{i18n>gameEditor.quickstart.step2}" textAlign="Center" width="100%"/>
 					<core:HTML content="&lt;video autoplay loop muted width=100%&gt;&lt;source src=&quot;resources/video/{i18n>gameEditor.quickstart.video}2.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;"/>
 				</l:VerticalLayout>	

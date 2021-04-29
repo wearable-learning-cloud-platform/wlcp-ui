@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 var StateType = {
 		START_STATE : "START_STATE",
 		OUTPUT_STATE : "OUTPUT_STATE"
@@ -80,9 +76,13 @@ var State = class State {
 		
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.stopped, this)});
+		
+		// Mouse down event listener
 		document.getElementById(this.stateDiv.id).addEventListener("mousedown", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = true;
 		}, false);
+		
+		// Mouse up event listener
 		document.getElementById(this.stateDiv.id).addEventListener("mouseup", function(event) {
 			GameEditor.getEditorController().scroller.leftMouseDown = false;
 			GameEditor.getEditorController().scroller.handleMousemove(event);
@@ -135,9 +135,37 @@ var State = class State {
 	        		}
 	    		}
 	    	}
-	    	
-	    	//Log it
-	    	DataLogger.logGameEditor();
+			
+			// Log STATE event: state-remove-confirm
+			// State is removed after triggering then confirming the confirmation dialog
+			Logger.info("State removal: confirmed");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-remove-confirm"
+				)
+			);
+		}
+		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
+
+			// Log STATE event: state-remove-cancel
+			// State removal is canceled after triggering then canceling the confirmation dialog
+			Logger.info("State removal: canceled");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-remove-cancel"
+				)
+			);
+			
 		}
 	}
 	
@@ -170,6 +198,11 @@ var State = class State {
 		}
 	}
 	
+	/**
+	 * Called whenever a state is dragged to a different coordinate position
+	 * NOTE: Not recommended for logging because every single coordinate movement will be logged
+	 * @param {*} event 
+	 */
 	moved(event) {
 		
 		//Update the position
@@ -181,10 +214,47 @@ var State = class State {
 		GameEditor.getEditorController().scroller.handleMousemove(event.e);
 	}
 	
+	/**
+	 * Called when a drag event on a state that has been initiated is stopped
+	 */
 	stopped() {
-		
-		//Log it
-		DataLogger.logGameEditor();
+
+		// Check first what kind of state is being moved;
+		// The start state does not have a modelJSON component
+		if (this.stateType === StateType.START_STATE) {
+
+			// Log STATE event: state-move
+			// State moved to another part of the canvas
+			Logger.info("State moved - start state");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					"start-state",
+					"state-move"
+				)
+			);
+
+		} 
+		else if (this.stateType === StateType.OUTPUT_STATE) {
+
+			// Log STATE event: state-move
+			// State moved to another part of the canvas
+			Logger.info("State moved - regular state");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-move"
+				)
+			);
+
+		}
 	}
 	
 	save() {

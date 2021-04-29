@@ -1,8 +1,8 @@
 sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	
 	getMaxPlayer : function (max, teamCount) {
-		  return Math.floor(max / teamCount);
-		},
+		return Math.floor(max / teamCount);
+	},
 		
 	onPlayerChange: function (oEvent) {
 		
@@ -30,21 +30,28 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			
 	},
 	
-	
 	cancelCreateLoadGame : function() {
 		sap.ui.getCore().byId("createLoadGame").close();
 		sap.ui.getCore().byId("createLoadGame").destroy();
 	},
 	
 	/**
-	 * This is called when the create button is pressed on the Create Game
-	 * Dialog. If it succeeds, createGameSuccess will be called.
+	 * This is called when the create button is pressed on the Create Game Dialog.
+	 * If it succeeds, createGameSuccess() will be called.
 	 */
 	createGame : function() {
-		// if(!GameEditor.getEditorController().newGameModel.gameId.match(/^[a-zA-Z]+$/)) {
-		// 	sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
-		// 	return;
-		// }
+
+		// Log BUTTON_PRESS event: create-new-game-button
+		Logger.info("Create Game dialog: Create pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().newGameModel.gameId, 
+				"create-new-game-button"
+			)
+		); 
+
 		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
@@ -72,7 +79,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 * They will be returned to main editor screen with all controls disabled
 	 * except for the main toolbar.
 	 */
-	cancelCreateGame : function() {
+	cancelCreateGame : function(oEvent) {
+
+		// Log BUTTON_PRESS event: cancel-new-game-button
+		Logger.info("Create Game dialog: Cancel pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().newGameModel.gameId, 
+				"cancel-new-game-button"
+			)
+		); 
+
 		sap.ui.getCore().byId("createGame").close();
 		sap.ui.getCore().byId("createGame").destroy();
 	},

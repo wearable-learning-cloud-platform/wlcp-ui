@@ -1,24 +1,30 @@
-/**
- * 
- */
-
 var InputTransition = class InputTransition extends Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
+
 		super(cssClass, connection, overlayId, gameEditor);
+
 		this.create();
+
 		this.modelJSON = {
 				iconTabs : []
 		}
+
 		this.oldModelJSON = {};
 		this.transitionConfigs = [];
 		this.setupTransitionConfigs();
-		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
+		
+		this.modelJSON.iconTabs = this.generateData(
+			GameEditor.getEditorController().gameModel.teamCount, 
+			GameEditor.getEditorController().gameModel.playersPerTeam
+		);
+		
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.validationRules = [];
 		this.setupValidationRules();
 		this.scopeMask = 0xffffffff;
 		this.oldActiveScopes = [];
+
 	}
 	
 	create() {
@@ -56,20 +62,28 @@ var InputTransition = class InputTransition extends Transition {
 		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
+	/**
+	 * Called when Transition Editor properties (button press) are changed
+	 * @param {*} oEvent 
+	 */
 	onChange(oEvent) {
+
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
 		}
+		
 		for(var i = 0; i < this.transitionConfigs.length; i++) {
 			for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
 				this.transitionConfigs[i].validationRules[n].validate(this);
 			}
 		}
+		
 		if(typeof this.dialog !== "undefined") { 
 			if(this.dialog.isOpen()) { 
 				this.onAfterRenderingDialog(); 
 			}
 		}
+
 	}
 	
 	revalidate() {
@@ -244,9 +258,32 @@ var InputTransition = class InputTransition extends Transition {
 		return saveData;
 	}
 	
+	/**
+	 * Called when the user double-clicks a transition
+	 * @returns 
+	 */
 	doubleClick() {
+
 		if(this.scopeMask == 0){
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.emptyState"));
+			// , {title:"test"} // For title of error box
+			
+			// Log TRANSITION event: transition-edit-attempt-error
+			// User attempts to open the Transition editor on a transition,
+			// but is shown an error because of an empty state before it
+			Logger.info("Transition edit attempt error");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayloadFull(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					this.connection.connectionId, 
+					"transition-edit-attempt-error"
+				)
+			);
+
 			return;
 		}
 		
@@ -284,6 +321,21 @@ var InputTransition = class InputTransition extends Transition {
 			
 		//Open the dialog
 		this.dialog.open();
+
+		// Log TRANSITION event: transition-editor-dialog-open-success
+		// User attempts to open the Transition editor dialog by double-clicking and is successful
+		Logger.info("Transition editor: dialog opened");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createTransitionPayloadFull(
+				MetricsHelper.LogEventType.TRANSITION, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.overlayId, 
+				JSON.stringify(this.modelJSON.iconTabs),
+				this.connection.connectionId, 
+				"transition-editor-dialog-open-success"
+			)
+		);
 	}
 	
 	onAfterRenderingDialog() {
@@ -378,32 +430,118 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+	/**
+	 * Called when the user clicks the "Accept" button of the transition editor,
+	 * potentially with changes to transition properties
+	 * @returns 
+	 */
     acceptDialog() {
+
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
-    		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : $.proxy(this.acceptRevalidation, this)});
+    		sap.m.MessageBox.confirm(
+				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), 
+				{
+					title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), 
+					onClose : $.proxy(this.acceptRevalidation, this)
+				}
+			);
     		return;
     	}
+
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
-		DataLogger.logGameEditor();
+
+		// Log TRANSITION event: transition-editor-accept-noconfirm
+		// Transition editor dialog is currently open, user may/may not edit transition type, 
+		// and finally presses the Accept button in the editor dialog
+		Logger.info("Transition editor: Accept - no confirm");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createTransitionPayloadFull(
+				MetricsHelper.LogEventType.TRANSITION, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.overlayId, 
+				JSON.stringify(this.modelJSON.iconTabs),
+				this.connection.connectionId, 
+				"transition-editor-accept-noconfirm"
+			)
+		);
     }
     
+	/**
+	 * Called from acceptDialog() when the confirmation box is triggered
+	 * @param {*} oEvent 
+	 */
     acceptRevalidation(oEvent) {
+
+		// CASE: User confirms by clicking "OK" on the "Accept" dialog
     	if(oEvent == sap.m.MessageBox.Action.OK) {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
     		this.dialog.destroy();
-    		DataLogger.logGameEditor();
+
+			// Log TRANSITION event: transition-editor-accept-confirm-ok
+			// Transition editor dialog is currently open, user edits transition type properties, 
+			// presses the Accept button in the editor dialog, and finally clicks OK to confirm changes
+			Logger.info("Transition editor: Accept - confirm OK");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayloadFull(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
+					"transition-editor-accept-confirm-ok"
+				)
+			);
     	}
+		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
+		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
+			
+			// Log TRANSITION event: transition-editor-accept-confirm-cancel
+			// Transition editor dialog is currently open, user edits transition type properties, 
+			// presses the Accept button in the editor dialog, and finally clicks Cancel to cancel confirmation
+			Logger.info("Transition editor: Accept - confirm Cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayloadFull(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
+					"transition-editor-accept-confirm-cancel"
+				)
+			);
+
+		}
     }
 	
+	/**
+	 * Called when the transition editor dialog Cancel button is clicked
+	 */
 	closeDialog() {
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
-		DataLogger.logGameEditor();
+
+		// Log TRANSITION event: transition-editor-cancel
+		// Transition editor dialog is currently open, then the Cancel button in the editor dialog is pressed
+		Logger.info("Transition editor: Cancel");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createTransitionPayloadFull(
+				MetricsHelper.LogEventType.TRANSITION, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.overlayId, 
+				JSON.stringify(this.modelJSON.iconTabs), 
+				this.connection.connectionId, 
+				"transition-editor-cancel"
+			)
+		);
 	}
 	
 	remove() {
@@ -415,6 +553,7 @@ var InputTransition = class InputTransition extends Transition {
 	removeTransition(oAction) {
 		
 		//If they click OK, delete
+		// CASE: User attempts to remove a transition -> confirmation box displayed -> user confirms "OK"
 		if(oAction == sap.m.MessageBox.Action.OK) {
 			
 			//Remove the overlay
@@ -441,9 +580,40 @@ var InputTransition = class InputTransition extends Transition {
 	        		}
 	    		}
 	    	}
-	    	
-	    	//Log it
-	    	DataLogger.logGameEditor();
+			
+			// Log TRANSITION event: transition-remove-confirm
+			// Transition is removed after triggering then confirming the confirmation dialog
+			Logger.info("Transition removal: confirmed");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayloadFull(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId,
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
+					"transition-remove-confirm"
+				)
+			);
+		}
+		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
+		else if(oAction == sap.m.MessageBox.Action.CANCEL) {
+
+			// Log TRANSITION event: transition-remove-cancel
+			// Transition removal is canceled after triggering then canceling the confirmation dialog
+			Logger.info("Transition removal: canceled");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createTransitionPayloadFull(
+					MetricsHelper.LogEventType.TRANSITION, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId,
+					this.overlayId, 
+					JSON.stringify(this.modelJSON.iconTabs), 
+					this.connection.connectionId, 
+					"transition-remove-cancel"
+				)
+			);
+			
 		}
 	}
 	

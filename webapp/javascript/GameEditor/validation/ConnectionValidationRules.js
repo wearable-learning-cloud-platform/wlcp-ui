@@ -150,9 +150,6 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 
 		//Tell the state to update
 		this.getState(validationData.connectionTo.htmlId).onChange();
-		
-		//Log it
-		DataLogger.logGameEditor();
 	}
 	
 	getConnectionIsLoopBack(connectionId) {

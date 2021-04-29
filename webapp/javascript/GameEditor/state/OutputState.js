@@ -1,19 +1,30 @@
-/**
- * 
- */
-
 var OutputState = class OutputState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
+
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
+		
 		this.modelJSON = {
 				description : this.text,
 				iconTabs : []
 		}
+		
 		this.oldModelJSON = {};
 		this.stateConfigs = [];
 		this.setupStateConfigs();
-		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.teamCount, GameEditor.getEditorController().gameModel.playersPerTeam);
+		
+		/* 
+		- Each iconTabs element corresponds to a tracked item/object
+		within a state -> Game Wide, Team 1, Team 2, Team 1 Player 1, Team 1 Player 2, etc.
+		- Each iconTabs element has properties -> scope, navigationContainerPages, etc.
+		- The navigationContainerPages has all the elements editable by 
+		a player -> Display Text, Display Photo, etc.
+		*/
+		this.modelJSON.iconTabs = this.generateData(
+			GameEditor.getEditorController().gameModel.teamCount, 
+			GameEditor.getEditorController().gameModel.playersPerTeam
+		);
+		
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
 		this.validationRules = [];
@@ -67,6 +78,10 @@ var OutputState = class OutputState extends State {
 		this.validationRules.push(new StateScopeValidationRule());
 	}
 	
+	/**
+	 * Called when the user double-clicks a state
+	 * @returns 
+	 */
 	doubleClick() {
 		
 		//Check to see if we have a connection to us
@@ -96,7 +111,7 @@ var OutputState = class OutputState extends State {
 			return;
 		}
 		
-		//Create an instance of the dialog
+		//Create an instance of the State editor dialog
 		this.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.OutputStateConfig", this);
 		
 		//Set the model for the dialog
@@ -125,6 +140,21 @@ var OutputState = class OutputState extends State {
 		
 		//Open the dialog
 		this.dialog.open();
+
+		// Log STATE event: state-editor-dialog-open-success
+		// User attempts to open the State editor dialog by double-clicking and is successful
+		Logger.info("State editor: dialog opened");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayloadFull(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.modelJSON.iconTabs),
+				"state-editor-dialog-open-success"
+			)
+		);
+
 	}
 	
 	descriptionChanged(oEvent) {
@@ -148,6 +178,12 @@ var OutputState = class OutputState extends State {
 		}
 	}
 	
+	/**
+	 * Called to set the iconTabs object within a state
+	 * @param {*} teams 
+	 * @param {*} playersPerTeam 
+	 * @returns 
+	 */
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data
@@ -297,24 +333,80 @@ var OutputState = class OutputState extends State {
     }
     
     acceptDialog() {
+
+		// CASE: State editor dialog is open, user edits state properties, then presses the Accept button
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
-    		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), onClose : $.proxy(this.acceptRevalidation, this)});
+    		sap.m.MessageBox.confirm(
+				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validationEngine"), 
+				{
+					title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.validation.title"), 
+					onClose : $.proxy(this.acceptRevalidation, this)
+				}
+			);
+
+			// Log STATE event: state-editor-accept-withchanges
+			// State editor dialog is currently open, user edits state properties, 
+			// then presses the Accept button in the editor dialog
+			Logger.info("State editor: Accept with changes");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-editor-accept-withchanges"
+				)
+			);
+
     		return;
 		}
+
+		// CASE: State editor dialog is open, user does not edit state properties, then presses the Accept button
 		if(this.getActiveScopes().length == 0) {
-			sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), {title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges.title"), onClose : $.proxy(this.acceptWithoutAnyChanges, this)});
+			sap.m.MessageBox.confirm(
+				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), 
+				{
+					title:sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges.title"), 
+					onClose : $.proxy(this.acceptWithoutAnyChanges, this)
+				}
+			);
+
+			// Log STATE event: state-editor-accept-nochanges
+			// State editor dialog is currently open, user does not edit state properties, 
+			// then presses the Accept button in the editor dialog
+			Logger.info("State editor: Accept no changes");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-editor-accept-nochanges"
+				)
+			);
+
     		return;
 		}
+
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
+		
 		if(typeof this.newDescriptionText !== "undefined") {
 			this.changeText(this.newDescriptionText);
 		}
-		DataLogger.logGameEditor();
     }
     
+	/**
+	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
+	 * confirmation dialog of a state editor, with changes to state properties
+	 * @param {*} oEvent 
+	 */
     acceptRevalidation(oEvent) {
+
+		// CASE: User confirms by clicking "OK" on the "Accept" dialog
     	if(oEvent == sap.m.MessageBox.Action.OK) {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
@@ -322,23 +414,126 @@ var OutputState = class OutputState extends State {
 			if(typeof this.newDescriptionText !== "undefined") {
 				this.changeText(this.newDescriptionText);
 			}
-    		DataLogger.logGameEditor();
+
+			// Log STATE event: state-editor-accept-withchanges-confirm
+			// State editor dialog is currently open, user edits state properties, 
+			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
+			Logger.info("State editor: Accept with changes - confirm");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-editor-accept-withchanges-confirm"
+				)
+			);
     	}
+		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
+		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
+			
+			// Log STATE event: state-editor-accept-withchanges-cancel
+			// State editor dialog is currently open, user edits state properties, 
+			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
+			Logger.info("State editor: Accept with changes - cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					"state-editor-accept-withchanges-cancel"
+				)
+			);
+
+		}
+
 	}
 	
+	/**
+	 * Called when the user clicks either the "OK" or "Cancel" buttons on the "Accept"
+	 * confirmation dialog of a state editor, without making changes to state properties
+	 * @param {*} oEvent 
+	 */
 	acceptWithoutAnyChanges(oEvent) {
+
+		// CASE: User confirms by clicking "OK" on the "Accept" dialog
 		if(oEvent == sap.m.MessageBox.Action.OK) {
+
 			this.dialog.close();
 			this.dialog.destroy();
+
+			// Log STATE event: state-editor-accept-nochanges-confirm
+			// State editor dialog is currently open, user does not edit state properties, 
+			// presses the Accept button in the editor dialog, and finally confirms the confirmation dialog
+			Logger.info("State editor: Accept no changes - confirm");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					//"test",
+					"state-editor-accept-nochanges-confirm"
+				)
+			);
+
+		}
+		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
+		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
+
+			// Log STATE event: state-editor-accept-nochanges-cancel
+			// State editor dialog is currently open, user does not edit state properties, 
+			// presses the Accept button in the editor dialog, and finally cancels the confirmation dialog
+			Logger.info("State editor: Accept no changes - cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createStatePayloadFull(
+					MetricsHelper.LogEventType.STATE, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					this.htmlId, 
+					JSON.stringify(this.modelJSON.iconTabs),
+					//JSON.stringify(this.modelJSON.iconTabs[0].navigationContainerPages),
+					//"test",
+					"state-editor-accept-nochanges-cancel"
+				)
+			);
+
 		}
 	}
 	
+	/**
+	 * Called when the state editor dialog Cancel button is clicked
+	 */
 	closeDialog() {
+
+		// modelJSON is always current state
+		// oldModelJSON is the initial data state before editing
+		// LOG modelJSON here
+
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
-		DataLogger.logGameEditor();
+		
+		// Log STATE event: state-editor-cancel
+		// State editor dialog is currently open, then the Cancel button in the editor dialog is pressed
+		Logger.info("State editor: Cancel");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayloadFull(
+				MetricsHelper.LogEventType.STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.modelJSON.iconTabs),
+				"state-editor-cancel"
+			)
+		);
+
 	}
 	
 	navigationSelected(oEvent) {

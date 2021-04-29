@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 var Connection = class Connection {
 	constructor(connectionId, connectionFrom, connectionTo) {
 		this.connectionId = connectionId;
