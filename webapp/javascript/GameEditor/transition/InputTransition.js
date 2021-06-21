@@ -59,7 +59,6 @@ var InputTransition = class InputTransition extends Transition {
 	
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
-		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
 	/**

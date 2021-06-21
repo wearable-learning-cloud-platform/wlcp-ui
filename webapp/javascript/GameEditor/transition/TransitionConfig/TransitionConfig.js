@@ -53,7 +53,7 @@ var TransitionConfig = class TransitionConfig {
 var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidationRule extends ValidationRule {
 	
 	validate(transition, updateNeighborTransitions = true) {
-		
+
 		var transitionList = [];
 		
 		//Get a list of neighbor connections
@@ -67,46 +67,88 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 				}
 			}
 		}
+
+		// 1. Nothing active across all transitions show all
+		// 2. One active show only active + secondary (in ones not active)
+		// 3. Two active only show on one thats active
 		
 		//Loop through the transition list
 		for(var i = 0; i < transitionList.length; i++) {
+			if(!updateNeighborTransitions) {
+				if(transitionList[i].overlayId !== transition.overlayId) {
+					continue;
+				}
+			}
 			var scopes = transitionList[i].modelJSON.iconTabs;
 			for(var n = 0; n < scopes.length; n++) {
-				var activeList = [];
-				for(var j = 0; j < transitionList.length; j++) {
-					for(var k = 0; k < transitionList[j].modelJSON.iconTabs.length; k++) {
-						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
-							activeList.push(this.getActiveTransitionType(transitionList[j], scopes[n].scope));
+				var activeTransitionTypesAcrossAll = this.getActiveTransitionTypeAcrossAll(transitionList, scopes[n].scope);
+				var activeTransitionTypeNonSecondary = this.getActiveTransitionTypeNonSecondary(transitionList, scopes[n].scope);
+				var activeTransitionType = this.getActiveTransitionType(transitionList[i], scopes[n].scope);
+				if(activeTransitionTypesAcrossAll.length == 1 && activeTransitionTypesAcrossAll.includes("")) {
+					var transitionTypes = transitionList[i].modelJSON.iconTabs[n].navigationListItems;
+					if(scopes[n].scope == transitionList[i].modelJSON.iconTabs[n].scope) {
+						for(var j = 0; j < transitionTypes.length; j++) {
+							transitionTypes[j].visible = true;
 						}
 					}
-				}
-				for(var j = 0; j < transitionList.length; j++) {
-					if(!updateNeighborTransitions) {
-						if(transitionList[j].overlayId !== transition.overlayId) {
-							continue;
-						}
-					}
-					for(var k = 0; k < transitionList[j].modelJSON.iconTabs.length; k++) {
-						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].navigationListItems;
-						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
-							for(var l = 0; l < transitionTypes.length; l++) {
-								if(activeList.includes("") && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) && !activeList.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random"))) {
-									transitionTypes[l].visible = true;
-								} else if(activeList.includes(transitionTypes[l].title)) {
-									transitionTypes[l].visible = true;
-									transitionList[j].modelJSON.iconTabs[k].activeTransition = transitionTypes[l].title;
+				} else if (activeTransitionTypesAcrossAll.length >= 1 && !activeTransitionTypesAcrossAll.includes("")) {
+					var transitionTypes = transitionList[i].modelJSON.iconTabs[n].navigationListItems;
+					if(scopes[n].scope == transitionList[i].modelJSON.iconTabs[n].scope) {
+						for(var j = 0; j < transitionTypes.length; j++) {
+							if(activeTransitionType === "") {
+								if(transitionTypes[j].title == activeTransitionTypeNonSecondary || (transitionTypes[j].title === sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer") && !activeTransitionTypesAcrossAll.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")))) {
+									transitionTypes[j].visible = true;
 								} else {
-									transitionTypes[l].visible = false;
+									transitionTypes[j].visible = false;
+								}
+							} else {
+								if(transitionTypes[j].title == activeTransitionType) {
+									transitionTypes[j].visible = true;
+									transitionList[i].modelJSON.iconTabs[n].activeTransition = transitionTypes[j].title;
+								} else {
+									transitionTypes[j].visible = false;
 								}
 							}
-							transitionList[j].model.setData(transitionList[j].modelJSON);
 						}
+					}
+				} 
+			}
+			transitionList[i].model.setData(transitionList[i].modelJSON);
+		}
+	}
+
+	getActiveTransitionTypeAcrossAll(transitionList, scope) {
+		var activeList = [];
+		for(var i = 0; i < transitionList.length; i++) {
+			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
+				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
+					var activeTransitionType = this.getActiveTransitionType(transitionList[i], scope)
+					if(!activeList.includes(activeTransitionType)) {
+						activeList.push(activeTransitionType);
 					}
 				}
 			}
 		}
+		if(activeList.length > 1 && activeList.includes("")) {
+			activeList.splice(activeList.indexOf(""), 1);
+		}
+		return activeList;
 	}
-	
+
+	getActiveTransitionTypeNonSecondary(transitionList, scope) {
+		var activeTransitionTypesAcrossAll = this.getActiveTransitionTypeAcrossAll(transitionList, scope);
+		if(activeTransitionTypesAcrossAll.length == 0) {
+			return "";
+		} else if(activeTransitionTypesAcrossAll.length == 1) {
+			return activeTransitionTypesAcrossAll[0];
+		} else if(activeTransitionTypesAcrossAll.length == 2) {
+			if(activeTransitionTypesAcrossAll.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer"))) {
+				activeTransitionTypesAcrossAll.splice(activeTransitionTypesAcrossAll.indexOf(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")), 1);
+			}
+			return activeTransitionTypesAcrossAll;
+		}
+	}
+
 	getActiveTransitionType(transition, scope) {
 		var iconTabs = transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
