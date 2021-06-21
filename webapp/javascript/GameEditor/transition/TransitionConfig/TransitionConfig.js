@@ -7,10 +7,8 @@ var TransitionConfig = class TransitionConfig {
 	}
 	
 	onChange(oEvent) {
-		this.transition.onChange(oEvent);
-		for(var i = 0; i < this.validationRules.length; i++) {
-			this.validationRules[i].validate(this.transition);
-		}
+		this.transition.onChange(oEvent, false);
+		this.validationRules[0].validate(this.transition, false);
 	}
 	
 	getNavigationListItem() {
@@ -54,7 +52,7 @@ var TransitionConfig = class TransitionConfig {
 
 var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidationRule extends ValidationRule {
 	
-	validate(transition) {
+	validate(transition, updateNeighborTransitions = true) {
 		
 		var transitionList = [];
 		
@@ -83,6 +81,11 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					}
 				}
 				for(var j = 0; j < transitionList.length; j++) {
+					if(!updateNeighborTransitions) {
+						if(transitionList[j].overlayId !== transition.overlayId) {
+							continue;
+						}
+					}
 					for(var k = 0; k < transitionList[j].modelJSON.iconTabs.length; k++) {
 						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].navigationListItems;
 						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
