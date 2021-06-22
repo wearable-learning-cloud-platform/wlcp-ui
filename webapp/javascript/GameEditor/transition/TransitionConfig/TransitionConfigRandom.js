@@ -83,12 +83,11 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
 
 var RandomTransitionValidationRule = class RandomTransitionValidationRule extends ValidationRule {
 	
-	validate(transition) {
-		
-		var state = transition.connection.connectionFrom;
+	validate(transition, updateNeighborTransitions, dialogOnChange) {
 
 		var scopeCollection = [];
 
+		//Get a list of scope vs random enabled for this transition
 		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
 			for(var n = 0; n < transition.modelJSON.iconTabs[i].navigationContainerPages.length; n++) {
 				if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].title == "Random") {
@@ -96,39 +95,58 @@ var RandomTransitionValidationRule = class RandomTransitionValidationRule extend
 				}
 			}
 		}
+
+		var transitionList = [];
 		
-		for(var i = 0; i < state.outputConnections.length; i++) {
-			if(state.outputConnections[i].transition != null && transition.overlayId != state.outputConnections[i].transition.overlayId) {
-				for(var n = 0; n < state.outputConnections[i].transition.modelJSON.iconTabs.length; n++) {
-					for(var j = 0; j < scopeCollection.length; j++) {
-						if(state.outputConnections[i].transition.modelJSON.iconTabs[n].scope == scopeCollection[j].scope) {
-							for(var k = 0; k < state.outputConnections[i].transition.modelJSON.iconTabs[n].navigationContainerPages.length; k++) {
-								if(state.outputConnections[i].transition.modelJSON.iconTabs[n].navigationContainerPages[k].title == "Random") {
-									if(state.outputConnections[i].transition.modelJSON.iconTabs[n].navigationContainerPages[k].randomEnabled && !scopeCollection[j].randomEnabled) {
-										scopeCollection[j].randomEnabled = true;
-										transition.modelJSON.iconTabs[n].navigationContainerPages[k].randomEnabled = scopeCollection[j].randomEnabled;
-										this.setScopeData(transition, transition.modelJSON.iconTabs[n]);
+		//Get a list of neighbor connections
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFrom.htmlId});
+		
+		//Loop through the neighbor connections
+		for(var i = 0; i < neighborConnections.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.connectionId && neighborConnections[i].id !== transition.connection.connectionId) {
+					transitionList.push(GameEditor.getEditorController().transitionList[n]);
+				}
+			}
+		}
+
+		//If the change is being made from the dialog set all scopes the same
+		//If the change is being made from a new transition placement set this transition to the same
+		for(var i = 0; i < transitionList.length; i++) {
+			var scopes = transitionList[i].modelJSON.iconTabs;
+			for(var n = 0; n < scopes.length; n++) {
+				for(var j = 0; j < scopeCollection.length; j++) {
+					if(scopes[n].scope == scopeCollection[j].scope) {
+						var transitionTypes = transitionList[i].modelJSON.iconTabs[n].navigationContainerPages;
+						for(var k = 0; k < transitionTypes.length; k++) {
+							if(transitionTypes[k].title === "Random") {
+								if(transitionTypes[k].randomEnabled && !scopeCollection[j].randomEnabled && !dialogOnChange) {
+									for(var l = 0; l < transition.modelJSON.iconTabs.length; l++) {
+										if(transition.modelJSON.iconTabs[l].scope == scopes[n].scope) {
+											for(var m = 0; m < transition.modelJSON.iconTabs[l].navigationContainerPages.length; m++) {
+												if(transition.modelJSON.iconTabs[l].navigationContainerPages[m].title == "Random") {
+													transition.modelJSON.iconTabs[l].navigationContainerPages[m].randomEnabled = transitionTypes[k].randomEnabled;
+													if(transition.modelJSON.iconTabs[l].navigationContainerPages[m].randomEnabled) {
+														transition.modelJSON.iconTabs[l].activeTransition = "Random";
+													}
+												}
+											}
+										}
 									}
-									state.outputConnections[i].transition.modelJSON.iconTabs[n].navigationContainerPages[k].randomEnabled = scopeCollection[j].randomEnabled
-									this.setScopeData(state.outputConnections[i].transition, state.outputConnections[i].transition.modelJSON.iconTabs[n]);
+								} else {
+									transitionTypes[k].randomEnabled = scopeCollection[j].randomEnabled;
+									if(transitionTypes[k].randomEnabled) {
+										transitionList[i].modelJSON.iconTabs[n].activeTransition = "Random";
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+			transitionList[i].model.setData(transitionList[i].modelJSON);
 		}
-
-		transition.validationRules[0].validate(transition);
-	}
-
-	setScopeData(transition, model) {
-		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
-			if(transition.modelJSON.iconTabs[i].scope == model.scope) {
-				transition.modelJSON.iconTabs[i] = model;
-				transition.model.setData(transition.modelJSON);
-				break;
-			}
-		}
+		
+		transition.transitionConfigs[0].validationRules[0].validate(transition);
 	}
 }

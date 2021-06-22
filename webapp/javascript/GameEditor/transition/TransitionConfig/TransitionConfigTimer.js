@@ -52,9 +52,10 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 		for(var i = 0; i < scopeCollection.length; i++) {
 			for(var n = 0; n < scopeCollection.length; n++) {
 				if((scopeCollection[i].model.scope == scopeCollection[n].model.scope) && !activeScopes.includes(scopeCollection[i].model.scope)) {
+					var activeTransitionTypesAcrossAll = this.validationRules[0].getActiveTransitionTypeAcrossAll(neighborTransitions, scopeCollection[i].model.scope);
 					for(var j = 0; j < scopeCollection[i].model.navigationContainerPages.length; j++) {
 						if(scopeCollection[i].model.navigationContainerPages[j].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
-							if(scopeCollection[i].model.navigationContainerPages[j].duration > 0) {
+							if(scopeCollection[i].model.navigationContainerPages[j].duration > 0 && activeTransitionTypesAcrossAll.length < 2) {
 								activeScopes.push(scopeCollection[i].model.scope);
 							}
 						}

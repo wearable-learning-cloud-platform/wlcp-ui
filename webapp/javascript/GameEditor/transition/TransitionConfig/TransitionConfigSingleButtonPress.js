@@ -80,7 +80,8 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 					}
 				}
 			}
-			if(buttonsChecked == 4) { 
+			var activeTransition = this.validationRules[0].getActiveTransitionType(this.transition, scopeCollection[i].model.scope);
+			if(buttonsChecked == 4 && activeTransition !== "Timer") { 
 				activeScopes.push(scopeCollection[i].model.scope); 
 			}
 		}

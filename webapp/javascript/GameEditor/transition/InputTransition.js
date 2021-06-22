@@ -65,7 +65,7 @@ var InputTransition = class InputTransition extends Transition {
 	 * Called when Transition Editor properties (button press) are changed
 	 * @param {*} oEvent 
 	 */
-	onChange(oEvent, validateTransitionConfigs = true) {
+	onChange(oEvent, validateTransitionConfigs = true, dialogOnChange = true) {
 
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
@@ -74,7 +74,7 @@ var InputTransition = class InputTransition extends Transition {
 		if(validateTransitionConfigs) {
 			for(var i = 0; i < this.transitionConfigs.length; i++) {
 				for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
-					this.transitionConfigs[i].validationRules[n].validate(this);
+					this.transitionConfigs[i].validationRules[n].validate(this, true, dialogOnChange);
 				}
 			}
 		}
