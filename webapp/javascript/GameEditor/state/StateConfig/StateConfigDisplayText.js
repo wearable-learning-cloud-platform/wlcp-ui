@@ -7,6 +7,7 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 	getNavigationListItem() {
 		return {
 			text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayText"),
+			type : StateConfigType.DISPLAY_TEXT,
 			icon : "sap-icon://discussion-2"
 		}
 	}
@@ -14,6 +15,7 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayText"),
+			type : StateConfigType.DISPLAY_TEXT,
 			displayText : ""
 		}
 	}
@@ -27,7 +29,7 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_TEXT) {
 					if(iconTabs[i].navigationContainerPages[n].displayText != "") {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -43,7 +45,7 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+						if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_TEXT) {
 							iconTabs[i].navigationContainerPages[n].displayText = loadData.displayText[key];
 						}
 					}
@@ -57,7 +59,7 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_TEXT) {
 					if(iconTabs[i].navigationContainerPages[n].displayText != "") {
 						outputStateData[iconTabs[i].scope] = iconTabs[i].navigationContainerPages[n].displayText;
 					}

@@ -8,6 +8,7 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
     getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random"),
+			type : TransitionConfigType.RANDOM,
 			icon : "sap-icon://combine",
 			selected : false,
 			visible : true
@@ -16,7 +17,8 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
 	
 	getNavigationContainerPage() {
 		return {
-            title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random"),
+			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random"),
+			type : TransitionConfigType.RANDOM,
             randomEnabled : false
 		}
 	}
@@ -30,7 +32,7 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 					if(iconTabs[i].navigationContainerPages[n].randomEnabled == true) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -52,7 +54,7 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 							iconTabs[i].navigationContainerPages[n].randomEnabled = loadData.randoms[key].randomEnabled;
 						}
 					}
@@ -66,7 +68,7 @@ var TransitionConfigRandom = class TransitionConfigRandom extends TransitionConf
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 					if(iconTabs[i].navigationContainerPages[n].randomEnabled) {
 						randoms[iconTabs[i].scope] = {
 							randomEnabled : iconTabs[i].navigationContainerPages[n].randomEnabled
@@ -90,7 +92,7 @@ var RandomTransitionValidationRule = class RandomTransitionValidationRule extend
 		//Get a list of scope vs random enabled for this transition
 		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
 			for(var n = 0; n < transition.modelJSON.iconTabs[i].navigationContainerPages.length; n++) {
-				if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].title == "Random") {
+				if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 					scopeCollection.push({scope : transition.modelJSON.iconTabs[i].scope, randomEnabled : transition.modelJSON.iconTabs[i].navigationContainerPages[n].randomEnabled});
 				}
 			}
@@ -119,12 +121,12 @@ var RandomTransitionValidationRule = class RandomTransitionValidationRule extend
 					if(scopes[n].scope == scopeCollection[j].scope) {
 						var transitionTypes = transitionList[i].modelJSON.iconTabs[n].navigationContainerPages;
 						for(var k = 0; k < transitionTypes.length; k++) {
-							if(transitionTypes[k].title === "Random") {
+							if(transitionTypes[k].type === TransitionConfigType.RANDOM) {
 								if(transitionTypes[k].randomEnabled && !scopeCollection[j].randomEnabled && !dialogOnChange) {
 									for(var l = 0; l < transition.modelJSON.iconTabs.length; l++) {
 										if(transition.modelJSON.iconTabs[l].scope == scopes[n].scope) {
 											for(var m = 0; m < transition.modelJSON.iconTabs[l].navigationContainerPages.length; m++) {
-												if(transition.modelJSON.iconTabs[l].navigationContainerPages[m].title == "Random") {
+												if(transition.modelJSON.iconTabs[l].navigationContainerPages[m].type == TransitionConfigType.RANDOM) {
 													transition.modelJSON.iconTabs[l].navigationContainerPages[m].randomEnabled = transitionTypes[k].randomEnabled;
 													if(transition.modelJSON.iconTabs[l].navigationContainerPages[m].randomEnabled) {
 														transition.modelJSON.iconTabs[l].activeTransition = "Random";

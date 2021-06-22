@@ -8,6 +8,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 	getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress"),
+			type : TransitionConfigType.SINGLE_BUTTON_PRESS,
 			icon : "sap-icon://touch",
 			selected : true,
 			visible : true
@@ -17,6 +18,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress"),
+			type : TransitionConfigType.SINGLE_BUTTON_PRESS,
 			singlePress : [
 			{
 				selected : false,
@@ -46,7 +48,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 					if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected || 
 				       iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
 						activeScopes.push(iconTabs[i].scope);
@@ -73,7 +75,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 				if((scopeCollection[i].model.scope == scopeCollection[n].model.scope) && !activeScopes.includes(scopeCollection[i].model.scope)) {
 					for(var button = 0; button < 4; button++) {
 						for(var j = 0; j < scopeCollection[n].model.navigationContainerPages.length; j++) {
-							if(scopeCollection[n].model.navigationContainerPages[j].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+							if(scopeCollection[n].model.navigationContainerPages[j].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 								if(scopeCollection[n].model.navigationContainerPages[j].singlePress[button].selected) {buttonsChecked++;}
 							}
 						}
@@ -81,7 +83,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 				}
 			}
 			var activeTransition = this.validationRules[0].getActiveTransitionType(this.transition, scopeCollection[i].model.scope);
-			if(buttonsChecked == 4 && activeTransition !== "Timer") { 
+			if(buttonsChecked == 4 && activeTransition !== TransitionConfigType.TIMER) { 
 				activeScopes.push(scopeCollection[i].model.scope); 
 			}
 		}
@@ -95,7 +97,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 							iconTabs[i].navigationContainerPages[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
 							iconTabs[i].navigationContainerPages[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
@@ -112,7 +114,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 					if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected
 					 ||iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
 						singleButtonPresses[iconTabs[i].scope] = {
@@ -163,7 +165,7 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 					for(var j = 0; j < scopeCollection.length; j++) {
 						if(scopeCollection[n].model.scope == scopeCollection[j].model.scope) {
 							for(var k = 0; k < scopeCollection[j].model.navigationContainerPages.length; k++) {
-								if(scopeCollection[j].model.navigationContainerPages[k].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {									
+								if(scopeCollection[j].model.navigationContainerPages[k].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {									
 									if(scopeCollection[j].model.navigationContainerPages[k].singlePress[button].selected) {
 										selected = true;
 									}
@@ -195,7 +197,7 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
 			if(transition.modelJSON.iconTabs[i].scope == scope) {
 				for(var n = 0; n < transition.modelJSON.iconTabs[i].navigationContainerPages.length; n++) {
-					if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+					if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 						return { iconTab : transition.modelJSON.iconTabs[i], singleButtonPress :  transition.modelJSON.iconTabs[i].navigationContainerPages[n]}
 					}
 				}

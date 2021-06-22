@@ -14,13 +14,15 @@ var TransitionConfig = class TransitionConfig {
 	getNavigationListItem() {
 		return {
 			title : "",
+			type : "",
 			icon : ""
 		}
 	}
 	
 	getNavigationContainerPage() {
 		return {
-			title : ""
+			title : "",
+			type : ""
 		}
 	}
 	
@@ -96,13 +98,13 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					if(scopes[n].scope == transitionList[i].modelJSON.iconTabs[n].scope) {
 						for(var j = 0; j < transitionTypes.length; j++) {
 							if(activeTransitionType === "") {
-								if(transitionTypes[j].title == activeTransitionTypeNonSecondary || (transitionTypes[j].title === sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer") && !activeTransitionTypesAcrossAll.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")))) {
+								if(transitionTypes[j].type == activeTransitionTypeNonSecondary || (transitionTypes[j].type === TransitionConfigType.TIMER && !activeTransitionTypesAcrossAll.includes(TransitionConfigType.TIMER))) {
 									transitionTypes[j].visible = true;
 								} else {
 									transitionTypes[j].visible = false;
 								}
 							} else {
-								if(transitionTypes[j].title == activeTransitionType) {
+								if(transitionTypes[j].type == activeTransitionType) {
 									transitionTypes[j].visible = true;
 									transitionList[i].modelJSON.iconTabs[n].activeTransition = transitionTypes[j].title;
 								} else {
@@ -142,8 +144,8 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 		} else if(activeTransitionTypesAcrossAll.length == 1) {
 			return activeTransitionTypesAcrossAll[0];
 		} else if(activeTransitionTypesAcrossAll.length == 2) {
-			if(activeTransitionTypesAcrossAll.includes(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer"))) {
-				activeTransitionTypesAcrossAll.splice(activeTransitionTypesAcrossAll.indexOf(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")), 1);
+			if(activeTransitionTypesAcrossAll.includes(TransitionConfigType.TIMER)) {
+				activeTransitionTypesAcrossAll.splice(activeTransitionTypesAcrossAll.indexOf(TransitionConfigType.TIMER), 1);
 			}
 			return activeTransitionTypesAcrossAll;
 		}
@@ -154,26 +156,26 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == scope) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress")) {
+					if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 						if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected || 
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
-							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
+							return TransitionConfigType.SINGLE_BUTTON_PRESS;
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) {
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
 						if(iconTabs[i].navigationContainerPages[n].sequencePress.length > 0) { 
-							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress");
+							return TransitionConfigType.SEQUENCE_BUTTON_PRESS;
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 						if(iconTabs[i].navigationContainerPages[n].keyboardField.length > 0) {
-							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput");
+							return TransitionConfigType.KEYBOARD_INPUT;
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.TIMER) {
 						if(iconTabs[i].navigationContainerPages[n].duration > 0) {
-							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer");
+							return TransitionConfigType.TIMER;
 						}
-					} else if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random")) {
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 						if(iconTabs[i].navigationContainerPages[n].randomEnabled == true) {
-							return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random");
+							return TransitionConfigType.RANDOM;
 						}
 					}
 				}

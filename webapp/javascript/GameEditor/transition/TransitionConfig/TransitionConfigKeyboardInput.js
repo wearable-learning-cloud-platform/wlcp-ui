@@ -8,6 +8,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 	getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			type : TransitionConfigType.KEYBOARD_INPUT,
 			icon : "sap-icon://keyboard-and-mouse",
 			selected : false,
 			visible : true
@@ -17,6 +18,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			type : TransitionConfigType.KEYBOARD_INPUT,
 			keyboardField : []
 		}
 	}
@@ -30,7 +32,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 					if(iconTabs[i].navigationContainerPages[n].keyboardField.length > 0) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -52,7 +54,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 							for(var k = 0; k < loadData.keyboardInputs[key].keyboardInputs.length; k++) {
 								iconTabs[i].navigationContainerPages[n].keyboardField.push({value: loadData.keyboardInputs[key].keyboardInputs[k]});
 							}
@@ -68,7 +70,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 					var keyboardInputStrings = [];
 					for(var k = 0; k < iconTabs[i].navigationContainerPages[n].keyboardField.length; k++) {
 						keyboardInputStrings.push(iconTabs[i].navigationContainerPages[n].keyboardField[k].value);
