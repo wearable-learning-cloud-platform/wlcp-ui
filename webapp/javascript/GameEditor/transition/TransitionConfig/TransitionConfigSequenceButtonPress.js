@@ -121,12 +121,14 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		//Open the dialog
 		this.dialog.open();
 		
-		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		//Store the scopes path
+		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
 	}
 	
 	acceptSequence() {
 		var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
-		var data = this.transition.model.getProperty(this.path23 + "/sequencePress");
+		var data = this.transition.model.getProperty(this.navigationContainerPagePath + "/sequencePress");
 		var buttonsArray = [];
 		for(var i = 0; i < sequence.length; i++) {
 			if(sequence[i].includes("Red")) {
@@ -143,11 +145,11 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			sap.m.MessageBox.information(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.emptyInput"));
 		}
 		var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
-		if(!sequenceValidation.validate(this.transition, {buttons : buttonsArray}, this.transition.model.getProperty(this.path23).scope)) {
+		if(!sequenceValidation.validate(this.transition, {buttons : buttonsArray}, this.transition.model.getProperty(this.iconTabPath).scope)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.alreadyExists"));
 		} else {
 			data.push({buttons : buttonsArray});
-			this.transition.model.setProperty(this.path23 + "/sequencePress", data);
+			this.transition.model.setProperty(this.navigationContainerPagePath + "/sequencePress", data);
 			this.onChange();
 			this.sequenceRefresh();
 		}
@@ -242,8 +244,12 @@ var TransitionSequenceButtonPressValidationRule = class TransitionSequenceButton
 		for(var i = 0; i < transitionList.length; i++) {
 			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
 				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
-					if(this.containsSequence(sequence, transitionList[i].modelJSON.iconTabs[n].sequencePress)) {
-						return false;
+					for(var j = 0; j < transitionList[i].modelJSON.iconTabs[n].navigationContainerPages.length; j++) {
+						if(transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
+							if(this.containsSequence(sequence, transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].sequencePress)) {
+								return false;
+							}
+						}
 					}
 				}
 			}

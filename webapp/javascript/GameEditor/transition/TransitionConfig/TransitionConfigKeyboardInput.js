@@ -104,21 +104,22 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		this.dialog.open();
 		
 		//Store the scopes path
-		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
 	}
 	
 	closeKeyboardInput(oEvent) {
 		var keyboardInputValue = sap.ui.getCore().byId("keyboardInput").getValue().toLowerCase();
 		var keyboardValidation = new TransitionKeyboardInputValidationRule();
-		if(!keyboardValidation.validate(this.transition, keyboardInputValue, this.transition.model.getProperty(this.path23).scope)) {
+		if(!keyboardValidation.validate(this.transition, keyboardInputValue, this.transition.model.getProperty(this.iconTabPath).scope)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.alreadyExists"));
 		} else {
 			if(keyboardInputValue == "") {
 				sap.m.MessageBox.information(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.emptyInput"));
 			}
-			var data = this.transition.model.getProperty(this.path23 + "/keyboardField");
+			var data = this.transition.model.getProperty(this.navigationContainerPagePath + "/keyboardField");
 			data.push({value : keyboardInputValue});
-			this.transition.model.setProperty(this.path23 + "/keyboardField", data);
+			this.transition.model.setProperty(this.navigationContainerPagePath + "/keyboardField", data);
 			this.onChange();
 			this.closeDialog();
 		}
@@ -165,8 +166,12 @@ var TransitionKeyboardInputValidationRule = class TransitionKeyboardInputValidat
 		for(var i = 0; i < transitionList.length; i++) {
 			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
 				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
-					if(this.containsKeyboardInput(keyboardInput, transitionList[i].modelJSON.iconTabs[n].keyboardField)) {
-						return false;
+					for(var j = 0; j < transitionList[i].modelJSON.iconTabs[n].navigationContainerPages.length; j++) {
+						if(transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].type == TransitionConfigType.KEYBOARD_INPUT) {
+							if(this.containsKeyboardInput(keyboardInput, transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].keyboardField)) {
+								return false;
+							}
+						}
 					}
 				}
 			}
