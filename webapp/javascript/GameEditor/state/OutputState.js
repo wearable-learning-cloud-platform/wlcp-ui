@@ -137,6 +137,9 @@ var OutputState = class OutputState extends State {
 		
 		//Set the old active scopes
 		this.oldActiveScopes = this.getActiveScopes();
+
+		//Set the default active state type
+		this.setDefaultActiveStateType();
 		
 		//Open the dialog
 		this.dialog.open();
@@ -559,6 +562,16 @@ var OutputState = class OutputState extends State {
 					navContainer.to(navContainer.getPages()[n]);
 					break;
 				}
+			}
+		}
+	}
+
+	setDefaultActiveStateType() {
+		var activeScopes = this.getActiveScopes();
+		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems().length; i++) {
+			if(!activeScopes.includes(this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems()[i].getBindingContext().getPath()).scope)) {
+				var activeState = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayText");
+				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[1].getItems()[i].getBindingContext().getPath() + "/activeState", activeState);
 			}
 		}
 	}

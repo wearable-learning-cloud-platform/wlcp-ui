@@ -316,6 +316,9 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the old active scopes
 		this.oldActiveScopes = this.getActiveScopes();
+
+		//Set the default active transition type
+		this.setDefaultActiveTransitionType();
 		
 		//Set the on after rendering
 		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
@@ -359,6 +362,16 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		for(var i = 0; i < this.transitionConfigs.length; i++) {
 			this.transitionConfigs[i].onAfterRenderingDialog();
+		}
+	}
+
+	setDefaultActiveTransitionType() {
+		var activeScopes = this.getActiveScopes();
+		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
+			if(!activeScopes.includes(this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath()).scope)) {
+				var activeTransition = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
+				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
+			}
 		}
 	}
 	
