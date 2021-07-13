@@ -124,6 +124,9 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		//Store the scopes path
 		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
 		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
+
+		//Store the original height of the input box
+		this.inputBoxHeight = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList")).height.replace("px", ""));
 	}
 	
 	acceptSequence() {
@@ -179,7 +182,15 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
 		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
 		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListSortable-listUl").sortable();
+		$("#colorListSortable-listUl").sortable({
+			update: function(event, ui) {
+				var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+				if(sequence.length % 4 == 0) {
+					var newHeight = document.getElementById("colorListSortable-listUl").clientHeight + this.inputBoxHeight;
+					document.getElementById("colorListSortable-listUl").style.height = newHeight.toString() + "px";
+				}
+			}.bind(this)
+		});
 	}
 	
 	sequenceRefresh() {
