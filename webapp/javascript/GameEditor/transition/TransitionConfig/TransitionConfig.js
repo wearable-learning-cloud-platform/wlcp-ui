@@ -98,7 +98,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					if(scopes[n].scope == transitionList[i].modelJSON.iconTabs[n].scope) {
 						for(var j = 0; j < transitionTypes.length; j++) {
 							if(activeTransitionType === "") {
-								if(transitionTypes[j].type == activeTransitionTypeNonSecondary || (transitionTypes[j].type === TransitionConfigType.TIMER && !activeTransitionTypesAcrossAll.includes(TransitionConfigType.TIMER))) {
+								if(transitionTypes[j].type == activeTransitionTypeNonSecondary || this.checkForAllowedSecondaryTransition(transitionTypes[j].type, activeTransitionTypesAcrossAll)) {
 									transitionTypes[j].visible = true;
 								} else {
 									transitionTypes[j].visible = false;
@@ -117,6 +117,18 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 			}
 			transitionList[i].model.setData(transitionList[i].modelJSON);
 		}
+	}
+
+	checkForAllowedSecondaryTransition(transitionType, activeTransitionTypesAcrossAll) {
+		if(transitionType === TransitionConfigType.TIMER) {
+			if(activeTransitionTypesAcrossAll.includes(TransitionConfigType.RANDOM)) {
+				return false;
+			}
+			if(!activeTransitionTypesAcrossAll.includes(TransitionConfigType.TIMER)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	getActiveTransitionTypeAcrossAll(transitionList, scope) {

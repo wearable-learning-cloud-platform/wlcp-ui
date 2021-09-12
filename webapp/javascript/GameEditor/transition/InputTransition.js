@@ -316,6 +316,7 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the old active scopes
 		this.oldActiveScopes = this.getActiveScopes();
+		this.oldScopeMask = this.scopeMask;
 
 		//Set the default active transition type
 		this.setDefaultActiveTransitionType();
@@ -366,10 +367,44 @@ var InputTransition = class InputTransition extends Transition {
 	}
 
 	setDefaultActiveTransitionType() {
+
+		var transitionList = [];
+		
+		//Get a list of neighbor connections
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : this.connection.connectionFrom.htmlId});
+		
+		//Loop through the neighbor connections
+		for(var i = 0; i < neighborConnections.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.connectionId) {
+					transitionList.push(GameEditor.getEditorController().transitionList[n]);
+				}
+			}
+		}
+
+		//Get the active scopes for this transition
 		var activeScopes = this.getActiveScopes();
+
+		//Loop through all of the scopes
 		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
-			if(!activeScopes.includes(this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath()).scope)) {
-				var activeTransition = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
+
+			var scope = this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath()).scope;
+			var activeTransitionsAcrossAll = this.transitionConfigs[0].validationRules[0].getActiveTransitionTypeAcrossAll(transitionList, scope);
+
+			//If a neighbor transition has an active scope
+			if(activeTransitionsAcrossAll.length === 1 && activeTransitionsAcrossAll.includes("")) {
+				if(!activeScopes.includes(scope)) {
+					var activeTransition = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
+					this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
+				}
+			} else if(activeTransitionsAcrossAll.length > 0 && !activeTransitionsAcrossAll.includes("")) {
+				//var activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
+				var activeTransition = null;
+				for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+					if(this.modelJSON.iconTabs[n].scope === scope) {
+						activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+					}
+				}
 				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
 			}
 		}
@@ -541,6 +576,7 @@ var InputTransition = class InputTransition extends Transition {
 	closeDialog() {
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
+		this.scopeMask = this.oldScopeMask;
 		this.dialog.close();
 		this.dialog.destroy();
 
