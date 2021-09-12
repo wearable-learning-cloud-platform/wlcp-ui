@@ -146,6 +146,13 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="randomInput" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Button text="Go To Random" press="submitRandomInput"></Button>
+							</items>
+						</FlexBox>
+					</Page>
 					<Page id="timerDuration" showHeader="false" enableScrolling="false">
 						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
 							<items>
