@@ -9,6 +9,7 @@ var State = class State {
 		this.topColorClass = topColorClass;
 		this.bottomColorClass = bottomColorClass;
 		this.text = text;
+		this.newDescriptionText = null;
 		this.positionX = 0;
 		this.positionY = 0;
 		this.width = 0;
@@ -257,9 +258,12 @@ var State = class State {
 		return [];
 	}
 	
-	changeText(text) {
-		document.getElementById(this.htmlId + "-description").innerHTML = text;
-		this.text = text;
+	changeText() {
+		if(this.newDescriptionText !== null) {
+			document.getElementById(this.htmlId + "-description").innerHTML = this.newDescriptionText;
+			this.text = this.newDescriptionText;
+			this.newDescriptionText = null;
+		}
 	}
 	
 	getPositionX() {

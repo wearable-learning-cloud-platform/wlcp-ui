@@ -366,7 +366,7 @@ var OutputState = class OutputState extends State {
 		}
 
 		// CASE: State editor dialog is open, user does not edit state properties, then presses the Accept button
-		if(this.getActiveScopes().length == 0) {
+		if(this.getActiveScopes().length == 0 && this.newDescriptionText == null) {
 			sap.m.MessageBox.confirm(
 				sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.noChanges"), 
 				{
@@ -397,9 +397,7 @@ var OutputState = class OutputState extends State {
 		this.dialog.close();
 		this.dialog.destroy();
 		
-		if(typeof this.newDescriptionText !== "undefined") {
-			this.changeText(this.newDescriptionText);
-		}
+		this.changeText();
     }
     
 	/**
@@ -414,9 +412,7 @@ var OutputState = class OutputState extends State {
     		this.validationRules[0].validate(this, true, true);
     		this.dialog.close();
 			this.dialog.destroy();
-			if(typeof this.newDescriptionText !== "undefined") {
-				this.changeText(this.newDescriptionText);
-			}
+			this.changeText();
 
 			// Log STATE event: state-editor-accept-withchanges-confirm
 			// State editor dialog is currently open, user edits state properties, 
