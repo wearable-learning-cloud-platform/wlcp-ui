@@ -59,22 +59,23 @@ var InputTransition = class InputTransition extends Transition {
 	
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
-		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
 	/**
 	 * Called when Transition Editor properties (button press) are changed
 	 * @param {*} oEvent 
 	 */
-	onChange(oEvent) {
+	onChange(oEvent, validateTransitionConfigs = true, dialogOnChange = true) {
 
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
 		}
 		
-		for(var i = 0; i < this.transitionConfigs.length; i++) {
-			for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
-				this.transitionConfigs[i].validationRules[n].validate(this);
+		if(validateTransitionConfigs) {
+			for(var i = 0; i < this.transitionConfigs.length; i++) {
+				for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
+					this.transitionConfigs[i].validationRules[n].validate(this, true, dialogOnChange);
+				}
 			}
 		}
 		
@@ -315,6 +316,10 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the old active scopes
 		this.oldActiveScopes = this.getActiveScopes();
+		this.oldScopeMask = this.scopeMask;
+
+		//Set the default active transition type
+		this.setDefaultActiveTransitionType();
 		
 		//Set the on after rendering
 		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
@@ -358,6 +363,50 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		for(var i = 0; i < this.transitionConfigs.length; i++) {
 			this.transitionConfigs[i].onAfterRenderingDialog();
+		}
+	}
+
+	setDefaultActiveTransitionType() {
+
+		var transitionList = [];
+		
+		//Get a list of neighbor connections
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : this.connection.connectionFrom.htmlId});
+		
+		//Loop through the neighbor connections
+		for(var i = 0; i < neighborConnections.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.connectionId) {
+					transitionList.push(GameEditor.getEditorController().transitionList[n]);
+				}
+			}
+		}
+
+		//Get the active scopes for this transition
+		var activeScopes = this.getActiveScopes();
+
+		//Loop through all of the scopes
+		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
+
+			var scope = this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath()).scope;
+			var activeTransitionsAcrossAll = this.transitionConfigs[0].validationRules[0].getActiveTransitionTypeAcrossAll(transitionList, scope);
+
+			//If a neighbor transition has an active scope
+			if(activeTransitionsAcrossAll.length === 1 && activeTransitionsAcrossAll.includes("")) {
+				if(!activeScopes.includes(scope)) {
+					var activeTransition = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.singleButtonPress");
+					this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
+				}
+			} else if(activeTransitionsAcrossAll.length > 0 && !activeTransitionsAcrossAll.includes("")) {
+				//var activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
+				var activeTransition = null;
+				for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+					if(this.modelJSON.iconTabs[n].scope === scope) {
+						activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+					}
+				}
+				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
+			}
 		}
 	}
 	
@@ -449,6 +498,7 @@ var InputTransition = class InputTransition extends Transition {
     	}
 
 		this.validationRules[0].validate(this, true, true);
+		this.onChange();
 		this.dialog.close();
 		this.dialog.destroy();
 
@@ -477,7 +527,8 @@ var InputTransition = class InputTransition extends Transition {
 
 		// CASE: User confirms by clicking "OK" on the "Accept" dialog
     	if(oEvent == sap.m.MessageBox.Action.OK) {
-    		this.validationRules[0].validate(this, true, true);
+			this.validationRules[0].validate(this, true, true);
+			this.onChange();
     		this.dialog.close();
     		this.dialog.destroy();
 
@@ -525,6 +576,7 @@ var InputTransition = class InputTransition extends Transition {
 	closeDialog() {
 		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
 		this.model.setData(this.modelJSON);
+		this.scopeMask = this.oldScopeMask;
 		this.dialog.close();
 		this.dialog.destroy();
 
@@ -567,17 +619,13 @@ var InputTransition = class InputTransition extends Transition {
 			
 	    	//Revalidate the transitions
 	    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
-	    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
-	    			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
-	    		}
+				GameEditor.getEditorController().transitionList[i].onChange();
 	    	}
 	    	
 	    	//Revalidate the states
 	    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
 	    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
-	        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
-	        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
-	        		}
+					GameEditor.getEditorController().stateList[i].onChange();
 	    		}
 	    	}
 			

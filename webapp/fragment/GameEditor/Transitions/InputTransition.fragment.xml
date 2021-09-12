@@ -15,7 +15,7 @@
 			<Button text="{i18n>button.accept}" type="Accept" press="acceptDialog"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
 		</buttons>
-		<IconTabBar id="inputTransitionDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
+		<IconTabBar id="inputTransitionDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false" visible="{= ${/iconTabs}.length > 0}">
 			<items>
 				<IconTabFilter icon="{icon}" text="{scopeText}" key="{scope}">
 					<content>
@@ -33,5 +33,8 @@
 				</IconTabFilter>
 			</items>
 		</IconTabBar>
+		<FlexBox visible="{= ${/iconTabs}.length === 0}" alignItems="Center" justifyContent="Center">
+			<Text visible="{= ${/iconTabs}.length === 0}" text="You have made a change that no longer makes this transition valid. Please accept or cancel to revert."/>
+		</FlexBox>
 	</Dialog>
 </core:FragmentDefinition>

@@ -8,6 +8,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 	getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			type : TransitionConfigType.KEYBOARD_INPUT,
 			icon : "sap-icon://keyboard-and-mouse",
 			selected : false,
 			visible : true
@@ -17,6 +18,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			type : TransitionConfigType.KEYBOARD_INPUT,
 			keyboardField : []
 		}
 	}
@@ -30,7 +32,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 					if(iconTabs[i].navigationContainerPages[n].keyboardField.length > 0) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -52,7 +54,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 							for(var k = 0; k < loadData.keyboardInputs[key].keyboardInputs.length; k++) {
 								iconTabs[i].navigationContainerPages[n].keyboardField.push({value: loadData.keyboardInputs[key].keyboardInputs[k]});
 							}
@@ -68,7 +70,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.KEYBOARD_INPUT) {
 					var keyboardInputStrings = [];
 					for(var k = 0; k < iconTabs[i].navigationContainerPages[n].keyboardField.length; k++) {
 						keyboardInputStrings.push(iconTabs[i].navigationContainerPages[n].keyboardField[k].value);
@@ -102,22 +104,23 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		this.dialog.open();
 		
 		//Store the scopes path
-		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
 	}
 	
 	closeKeyboardInput(oEvent) {
 		var keyboardInputValue = sap.ui.getCore().byId("keyboardInput").getValue().toLowerCase();
 		var keyboardValidation = new TransitionKeyboardInputValidationRule();
-		if(!keyboardValidation.validate(this.transition, keyboardInputValue, this.transition.model.getProperty(this.path23).scope)) {
+		if(!keyboardValidation.validate(this.transition, keyboardInputValue, this.transition.model.getProperty(this.iconTabPath).scope)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.alreadyExists"));
 		} else {
 			if(keyboardInputValue == "") {
 				sap.m.MessageBox.information(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.emptyInput"));
 			}
-			var data = this.transition.model.getProperty(this.path23 + "/keyboardField");
+			var data = this.transition.model.getProperty(this.navigationContainerPagePath + "/keyboardField");
 			data.push({value : keyboardInputValue});
-			this.transition.model.setProperty(this.path23 + "/keyboardField", data);
-			this.transition.onChange();
+			this.transition.model.setProperty(this.navigationContainerPagePath + "/keyboardField", data);
+			this.onChange();
 			this.closeDialog();
 		}
 	}
@@ -135,7 +138,7 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			var sequenceArray = this.transition.model.getProperty(this.deleteKeyboardPath);
 			sequenceArray.splice(index, 1);
 			this.transition.model.setProperty(this.deleteKeyboardPath, sequenceArray);
-			this.transition.onChange();
+			this.onChange();
 		}
 	}
 
@@ -163,8 +166,12 @@ var TransitionKeyboardInputValidationRule = class TransitionKeyboardInputValidat
 		for(var i = 0; i < transitionList.length; i++) {
 			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
 				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
-					if(this.containsKeyboardInput(keyboardInput, transitionList[i].modelJSON.iconTabs[n].keyboardField)) {
-						return false;
+					for(var j = 0; j < transitionList[i].modelJSON.iconTabs[n].navigationContainerPages.length; j++) {
+						if(transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].type == TransitionConfigType.KEYBOARD_INPUT) {
+							if(this.containsKeyboardInput(keyboardInput, transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].keyboardField)) {
+								return false;
+							}
+						}
 					}
 				}
 			}

@@ -7,6 +7,7 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
     getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer"),
+			type : TransitionConfigType.TIMER,
 			icon : "sap-icon://fob-watch",
 			selected : false,
 			visible : true
@@ -16,6 +17,7 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer"),
+			type : TransitionConfigType.TIMER,
 			duration : 0
 		}
 	}
@@ -29,7 +31,7 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.TIMER) {
 					if(iconTabs[i].navigationContainerPages[n].duration > 0) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -52,9 +54,10 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 		for(var i = 0; i < scopeCollection.length; i++) {
 			for(var n = 0; n < scopeCollection.length; n++) {
 				if((scopeCollection[i].model.scope == scopeCollection[n].model.scope) && !activeScopes.includes(scopeCollection[i].model.scope)) {
+					var activeTransitionTypesAcrossAll = this.validationRules[0].getActiveTransitionTypeAcrossAll(neighborTransitions, scopeCollection[i].model.scope);
 					for(var j = 0; j < scopeCollection[i].model.navigationContainerPages.length; j++) {
-						if(scopeCollection[i].model.navigationContainerPages[j].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
-							if(scopeCollection[i].model.navigationContainerPages[j].duration > 0) {
+						if(scopeCollection[i].model.navigationContainerPages[j].type == TransitionConfigType.TIMER) {
+							if(scopeCollection[i].model.navigationContainerPages[j].duration > 0 && activeTransitionTypesAcrossAll.length < 2) {
 								activeScopes.push(scopeCollection[i].model.scope);
 							}
 						}
@@ -71,7 +74,7 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.TIMER) {
 							iconTabs[i].navigationContainerPages[n].duration = loadData.timerDurations[key].duration;
 						}
 					}
@@ -85,7 +88,7 @@ var TransitionConfigTimer = class TransitionConfigTimer extends TransitionConfig
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.TIMER) {
 					if(iconTabs[i].navigationContainerPages[n].duration > 0) {
 						timerDurations[iconTabs[i].scope] = {
 							duration : iconTabs[i].navigationContainerPages[n].duration

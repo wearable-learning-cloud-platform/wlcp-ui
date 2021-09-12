@@ -9,6 +9,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 	getNavigationListItem() {
 		return {	
 			text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayPhoto"),
+			type : StateConfigType.DISPLAY_PHOTO,
 			icon : "sap-icon://picture"	
 		}
 	}
@@ -17,6 +18,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.displayPhoto"),
+			type : StateConfigType.DISPLAY_PHOTO,
 			url : "",
 			scale : 50,
 			scalingString : "50%",
@@ -30,7 +32,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 						this.displayPhotoPage = iconTabs[i].navigationContainerPages[n];
 						var img = new Image();
 						img.addEventListener("load", $.proxy(function() {
@@ -51,7 +53,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 						this.displayPhotoPage = i;
 						break;
 					}
@@ -84,7 +86,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 						this.displayPhotoPage = iconTabs[i].navigationContainerPages[n];
 						this.displayPhotoPage.url = ServerConfig.getServerAddress() + "/objectStoreController/files/" + sResponse;
 						this.state.model.setData(this.state.modelJSON);
@@ -108,7 +110,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 					if(iconTabs[i].navigationContainerPages[n].url != "") {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -125,7 +127,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+						if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 							iconTabs[i].navigationContainerPages[n].url = loadData.pictureOutputs[key].url;
 							iconTabs[i].navigationContainerPages[n].scale = loadData.pictureOutputs[key].scale;
 							this.displayPhotoPage = iconTabs[i].navigationContainerPages[n];
@@ -150,7 +152,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
 					if(iconTabs[i].navigationContainerPages[n].url != "") {
 						outputStateData[iconTabs[i].scope] = {
 							    url : iconTabs[i].navigationContainerPages[n].url,

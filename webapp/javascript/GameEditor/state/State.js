@@ -122,17 +122,13 @@ var State = class State {
 			
 	    	//Revalidate the transitions
 	    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
-	    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
-	    			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
-	    		}
+				GameEditor.getEditorController().transitionList[i].onChange();
 	    	}
 	    	
 	    	//Revalidate the states
 	    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
 	    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
-	        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
-	        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
-	        		}
+	        		GameEditor.getEditorController().stateList[i].onChange();
 	    		}
 	    	}
 			

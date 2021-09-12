@@ -182,7 +182,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				}
 			}
 			
-			inputTransition.onChange(connection);
+			inputTransition.onChange(connection, true, false);
 			
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.connectionTo.htmlId) {

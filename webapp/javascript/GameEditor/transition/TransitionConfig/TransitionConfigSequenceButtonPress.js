@@ -8,6 +8,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 	getNavigationListItem() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress"),
+			type : TransitionConfigType.SEQUENCE_BUTTON_PRESS,
 			icon : "sap-icon://multiselect-none",
 			selected : false,
 			visible : true
@@ -17,6 +18,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress"),
+			type : TransitionConfigType.SEQUENCE_BUTTON_PRESS,
 			sequencePress : []
 		}
 	}
@@ -30,7 +32,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
 					if(iconTabs[i].navigationContainerPages[n].sequencePress.length > 0) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -52,7 +54,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
 							for(var k = 0; k < loadData.sequenceButtonPresses[key].sequences.length; k++) {
 								var buttons = [];
 								for(var j = 0; j < loadData.sequenceButtonPresses[key].sequences[k].length; j++) {
@@ -72,7 +74,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress")) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
 					var sequences = [];
 					for(var k = 0; k < iconTabs[i].navigationContainerPages[n].sequencePress.length; k++) {
 						var buttons = "";
@@ -119,12 +121,17 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		//Open the dialog
 		this.dialog.open();
 		
-		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		//Store the scopes path
+		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
+
+		//Store the original height of the input box
+		this.inputBoxHeight = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList")).height.replace("px", ""));
 	}
 	
 	acceptSequence() {
 		var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
-		var data = this.transition.model.getProperty(this.path23 + "/sequencePress");
+		var data = this.transition.model.getProperty(this.navigationContainerPagePath + "/sequencePress");
 		var buttonsArray = [];
 		for(var i = 0; i < sequence.length; i++) {
 			if(sequence[i].includes("Red")) {
@@ -141,12 +148,12 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			sap.m.MessageBox.information(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.emptyInput"));
 		}
 		var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
-		if(!sequenceValidation.validate(this.transition, {buttons : buttonsArray}, this.transition.model.getProperty(this.path23).scope)) {
+		if(!sequenceValidation.validate(this.transition, {buttons : buttonsArray}, this.transition.model.getProperty(this.iconTabPath).scope)) {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.alreadyExists"));
 		} else {
 			data.push({buttons : buttonsArray});
-			this.transition.model.setProperty(this.path23 + "/sequencePress", data);
-			this.transition.onChange();
+			this.transition.model.setProperty(this.navigationContainerPagePath + "/sequencePress", data);
+			this.onChange();
 			this.sequenceRefresh();
 		}
 		this.closeDialog();
@@ -165,7 +172,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			var sequenceArray = this.transition.model.getProperty(this.deleteSequencePath);
 			sequenceArray.splice(index, 1);
 			this.transition.model.setProperty(this.deleteSequencePath, sequenceArray);
-			this.transition.onChange();
+			this.onChange();
 			this.sequenceRefresh();
 		} 
 	}
@@ -175,7 +182,15 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
 		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
 		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListSortable-listUl").sortable();
+		$("#colorListSortable-listUl").sortable({
+			update: function(event, ui) {
+				var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+				if(sequence.length % 4 == 0) {
+					var newHeight = document.getElementById("colorListSortable-listUl").clientHeight + this.inputBoxHeight;
+					document.getElementById("colorListSortable-listUl").style.height = newHeight.toString() + "px";
+				}
+			}.bind(this)
+		});
 	}
 	
 	sequenceRefresh() {
@@ -240,8 +255,12 @@ var TransitionSequenceButtonPressValidationRule = class TransitionSequenceButton
 		for(var i = 0; i < transitionList.length; i++) {
 			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
 				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
-					if(this.containsSequence(sequence, transitionList[i].modelJSON.iconTabs[n].sequencePress)) {
-						return false;
+					for(var j = 0; j < transitionList[i].modelJSON.iconTabs[n].navigationContainerPages.length; j++) {
+						if(transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
+							if(this.containsSequence(sequence, transitionList[i].modelJSON.iconTabs[n].navigationContainerPages[j].sequencePress)) {
+								return false;
+							}
+						}
 					}
 				}
 			}
