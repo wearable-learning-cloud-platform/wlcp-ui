@@ -71,6 +71,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 	},
 
+	submitRandomInput : function() {
+		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/randomInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({})});
+	},
+
 	clearButtonPressSequence : function() {
 		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
 		for(var i = 0; i < children.length; i++) {
@@ -243,6 +247,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/keyboardInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("KeyboardInput");
 		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/randomInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
+			that.switchToTransitionType("RandomInput");
+		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/timerDurationRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration").getContent()[0].getItems()[0].setText("Timer Duration: " + parsedJson.duration);
@@ -323,6 +330,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			break;
 		case "KeyboardInput":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInput"));
+			break;
+		case "RandomInput":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--randomInput"));
 			break;
 		case "TimerDuration":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration"));
