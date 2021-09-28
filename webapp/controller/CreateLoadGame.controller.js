@@ -52,25 +52,26 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			)
 		); 
 
-		RestAPIHelper.post("/gameController/saveGame", GameEditor.getEditorController().newGameModel, true, this.createGameSuccess, this.createGameError, this);
+		RestAPIHelper.post("/gameController/saveGame", {game : GameEditor.getEditorController().newGameModel, gameSave : {type : 0, description : "First Save"}}, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
 	loadGame : function() {
-		var gameToLoad = "";
-		if(sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey() != "" && sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey() != "") {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectError"));
-			return;
-		} else if(sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey() != "") {
-			gameToLoad = sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey();
-		} else if(sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey() != "") {
-			gameToLoad = sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey();
-		} else {
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
-			return;
+		if(this.selectedGame != null & this.selectedDetail == null) {
+			GameEditor.getEditorController().gameModel.gameId = this.selectedGame;
+			GameEditor.getEditorController().resetEditor();
+			GameEditor.getEditorController().load();
 		}
-		GameEditor.getEditorController().gameModel.gameId = gameToLoad;
-		GameEditor.getEditorController().resetEditor();
-		GameEditor.getEditorController().load();
+		if(this.selectedGame != null && this.selectedDetail != null) {
+			GameEditor.getEditorController().gameModel.gameId = this.selectedGame;
+			GameEditor.getEditorController().resetEditor();
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(true);
+			for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
+				sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(false);
+			}
+			GameEditor.getEditorController().loadArchivedGame(this.selectedDetail);
+		}
 		this.cancelLoadGame();
 	},
 	
@@ -154,5 +155,71 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	 */
 	createGameError : function(oError) {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.create.error"));
-	}
+	},
+
+	selectGame : function (oEvent) {
+		sap.ui.getCore().byId("load").setEnabled(true);
+		sap.ui.getCore().byId("advance").setEnabled(true);
+		this.selectedGame = oEvent.getParameters().item.getText();
+		if(sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().getProperty("size") === "50%"){
+			this.showAdvance(oEvent);
+		}
+	},
+
+	selectDetail : function(oEvent) {
+		sap.ui.getCore().byId("load").setEnabled(true);
+		sap.ui.getCore().byId("advance").setEnabled(true);
+		this.selectedDetail = oEvent.getParameters().item.getKey();
+	},
+
+	setExpansionGame : function(oEvent) {
+		oEvent.getSource().setExpanded(!oEvent.getSource().getExpanded());
+		sap.ui.getCore().byId("load").setEnabled(false);
+		sap.ui.getCore().byId("advance").setEnabled(false);
+		this.selectedGame = null;
+	},
+
+	setExpansionDetail : function(oEvent) {
+		oEvent.getSource().setExpanded(!oEvent.getSource().getExpanded());
+		sap.ui.getCore().byId("load").setEnabled(false);
+		sap.ui.getCore().byId("advance").setEnabled(false);
+		this.selectedDetail = null;
+	},
+
+	showAdvance : function (oEvent) {
+		if(sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().getProperty("size") === "50%") {
+			sap.ui.getCore().byId("advance").setText("Show Advance");
+			sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().setProperty("size", "0%");
+			return;
+		} else {
+			sap.ui.getCore().byId("advance").setText("Hide Advance");
+		}
+		RestAPIHelper.get(
+			"/gameController/getGameHistory?gameId=" + this.selectedGame + "&saveType=MANUAL", 
+			false,
+
+			function(data) {
+				sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().setProperty("size", "50%");
+				oEvent.getSource().getModel().setProperty("/manualSaves", data);
+			}, 
+
+			function(error) {
+				//Allow default error handling
+			}, this
+		);
+
+		RestAPIHelper.get(
+			"/gameController/getGameHistory?gameId=" + this.selectedGame + "&saveType=AUTO", 
+			false,
+
+			function(data) {
+				sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().setProperty("size", "50%");
+				oEvent.getSource().getModel().setProperty("/autoSaves", data);
+			}, 
+
+			function(error) {
+				//Allow default error handling
+			}, this
+		);
+	},
 });

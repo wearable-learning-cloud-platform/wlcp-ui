@@ -70,7 +70,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.saveGame();
+		this.saveGame(false);
 	},
 	
 	initToolboxText : function() {
@@ -518,6 +518,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			true, this.loadSuccess, this.loadError, this
 		);
 	},
+
+	loadArchivedGame : function(version) {
+		RestAPIHelper.get(
+			"/gameController/loadGameVersion?gameId=" + encodeURIComponent(this.gameModel.gameId) + "&version=" + version, 
+			true, this.loadSuccess, this.loadError, this
+		);
+	},
 	
 	loadSuccess(loadedData) {
 
@@ -641,7 +648,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		GameEditor.getEditorController().load();
 	},
 
-	saveGame : function() {
+	saveGame : function(showDescriptionDialog = true) {
 		
 		//This is a save without a run
 		this.saveRun = false;
@@ -655,16 +662,40 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				return;
 			}
 		}
-		
-		//Open the busy dialog
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
 
-		//Save the game
-		this.save();
+		if(showDescriptionDialog) {
+			var dialog = new sap.m.Dialog({
+				title : "Save Description",
+				content : new sap.m.Input({
+					placeholder : "Save Description"
+				}),
+				beginButton : new sap.m.Button({
+					text : "Save",
+					type : sap.m.ButtonType.Accept,
+					press : $.proxy(function(oAction) {
+						this.busy = new sap.m.BusyDialog();
+						this.busy.open();
+						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue());
+						dialog.close();
+					}, this)
+				}),
+				endButton : new sap.m.Button({
+					text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
+					type : sap.m.ButtonType.Reject,
+					press : function() {
+						dialog.close();
+					}
+				}),
+				afterClose : function() {
+					dialog.destroy();
+				}
+			});
+			dialog.addStyleClass("sapUiPopupWithPadding");
+			dialog.open();
+		}
 	},
 	
-	save : function() {
+	save : function(description) {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
@@ -710,7 +741,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		this.busy.close();
 
-		RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
+		RestAPIHelper.post("/gameController/saveGame", {game : saveJSON, gameSave : {type : 0, description : description} }, true, this.saveSuccess, this.saveError, this);
 	},
 	
 	saveSuccess : function() {
@@ -740,7 +771,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	runGame : function() {
 		this.saveRun = true;
-		this.save();
+		this.save("Run and Debug");
 
 		// Log BUTTON_PRESS event: button-run-debug
 		// Run and Debug button pressed
