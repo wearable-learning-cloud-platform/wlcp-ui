@@ -74,6 +74,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		}
 		this.cancelLoadGame();
 	},
+
+	onSearch : function(oFilter) {
+		sap.ui.getCore().byId("publicGames").getBinding("items").filter(new sap.ui.model.Filter("gameId", sap.ui.model.FilterOperator.StartsWith, oFilter.getParameters().newValue))
+		sap.ui.getCore().byId("privateGames").getBinding("items").filter(new sap.ui.model.Filter("gameId", sap.ui.model.FilterOperator.StartsWith, oFilter.getParameters().newValue))
+	},
 	
 	/**
 	 * Called when the user wants to cancel creating a game.

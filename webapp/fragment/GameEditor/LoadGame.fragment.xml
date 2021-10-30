@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <core:FragmentDefinition xmlns="sap.m"
-	xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:tnt="sap.tnt">
-	<Dialog id="loadGame" title="Load Game">
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:tnt="sap.tnt">
+	<Dialog id="loadGame" title="{i18n>gameEditor.load.title}">
 		<buttons>
 			<Button id="load" text="{i18n>gameEditor.load.load}" type="Accept" enabled="false" press="loadGame" />
-			<Button id="advance" text="Show Advance" type="Attention" enabled="false" press="showAdvance"/>
+			<Button id="advance" text="{i18n>gameEditor.load.advanced}" type="Attention" enabled="false" press="showAdvance"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="cancelLoadGame" />
 		</buttons>
 		<content>
-			<l:Splitter
-				id="gameLoadSplitter"
-				height="500px"
-				width="1000px">
-				<Panel headerText="Select a game to load">
+			<l:Splitter id="gameLoadSplitter" height="500px">
+				<Panel>
 					<headerToolbar>
-					<OverflowToolbar >
-						<Title level="H3" text="Select a game to load from the drop downs below" />
-						<ToolbarSpacer/>
-						<SearchField ariaLabelledBy="text1" id="maxPrice" liveChange="onFilter">
-							<layoutData><OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/></layoutData>
-						</SearchField>
-					</OverflowToolbar>
+						<OverflowToolbar >
+							<Title level="H3" text="{i18n>gameEditor.load.select}" />
+							<ToolbarSpacer/>
+							<SearchField placeholder="{i18n>gameEditor.load.search}" liveChange="onSearch">
+								<layoutData>
+									<OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/>
+								</layoutData>
+							</SearchField>
+						</OverflowToolbar>
 					</headerToolbar>
 					<tnt:NavigationList>
-						<tnt:NavigationListItem text="Everyone's Games" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
+						<tnt:NavigationListItem id="publicGames" text="{i18n>gameEditor.load.publicGames}" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
 							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
 						</tnt:NavigationListItem>
-						<tnt:NavigationListItem text="Your Games" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
+						<tnt:NavigationListItem id="privateGames" text="{i18n>gameEditor.load.yourGames}" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
 							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
 				</Panel>
-				<Panel id="saveDetails" headerText="Select the type of save to load" >
-				<tnt:NavigationList>
-						<tnt:NavigationListItem text="User Saves" icon="sap-icon://employee" items="{/manualSaves}" select="setExpansionDetail" expanded="false">
+				<Panel id="saveDetails" headerText="{i18n>gameEditor.load.saveDetails}">
+					<tnt:NavigationList>
+						<tnt:NavigationListItem text="{i18n>gameEditor.load.userSaves}" icon="sap-icon://employee" items="{/manualSaves}" select="setExpansionDetail" expanded="false">
 							<tnt:NavigationListItem key="{version}" text="Version {version}: ({description})" select="selectDetail"/>
 						</tnt:NavigationListItem>
-						<tnt:NavigationListItem text="Auto Saves" icon="sap-icon://building" items="{/autoSaves}" select="setExpansionDetail" expanded="false">
+						<tnt:NavigationListItem text="{i18n>gameEditor.load.autoSaves}" icon="sap-icon://building" items="{/autoSaves}" select="setExpansionDetail" expanded="false">
 							<tnt:NavigationListItem key="{version}" text="Version {version}: ({description})" select="selectDetail"/>
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
 					<layoutData>
-					<l:SplitterLayoutData size="0%" resizable="false" />
+						<l:SplitterLayoutData size="0%" resizable="false" />
 					</layoutData>
 				</Panel>
 			</l:Splitter>
 		</content>
-    </Dialog>
+	</Dialog>
 </core:FragmentDefinition>
