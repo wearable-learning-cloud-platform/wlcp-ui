@@ -36,11 +36,11 @@
 				</Panel>
 				<Panel id="saveDetails" headerText="{i18n>gameEditor.load.saveDetails}">
 					<tnt:NavigationList>
-						<tnt:NavigationListItem text="{i18n>gameEditor.load.userSaves}" icon="sap-icon://employee" items="{/manualSaves}" select="setExpansionDetail" expanded="false">
-							<tnt:NavigationListItem key="{version}" text="Version {version}: ({description})" select="selectDetail"/>
+						<tnt:NavigationListItem text="{i18n>gameEditor.load.userSaves}" icon="sap-icon://employee" items="{path : '/manualSaves', sorter : {path:'version', descending: true}}" select="setExpansionDetail" expanded="false">
+							<tnt:NavigationListItem key="{version} {type}" text="Version {version}: ({description})" select="selectDetail"/>
 						</tnt:NavigationListItem>
-						<tnt:NavigationListItem text="{i18n>gameEditor.load.autoSaves}" icon="sap-icon://building" items="{/autoSaves}" select="setExpansionDetail" expanded="false">
-							<tnt:NavigationListItem key="{version}" text="Version {version}: ({description})" select="selectDetail"/>
+						<tnt:NavigationListItem text="{i18n>gameEditor.load.autoSaves}" icon="sap-icon://building" items="{path : '/autoSaves', sorter : {path:'version', descending: true}}" select="setExpansionDetail" expanded="false">
+							<tnt:NavigationListItem key="{version} {type}" text="Version {version}: ({description})" select="selectDetail"/>
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
 					<layoutData>

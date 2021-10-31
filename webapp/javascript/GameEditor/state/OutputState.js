@@ -428,6 +428,8 @@ var OutputState = class OutputState extends State {
 					"state-editor-accept-withchanges-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave();
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {

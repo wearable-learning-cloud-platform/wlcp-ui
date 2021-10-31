@@ -547,6 +547,8 @@ var InputTransition = class InputTransition extends Transition {
 					"transition-editor-accept-confirm-ok"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave();
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -643,6 +645,8 @@ var InputTransition = class InputTransition extends Transition {
 					"transition-remove-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave();
 		}
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
 		else if(oAction == sap.m.MessageBox.Action.CANCEL) {

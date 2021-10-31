@@ -66,11 +66,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			GameEditor.getEditorController().resetEditor();
 			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
 			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
-			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(true);
-			for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
-				sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(false);
-			}
-			GameEditor.getEditorController().loadArchivedGame(this.selectedDetail);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
+			// for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
+			// 	sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(false);
+			// }
+			GameEditor.getEditorController().loadArchivedGame(this.selectedDetail, this.type);
 		}
 		this.cancelLoadGame();
 	},
@@ -174,7 +174,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	selectDetail : function(oEvent) {
 		sap.ui.getCore().byId("load").setEnabled(true);
 		sap.ui.getCore().byId("advance").setEnabled(true);
-		this.selectedDetail = oEvent.getParameters().item.getKey();
+		this.selectedDetail = oEvent.getParameters().item.getKey().split(" ")[0];
+		this.type = oEvent.getParameters().item.getKey().split(" ")[1];
 	},
 
 	setExpansionGame : function(oEvent) {
@@ -189,6 +190,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		sap.ui.getCore().byId("load").setEnabled(false);
 		sap.ui.getCore().byId("advance").setEnabled(false);
 		this.selectedDetail = null;
+		this.type = null;
 	},
 
 	showAdvance : function (oEvent) {
