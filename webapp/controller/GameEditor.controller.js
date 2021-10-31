@@ -72,7 +72,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.saveGame(false);
+		this.save("Auto Save", 1, false);
 	},
 	
 	initToolboxText : function() {
@@ -686,6 +686,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						this.busy = new sap.m.BusyDialog();
 						this.busy.open();
 						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue(), 0);
+						this.busy.close();
 						dialog.close();
 					}, this)
 				}),
@@ -748,8 +749,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    }
 			    return val;
 			});
-
-		this.busy.close();
 
 		RestAPIHelper.post("/gameController/saveGame", {game : saveJSON, gameSave : {type : type, description : description} }, true, this.saveSuccess, this.saveError, this, busy);
 	},
