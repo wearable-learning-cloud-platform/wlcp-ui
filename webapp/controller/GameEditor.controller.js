@@ -39,6 +39,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	loadFromEditor : null,
 
 	scroller : new GameEditorScroller(),
+
+	autoSaveEnabled : true,
 	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
@@ -527,6 +529,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	loadArchivedGame : function(version, type) {
+		this.autoSaveEnabled = false;
 		RestAPIHelper.get(
 			"/gameController/loadGameVersion?gameId=" + encodeURIComponent(this.gameModel.gameId) + "&version=" + version + "&saveType=" + type, 
 			true, this.loadSuccess, this.loadError, this
@@ -777,7 +780,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	autoSave : function() {
-		this.save("Auto Save", 1, false);
+		if(this.autoSaveEnabled) {
+			this.save("Auto Save", 1, false);
+		}
 	},
 	
 	runGame : function() {
@@ -1154,6 +1159,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
+
+		this.autoSaveEnabled = true;
 	},
 	
 	onGotoLogin: function() {
