@@ -72,7 +72,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.save("Auto Save", 1, false);
+		this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startStateCreatedMessage"), 0, false);
 	},
 	
 	initToolboxText : function() {
@@ -757,6 +757,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.saveRun) {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
+			this.saveRun = false;
 		}
 
 		// BUG: IS THERE A WAY TO DIFFERENTIATE BETWEEN PRESSING THE BUTTON AND AUTOSAVES FROM RUN AND DEBUG?
@@ -780,13 +781,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	autoSave : function() {
 		if(this.autoSaveEnabled) {
-			this.save("Auto Save", 1, false);
+			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage"), 1, false);
 		}
 	},
 	
 	runGame : function() {
 		this.saveRun = true;
-		this.save("Run and Debug", 0);
+		this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebugMessage"), 1);
 
 		// Log BUTTON_PRESS event: button-run-debug
 		// Run and Debug button pressed

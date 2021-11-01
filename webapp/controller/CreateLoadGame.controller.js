@@ -52,7 +52,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			)
 		); 
 
-		RestAPIHelper.post("/gameController/saveGame", {game : GameEditor.getEditorController().newGameModel, gameSave : {type : 0, description : "First Save"}}, true, this.createGameSuccess, this.createGameError, this);
+		RestAPIHelper.post("/gameController/saveGame", {game : GameEditor.getEditorController().newGameModel, gameSave : {type : 1, description : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.initialSaveMessage")}}, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
 	loadGame : function() {
