@@ -164,6 +164,12 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 		this.deleteSequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.remove"), {onClose : $.proxy(this.deleteOnClose, this)});
 	}
+
+	clearSequence(oEvent) {
+		$("#colorListSortable-listUl").children().remove();
+		document.getElementById("colorListSortable-listUl").style.height = this.inputBoxHeight.toString() + "px";
+		$("#colorListSortable-listUl").sortable('refresh');
+	}
 	
 	deleteOnClose(oEvent) {
 		if(oEvent == "OK") {
@@ -178,11 +184,24 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 	}
 	
 	onAfterRenderingSequence(oEvent) {
-		$("#colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListRed").click(function() {
+			$("#colorListRed").clone().appendTo($("#colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#colorListGreen").click(function() {
+			$("#colorListGreen").clone().appendTo($("#colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#colorListBlue").click(function() {
+			$("#colorListBlue").clone().appendTo($("#colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#colorListBlack").click(function() {
+			$("#colorListBlack").clone().appendTo($("#colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
 		$("#colorListSortable-listUl").sortable({
+			disabled: true,
 			update: function(event, ui) {
 				var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
 				if(sequence.length % 4 == 0) {
@@ -191,6 +210,15 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 				}
 			}.bind(this)
 		});
+	}
+
+	up() {
+		var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+			if(sequence.length % 4 == 0) {
+				var newHeight = document.getElementById("colorListSortable-listUl").clientHeight + this.inputBoxHeight;
+				document.getElementById("colorListSortable-listUl").style.height = newHeight.toString() + "px";
+			}
+		$("#colorListSortable-listUl").sortable('refresh');
 	}
 	
 	sequenceRefresh() {
