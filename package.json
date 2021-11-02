@@ -11,7 +11,7 @@
                 "karma-ci": "karma start karma-ci.conf.js",
                 "karma": "rimraf coverage && npm run karma-ci",
                 "lint": "eslint webapp",
-                "build:ui": "rimraf dist && ui5 build  --all --dest dist/webapp"
+                "build:ui": "rimraf dist && ui5 build --dest dist/webapp"
         },
         "dependencies": {
                 "@openui5/sap.m": "^1.73.1",
