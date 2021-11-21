@@ -429,7 +429,7 @@ var OutputState = class OutputState extends State {
 				)
 			);
 
-			GameEditor.getEditorController().autoSave();
+			GameEditor.getEditorController().autoSave("State Edited");
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
