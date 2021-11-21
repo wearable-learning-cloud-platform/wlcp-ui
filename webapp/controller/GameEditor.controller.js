@@ -41,6 +41,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	scroller : new GameEditorScroller(),
 
 	autoSaveEnabled : true,
+	archivedGame : false,
 	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
@@ -72,7 +73,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startStateCreatedMessage"), 0, false);
+		this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startStateCreatedMessage"), 1, false);
 	},
 	
 	initToolboxText : function() {
@@ -522,6 +523,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	load : function() {
+		this.archivedGame = false;
 		RestAPIHelper.get(
 			"/gameController/loadGame?gameId=" + encodeURIComponent(this.gameModel.gameId), 
 			true, this.loadSuccess, this.loadError, this
@@ -530,6 +532,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	loadArchivedGame : function(version, type) {
 		this.autoSaveEnabled = false;
+		this.archivedGame = true;
 		RestAPIHelper.get(
 			"/gameController/loadGameVersion?gameId=" + encodeURIComponent(this.gameModel.gameId) + "&version=" + version + "&saveType=" + type, 
 			true, this.loadSuccess, this.loadError, this
@@ -673,6 +676,23 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 		}
 
+		if(this.archivedGame) {
+			sap.m.MessageBox.confirm("You are not editing the most recent version of this game. Would you like to overwrite this version or the most recent version?", {actions : ["This Version", "Most Recent Version", "Cancel"],onClose : $.proxy(function(oEvent) {
+				this.busy = new sap.m.BusyDialog();
+				this.busy.open();
+				switch(oEvent) {
+					case "This Version":
+						this.save("", 3);
+						break;
+					case "Most Recent Version":
+						this.save("Overwriting from autosave", 4);
+						break;
+				}
+				this.busy.close();
+			}, this)});
+			return;
+		}
+
 		if(showDescriptionDialog) {
 			var dialog = new sap.m.Dialog({
 				title : "Save Description",
@@ -685,7 +705,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					press : $.proxy(function(oAction) {
 						this.busy = new sap.m.BusyDialog();
 						this.busy.open();
-						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue(), 0);
+						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue(), 1);
 						this.busy.close();
 						dialog.close();
 					}, this)
@@ -781,7 +801,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	autoSave : function() {
 		if(this.autoSaveEnabled) {
-			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage"), 1, false);
+			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage"), 2, false);
 		}
 	},
 	
@@ -832,6 +852,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	 */
 	copyGame : function(oEvent) {
 
+		var saveType = 0;
+		if(this.archivedGame) {
+			saveType = 3;
+		}
+
 		var dialog = new sap.m.Dialog({
 			
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
@@ -845,7 +870,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Accept,
 				press : $.proxy(function(oAction) {
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
-					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected()}, true, 
+					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected(), saveType : saveType}, true, 
 					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();

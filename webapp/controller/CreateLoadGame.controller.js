@@ -52,24 +52,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			)
 		); 
 
-		RestAPIHelper.post("/gameController/saveGame", {game : GameEditor.getEditorController().newGameModel, gameSave : {type : 1, description : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.initialSaveMessage")}}, true, this.createGameSuccess, this.createGameError, this);
+		RestAPIHelper.post("/gameController/saveGame", {game : GameEditor.getEditorController().newGameModel, gameSave : {type : 0, description : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.initialSaveMessage")}}, true, this.createGameSuccess, this.createGameError, this);
 	},
 	
 	loadGame : function() {
 		if(this.selectedGame != null & this.selectedDetail == null) {
 			GameEditor.getEditorController().gameModel.gameId = this.selectedGame;
 			GameEditor.getEditorController().resetEditor();
+			for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
+				sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(true);
+			}
 			GameEditor.getEditorController().load();
 		}
 		if(this.selectedGame != null && this.selectedDetail != null) {
 			GameEditor.getEditorController().gameModel.gameId = this.selectedGame;
 			GameEditor.getEditorController().resetEditor();
-			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(false);
-			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(false);
-			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(false);
-			// for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
-			// 	sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(false);
-			// }
+			for(var i = 1; i < sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems().length; i++) {
+				sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").getMenu().getItems()[i].setEnabled(false);
+			}
 			GameEditor.getEditorController().loadArchivedGame(this.selectedDetail, this.type);
 		}
 		this.cancelLoadGame();
