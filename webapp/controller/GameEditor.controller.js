@@ -42,6 +42,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	autoSaveEnabled : true,
 	archivedGame : false,
+	reloadArchivedGame : false,
 	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
@@ -677,6 +678,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 
 		if(this.archivedGame) {
+			this.reloadArchivedGame = false;
 			sap.m.MessageBox.confirm("You are not editing the most recent version of this game. Would you like to overwrite this version or the most recent version?", {actions : ["This Version", "Most Recent Version", "Cancel"],onClose : $.proxy(function(oEvent) {
 				this.busy = new sap.m.BusyDialog();
 				this.busy.open();
@@ -686,6 +688,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						break;
 					case "Most Recent Version":
 						this.save("Overwriting from autosave", 4);
+						this.reloadArchivedGame = true;
 						break;
 				}
 				this.busy.close();
@@ -773,11 +776,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		RestAPIHelper.post("/gameController/saveGame", {game : saveJSON, gameSave : {type : type, description : description} }, true, this.saveSuccess, this.saveError, this, busy);
 	},
 	
-	saveSuccess : function() {
+	saveSuccess : function(savedGame) {
 		if(this.saveRun) {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
 			this.saveRun = false;
+		}
+
+		if(this.archivedGame && this.reloadArchivedGame) {
+			this.reloadGame(savedGame.gameId);
 		}
 
 		// BUG: IS THERE A WAY TO DIFFERENTIATE BETWEEN PRESSING THE BUTTON AND AUTOSAVES FROM RUN AND DEBUG?
