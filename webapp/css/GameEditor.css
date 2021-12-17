@@ -55,6 +55,10 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 									supported by Chrome, Opera and Firefox */
 }
 
+.titleText {
+	max-width: 240px;
+}
+
 .stateDescriptionHBox {
 	background-color : #eff4f9;
 }
