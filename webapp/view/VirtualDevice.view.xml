@@ -149,7 +149,7 @@
 					<Page id="randomInput" showHeader="false" enableScrolling="false">
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
-								<Button text="Go To Random" press="submitRandomInput"></Button>
+								<Button text="Continue?" press="submitRandomInput"></Button>
 							</items>
 						</FlexBox>
 					</Page>
