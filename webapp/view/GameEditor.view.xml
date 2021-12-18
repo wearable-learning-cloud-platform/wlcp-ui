@@ -57,7 +57,7 @@
 						<layoutData>
 							<l:SplitterLayoutData size="240px" resizable="false"/>
 						</layoutData>
-						<html:div id="toolboxTitle" class="noselect" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
+						<html:div id="toolboxTitle" class="noselect" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Draggable Toolbox</html:div>
 						<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow" style="top:50px;">
 							<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText noselect">Output State</html:div></html:div>
 							<html:div class="toolboxOutputStateBottomColor"></html:div>
@@ -65,6 +65,15 @@
 						<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
+						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
+						<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState historyButton" enabled="false">
+							<customData>
+								<BadgeCustomData
+									key="badge"
+									value="0"
+									visible="true"/>
+							</customData>
+						</Button>
 					</ScrollContainer>
 					<Page id="padPage">
 						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">

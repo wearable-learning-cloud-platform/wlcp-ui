@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Popover
+		id="myPopover"
+		title="My Title"
+		class="sapUiResponsivePadding--header sapUiResponsivePadding--footer"
+		placement="Bottom">
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button
+					id="email"
+					text="Revert To"
+					press="handleEmailPress" />
+				<Button
+					id="email2"
+					text="Load"
+					press="handleEmailPress" />
+			</OverflowToolbar>
+		</footer>
+        <List
+						id="gameSaves"
+						items="{path: '/saves', sorter: {path: 'gameSaveId', descending: true}}"
+						mode="SingleSelectMaster">
+						<StandardListItem
+							title="{
+											path: 'timeStamp',
+											type: 'sap.ui.model.type.DateTime',
+											formatOptions: {
+												source: {
+													pattern: 'yyyy-MM-ddTHH:mm:ss.SSSZ'
+												},
+												pattern: 'yyyy/MM/dd hh:mm:ss'
+												}
+										} {type}"
+							description="{description}"/>
+					</List>
+	</Popover>
+</core:FragmentDefinition>

@@ -59,6 +59,11 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	max-width: 240px;
 }
 
+.historyButton {
+	top : 288px;
+	width: 150px;
+}
+
 .stateDescriptionHBox {
 	background-color : #eff4f9;
 }

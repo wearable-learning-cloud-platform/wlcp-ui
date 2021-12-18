@@ -70,11 +70,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		this.saveGame();
+		this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.startStateCreatedMessage"), 1, false);
 	},
 	
 	initToolboxText : function() {
 		$("#container-wlcp-ui---gameEditor--toolboxTitle")[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.toolboxTitle");
+		$("#container-wlcp-ui---gameEditor--toolboxTitle2")[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.toolboxTitle2");
 		$("#container-wlcp-ui---gameEditor--toolboxOutputState")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState");
 		$("#container-wlcp-ui---gameEditor--toolboxTransition")[0].children[0].children[0].innerHTML = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition");
 	},
@@ -641,7 +642,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		GameEditor.getEditorController().load();
 	},
 
-	saveGame : function() {
+	saveGame : function(showDescriptionDialog = true) {
 		
 		//This is a save without a run
 		this.saveRun = false;
@@ -655,16 +656,41 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				return;
 			}
 		}
-		
-		//Open the busy dialog
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
 
-		//Save the game
-		this.save();
+		if(showDescriptionDialog) {
+			var dialog = new sap.m.Dialog({
+				title : "Save Description",
+				content : new sap.m.Input({
+					placeholder : "Save Description"
+				}),
+				beginButton : new sap.m.Button({
+					text : "Save",
+					type : sap.m.ButtonType.Accept,
+					press : $.proxy(function(oAction) {
+						this.busy = new sap.m.BusyDialog();
+						this.busy.open();
+						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue(), 1);
+						this.busy.close();
+						dialog.close();
+					}, this)
+				}),
+				endButton : new sap.m.Button({
+					text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
+					type : sap.m.ButtonType.Reject,
+					press : function() {
+						dialog.close();
+					}
+				}),
+				afterClose : function() {
+					dialog.destroy();
+				}
+			});
+			dialog.addStyleClass("sapUiPopupWithPadding");
+			dialog.open();
+		}
 	},
 	
-	save : function() {
+	save : function(description, type, busy = true) {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
@@ -708,9 +734,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			    return val;
 			});
 
-		this.busy.close();
-
-		RestAPIHelper.post("/gameController/saveGame", saveJSON, true, this.saveSuccess, this.saveError, this);
+		RestAPIHelper.post("/gameController/saveGame", {game : saveJSON, gameSave : {type : type, description : description} }, true, this.saveSuccess, this.saveError, this, busy);
 	},
 	
 	saveSuccess : function() {
@@ -1197,6 +1221,27 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			this.quickStartHelp();
 		}
 		document.cookie = "lastAccess=" + new Date().toString();
+	},
+
+	openGameHistory : function(oEvent) {
+
+		if (!this._pPopover) {
+			this._pPopover = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.GameHistory", this)
+		}
+		this._pPopover.openBy(oEvent.getSource());
+
+		RestAPIHelper.get(
+			"/gameController/getGameHistory?gameId=" + this.gameModel.gameId, 
+			false,
+
+			function(data) {
+				this._pPopover.setModel(new sap.ui.model.json.JSONModel({ saves : data }));
+			}, 
+
+			function(error) {
+				//Allow default error handling
+			}, this
+		);
 	},
 	
 /**
