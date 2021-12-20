@@ -21,17 +21,17 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" enabled="false">
+					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
+					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" visible="false" press="runGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false">
+					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
@@ -44,6 +44,11 @@
 							</Menu>
 						</menu>
 					</MenuButton>
+					<Button id="backButton" text="Back" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
 					<ToolbarSpacer/>
 					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
@@ -66,7 +71,7 @@
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
 						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
-						<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState historyButton" enabled="false">
+						<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState historyButton" visible="false">
 							<customData>
 								<BadgeCustomData
 									key="badge"
@@ -76,6 +81,7 @@
 						</Button>
 					</ScrollContainer>
 					<Page id="padPage">
+						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode</html:div></html:div>
 						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
 						</ScrollContainer>
 					</Page>

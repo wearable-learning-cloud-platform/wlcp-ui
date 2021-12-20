@@ -146,6 +146,8 @@ var State = class State {
 					"state-remove-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave("State Removed");
 		}
 		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
 
@@ -252,6 +254,8 @@ var State = class State {
 			);
 
 		}
+
+		GameEditor.getEditorController().autoSave("State Moved");
 	}
 	
 	save() {

@@ -16,7 +16,7 @@
 				<Button
 					id="email2"
 					text="Load"
-					press="handleEmailPress" />
+					press="test" />
 			</OverflowToolbar>
 		</footer>
         <List
