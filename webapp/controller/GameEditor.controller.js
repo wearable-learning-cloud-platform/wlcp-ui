@@ -42,6 +42,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	
 	autoSaveEnabled : true,
 	archivedGame : false,
+
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
 		this.jsPlumbInstance.importDefaults({Connector: ["Flowchart", {cornerRadius : 50}], ConnectionOverlays: [
@@ -1173,6 +1174,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		$("#container-wlcp-ui---gameEditor--toolboxTransition").show();
 		$("#container-wlcp-ui---gameEditor--toolboxTitle2").show();
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
+
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStarted").setVisible(false);
 
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
@@ -1322,8 +1326,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").show();
+		this.autoSaveEnabled = false;
 		this.archivedGameData = data;
 
 		//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView2", {archivedGame : true, masterGameId: data.masterGameId, referenceGameId: data.referenceGameId});
@@ -1342,8 +1348,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(false);
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").hide();
+		this.autoSaveEnabled = true;
 		this.load();
 	},
 /**

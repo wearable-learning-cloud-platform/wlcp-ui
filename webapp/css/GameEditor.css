@@ -64,6 +64,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	width: 150px;
 }
 
+.toolBoxButton {
+	width: 150px;
+}
+
+.toolBoxText {
+	color: white;
+}
+
 .stateDescriptionHBox {
 	background-color : #eff4f9;
 }

@@ -44,14 +44,14 @@
 							</Menu>
 						</menu>
 					</MenuButton>
-					<Button id="backButton" text="Back" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+					<Button id="backButton" text="Back To Editor" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<ToolbarSpacer/>
-					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
-					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
+					<!-- <Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/> -->
+					<Button text="Home" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
@@ -71,6 +71,7 @@
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
 						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
+						<VBox>
 						<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState historyButton" visible="false">
 							<customData>
 								<BadgeCustomData
@@ -79,6 +80,14 @@
 									visible="true"/>
 							</customData>
 						</Button>
+						<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState historyButton" visible="false"/>
+						</VBox>
+						<VBox id="gettingStarted" visible="true">
+							<FlexBox alignItems="Center" justifyContent="Center">
+								<FormattedText width="150px" renderWhitespace="true" wrapping="true" textAlign="Center" class="toolBoxText" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
+							</FlexBox>
+							<Button icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState toolBoxButton"/>
+						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">
 						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode</html:div></html:div>
