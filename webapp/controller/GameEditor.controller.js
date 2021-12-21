@@ -791,8 +791,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	runGame : function() {
-		this.saveRun = true;
-		this.save("Run and Debug", 3);
+		if(!this.archivedGame) {
+			this.saveRun = true;
+			this.save("Run and Debug", 3);
+		} else {
+			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
+			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
+		}
 
 		// Log BUTTON_PRESS event: button-run-debug
 		// Run and Debug button pressed
@@ -837,6 +842,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	 */
 	copyGame : function(oEvent) {
 
+		var saveType = 0;
+		if(this.archivedGame) {
+			saveType = 4;
+		}
+
 		var dialog = new sap.m.Dialog({
 			
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
@@ -850,8 +860,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Accept,
 				press : $.proxy(function(oAction) {
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
-					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected()}, true, 
+					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected(), saveType : saveType}, true, 
 					function(data) {
+						if(this.archivedGame) { this.goBack2(); }
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -1041,6 +1052,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 									$("#container-wlcp-ui---gameEditor--toolboxTransition").hide();
 									$("#container-wlcp-ui---gameEditor--toolboxTitle2").hide();
 									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(false);
+
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStarted").setVisible(true);
 
 									sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.deleted"))
 								},
@@ -1289,7 +1303,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		);
 	},
 
-	test : function(oEvent) {
+	loadSelectedArchivedGame : function(oEvent) {
 		
 		// sap.ui.core.UIComponent.getRouterFor(this).getTargets().addTarget("TargetGameEditorView2", {
 		// 	controlAggregation: "pages",
@@ -1328,9 +1342,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runAndDebugArchivedGameButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyArchivedGameButton").setVisible(true);
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").show();
 		this.autoSaveEnabled = false;
 		this.archivedGameData = data;
+		this.archivedGame = true;
 
 		//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView2", {archivedGame : true, masterGameId: data.masterGameId, referenceGameId: data.referenceGameId});
 	},
@@ -1338,6 +1355,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	goBack : function() {
 		this.gameModel.gameId = this.archivedGameData.masterGameId;
 		this.resetEditor();
+		this.goBack2();
+		this.load();
+	},
+
+	goBack2 : function() {
 		$("#container-wlcp-ui---gameEditor--toolboxTitle").show();
 		$("#container-wlcp-ui---gameEditor--toolboxOutputState").show();
 		$("#container-wlcp-ui---gameEditor--toolboxTransition").show();
@@ -1350,9 +1372,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runAndDebugArchivedGameButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyArchivedGameButton").setVisible(false);
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").hide();
 		this.autoSaveEnabled = true;
-		this.load();
+		this.archivedGame = false;
 	},
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.

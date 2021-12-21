@@ -44,7 +44,17 @@
 							</Menu>
 						</menu>
 					</MenuButton>
-					<Button id="backButton" text="Back To Editor" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+					<Button id="backButton" text="Back to Editor" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="runAndDebugArchivedGameButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" visible="false" press="runGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="copyArchivedGameButton" text="Copy to New Game" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
