@@ -81,7 +81,7 @@
 						</html:div>
 						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
 						<VBox id="clickableToolbox" visible="false">
-							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState toolBoxButton">
+							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="{i18n>gameEditor.history.buttonTitle}" class="centerToolboxState toolBoxButton">
 								<customData>
 									<BadgeCustomData
 										key="badge"
