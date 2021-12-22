@@ -59,12 +59,12 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	max-width: 240px;
 }
 
-.historyButton {
-	top : 288px;
+.toolBoxButton {
 	width: 150px;
 }
 
-.toolBoxButton {
+.clickableToolBoxButton {
+	top : 288px;
 	width: 150px;
 }
 

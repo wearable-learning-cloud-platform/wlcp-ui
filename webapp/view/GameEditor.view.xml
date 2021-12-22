@@ -44,7 +44,7 @@
 							</Menu>
 						</menu>
 					</MenuButton>
-					<Button id="backButton" text="Back to Editor" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+					<Button id="backButton" text="{i18n>gameEditor.backButton}" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
@@ -54,13 +54,12 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<Button id="copyArchivedGameButton" text="Copy to New Game" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
+					<Button id="copyArchivedGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
 					<ToolbarSpacer/>
-					<!-- <Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/> -->
 					<Button text="Home" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -91,13 +90,13 @@
 								</customData>
 								<layoutData>
 									<FlexItemData
-										styleClass="centerToolboxState historyButton"/>
+										styleClass="centerToolboxState clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
-							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState toolBoxButton">
+							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="centerToolboxState toolBoxButton">
 								<layoutData>
 									<FlexItemData
-										styleClass="centerToolboxState historyButton"/>
+										styleClass="centerToolboxState clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
 						</VBox>
@@ -105,7 +104,7 @@
 							<FlexBox alignItems="Center" justifyContent="Center">
 								<FormattedText width="150px" renderWhitespace="true" wrapping="true" textAlign="Center" class="toolBoxText" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
 							</FlexBox>
-							<Button icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState toolBoxButton"/>
+							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="centerToolboxState toolBoxButton"/>
 						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">
