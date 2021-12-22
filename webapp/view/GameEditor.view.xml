@@ -31,19 +31,6 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" visible="false">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="High" />
-						</layoutData>
-						<menu>
-							<Menu>
-								<MenuItem text="{i18n>gameEditor.gameOptions.copyGame}" icon="sap-icon://copy" press="copyGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.renameGame}" icon="sap-icon://bold-text" press="renameGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.deleteGame}" icon="sap-icon://delete" press="deleteGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.gameProperties}" icon="sap-icon://detail-view" press="gameProperties"/>
-							</Menu>
-						</menu>
-					</MenuButton>
 					<Button id="backButton" text="{i18n>gameEditor.backButton}" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
@@ -93,6 +80,20 @@
 										styleClass="clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
+							<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" icon="sap-icon://crm-service-manager" class="toolBoxButton">
+								<layoutData>
+									<FlexItemData
+										styleClass="clickableToolBoxButton"/>
+								</layoutData>
+								<menu>
+									<Menu>
+										<MenuItem text="{i18n>gameEditor.gameOptions.copyGame}" icon="sap-icon://copy" press="copyGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.renameGame}" icon="sap-icon://bold-text" press="renameGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.deleteGame}" icon="sap-icon://delete" press="deleteGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.gameProperties}" icon="sap-icon://detail-view" press="gameProperties"/>
+									</Menu>
+								</menu>
+							</MenuButton>
 							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton">
 								<layoutData>
 									<FlexItemData
