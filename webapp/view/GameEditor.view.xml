@@ -81,16 +81,25 @@
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
 						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
-						<VBox>
-						<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState historyButton" visible="false">
-							<customData>
-								<BadgeCustomData
-									key="badge"
-									value="0"
-									visible="true"/>
-							</customData>
-						</Button>
-						<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState historyButton" visible="false"/>
+						<VBox id="clickableToolbox" visible="false">
+							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="History" class="centerToolboxState toolBoxButton">
+								<customData>
+									<BadgeCustomData
+										key="badge"
+										value="0"
+										visible="true"/>
+								</customData>
+								<layoutData>
+									<FlexItemData
+										styleClass="centerToolboxState historyButton"/>
+								</layoutData>
+							</Button>
+							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="Getting Started" press="quickStartHelp" class="centerToolboxState toolBoxButton">
+								<layoutData>
+									<FlexItemData
+										styleClass="centerToolboxState historyButton"/>
+								</layoutData>
+							</Button>
 						</VBox>
 						<VBox id="gettingStarted" visible="true">
 							<FlexBox alignItems="Center" justifyContent="Center">
@@ -100,7 +109,7 @@
 						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">
-						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode</html:div></html:div>
+						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode. Changes will not appear in Run and Debug or Copy to New Game.</html:div></html:div>
 						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
 						</ScrollContainer>
 					</Page>

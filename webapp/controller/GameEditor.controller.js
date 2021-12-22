@@ -43,6 +43,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	autoSaveEnabled : true,
 	archivedGame : false,
 
+	firstRouteMatched : true,
+
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
 		this.jsPlumbInstance.importDefaults({Connector: ["Flowchart", {cornerRadius : 50}], ConnectionOverlays: [
@@ -410,6 +412,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 								"connection-remove-noconfirm"
 							)
 						);
+
+						GameEditor.getEditorController().autoSave("Connection Removed");
 
 						return true;
 					}
@@ -1051,8 +1055,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 									$("#container-wlcp-ui---gameEditor--toolboxOutputState").hide();
 									$("#container-wlcp-ui---gameEditor--toolboxTransition").hide();
 									$("#container-wlcp-ui---gameEditor--toolboxTitle2").hide();
-									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(false);
-									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
 
 									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStarted").setVisible(true);
 
@@ -1187,8 +1190,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		$("#container-wlcp-ui---gameEditor--toolboxOutputState").show();
 		$("#container-wlcp-ui---gameEditor--toolboxTransition").show();
 		$("#container-wlcp-ui---gameEditor--toolboxTitle2").show();
-		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
-		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(true);
 
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStarted").setVisible(false);
 
@@ -1339,8 +1341,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
-		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(false);
-		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runAndDebugArchivedGameButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyArchivedGameButton").setVisible(true);
@@ -1350,6 +1351,36 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.archivedGame = true;
 
 		//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView2", {archivedGame : true, masterGameId: data.masterGameId, referenceGameId: data.referenceGameId});
+	},
+
+	revertToSelectedArchivedGame : function(oEvent) {
+		console.log("test")
+		var data = oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getModel().getProperty(oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getPath());
+		sap.m.MessageBox.confirm(
+			"Continuing will overwrite the current game with this version.", 
+			{
+				title: "Overwrite?", 
+				onClose : function (oEvent2) {
+					if(oEvent2 == sap.m.MessageBox.Action.OK) {
+						RestAPIHelper.post(
+							"/gameController/revertGame", 
+							{oldGameId : data.referenceGameId, newGameId : data.masterGameId, usernameId : sap.ui.getCore().getModel("user").oData.username}, 
+							true, 
+	
+							function(data2) {
+								this.gameModel.gameId = data.masterGameId;
+								this.resetEditor();
+								this.load();
+							}.bind(this),
+	
+							function error(error) {
+
+							}, this
+						);
+					} 
+				}.bind(this)
+			}
+		);
 	},
 
 	goBack : function() {
@@ -1405,21 +1436,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	onRouteMatched : function (oEvent) {
 
-		//Setup scrolling via mouse
-		this.setupScrolling();
+		if(this.firstRouteMatched) {
 
-		//Load the toolbox text
-		this.initToolboxText();
+			//Setup scrolling via mouse
+			this.setupScrolling();
 
-		//Load the quickstart help
-		if(!document.URL.includes("localhost")) {
-			this.quickStartHelp();
+			//Load the toolbox text
+			this.initToolboxText();
+
+			//Load the quickstart help
+			if(!document.URL.includes("localhost")) {
+				this.quickStartHelp();
+			}
+
+			this.firstRouteMatched = false;
 		}
-
-		//this.archivedGameArgs = oEvent.getParameter("arguments");
-		// if(oEvent.getParameter("arguments").archivedGame) {
-		// 	this.loadArchivedGame(oEvent.getParameter("arguments").referenceGameId);
-		// }
 	},
 
 	setupScrolling : function() {

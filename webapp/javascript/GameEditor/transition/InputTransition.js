@@ -517,6 +517,8 @@ var InputTransition = class InputTransition extends Transition {
 				"transition-editor-accept-noconfirm"
 			)
 		);
+
+		GameEditor.getEditorController().autoSave("Transition Edited");
     }
     
 	/**

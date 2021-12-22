@@ -12,14 +12,14 @@
 				<Button
 					id="revertTo"
 					text="Revert To"
-					press="handleEmailPress"
+					press="revertToSelectedArchivedGame"
 					icon="sap-icon://reset"
 					type="Reject" />
 				<Button
 					id="loadSelectedArchivedGame"
-					text="Load"
+					text="View"
 					type="Accept"
-					icon="sap-icon://open-folder"
+					icon="sap-icon://detail-view"
 					press="loadSelectedArchivedGame" />
 			</OverflowToolbar>
 		</footer>

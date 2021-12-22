@@ -398,6 +398,8 @@ var OutputState = class OutputState extends State {
 		this.dialog.destroy();
 		
 		this.changeText();
+
+		GameEditor.getEditorController().autoSave("State Edited");
     }
     
 	/**
