@@ -40,10 +40,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	scroller : new GameEditorScroller(),
 	
-	autoSaveEnabled : true,
+	autoSaveEnabled : false,
 	archivedGame : false,
 
 	firstRouteMatched : true,
+
+	undoHistory : [],
+	redoHistory : [],
+	historyIndex : 0,
 
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
@@ -658,6 +662,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			this.stateList[i].onChange();
 		}
 
+		this.undoRedoChange();
+
 		this.busy.close();
 	},
 	
@@ -766,6 +772,41 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		RestAPIHelper.post("/gameController/saveGame", {game : saveJSON, gameSave : {type : type, description : description} }, true, this.saveSuccess, this.saveError, this, busy);
 	},
+
+	saveObject : function() {
+		//Container for all of the data to be sent
+		var saveJSON = {
+			gameId : this.gameModel.gameId,
+			teamCount : this.gameModel.teamCount,
+			playersPerTeam : this.gameModel.playersPerTeam,
+			stateIdCount : this.gameModel.stateIdCount,
+			transitionIdCount : this.gameModel.transitionIdCount,
+			connectionIdCount : this.gameModel.connectionIdCount,
+			visibility : this.gameModel.visibility,
+			dataLog : this.gameModel.dataLog,
+			username : this.gameModel.username,
+			states : [],
+			connections : [],
+			transitions :[]
+		}
+	
+		//Loop through and save all of the states
+		for(var i = 0; i < this.stateList.length; i++) {
+			saveJSON.states.push(this.stateList[i].save());
+		}
+		
+		//Loop through and save all of the connections
+		for(var i = 0; i < this.connectionList.length; i++) {
+			saveJSON.connections.push(this.connectionList[i].save());
+		}
+		
+		//Loop through all of the transition
+		for(var i = 0; i < this.transitionList.length; i++) {
+			saveJSON.transitions.push(this.transitionList[i].save());
+		}
+
+		return saveJSON;
+	},
 	
 	saveSuccess : function() {
 		if(this.saveRun) {
@@ -796,6 +837,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.autoSaveEnabled) {
 			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage") + " - " + description, 2, false);
 		}
+		this.undoRedoChange();
 	},
 	
 	runGame : function() {
@@ -1052,6 +1094,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 									this.resetEditor();
 									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(false);
 									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(false);
+									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(false);
 									sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
 
 
@@ -1188,6 +1232,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 
 		$("#container-wlcp-ui---gameEditor--toolboxTitle").show();
@@ -1344,6 +1390,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--loadButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
@@ -1402,6 +1450,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--loadButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
@@ -1463,6 +1513,180 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			GameEditor.getEditorController().scroller.leftMouseDown = false;
 			GameEditor.getEditorController().scroller.handleMousemove(event);
 		}, false);
+	},
+
+	resetUndoRedo : function() {
+		this.undoHistory = [];
+		this.redoHistory = [];
+		this.checkButtons();
+	},
+
+	undoRedoChange : function() {
+		if(this.redoHistory.length != 0) { 
+			this.undoHistory.push(this.redoHistory.pop());
+			this.redoHistory = [];
+		}
+		var saveObject = this.saveObject();
+		this.undoHistory.push(saveObject);
+		this.checkButtons();
+	},
+
+	undo : function() {
+		if(this.redoHistory.length == 0 || this.historyIndex == 1) {
+			this.redoHistory.push(this.undoHistory.pop());
+		}
+		var game = this.undoHistory.pop();
+		this.redoHistory.push(game);
+		this.loadUndoRedoGame(game);
+		this.historyIndex = 0;
+	},
+
+	redo : function() {
+		if(this.undoHistory.length == 0 || this.historyIndex == 0) {
+			this.undoHistory.push(this.redoHistory.pop());
+		}
+		var game = this.redoHistory.pop();
+		this.undoHistory.push(game);
+		this.loadUndoRedoGame(game);
+		this.historyIndex = 1;
+	},
+
+	loadUndoRedoGame : function(game) {
+		for(var i = 0; i < this.stateList.length; i++) {
+			this.jsPlumbInstance.remove(this.stateList[i].htmlId);
+		}
+		this.stateList = [];
+		this.connectionList = [];
+		this.transitionList = [];
+		this.saveCount = null;
+		this.type = null;
+		
+		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setEnabled(true);
+		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setEnabled(true);
+		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setEnabled(true);
+
+		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
+		
+		GameEditor.resetScroll();
+
+		loadedData = game
+
+		this.gameModel.gameId = loadedData.gameId;
+		this.gameModel.teamCount = loadedData.teamCount;
+		this.gameModel.playersPerTeam = loadedData.playersPerTeam;
+		this.gameModel.visibility = loadedData.visibility;
+		this.gameModel.stateIdCount = loadedData.stateIdCount;
+		this.gameModel.transitionIdCount = loadedData.transitionIdCount;
+		this.gameModel.connectionIdCount = loadedData.connectionIdCount;
+		this.gameModel.username.usernameId = loadedData.username.usernameId;
+
+		//Set the game name
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
+		
+		//Init jsPlumb
+		this.initJsPlumb();
+		
+		//Setup the toolbox drag and drop
+		this.initToolbox();
+		
+		//Load the states
+		for(var i = 0; i < loadedData.states.length; i++) {
+			switch(loadedData.states[i].stateType) {
+			case "START_STATE":
+				StartState.load(loadedData.states[i]);
+				break;
+			case "OUTPUT_STATE":
+				OutputState.load(loadedData.states[i]);
+				break;
+			}
+		}
+		
+		//Load the connections
+		Connection.load(loadedData.connections);
+		
+		//Load the transitions
+		for(var i = 0; i < loadedData.transitions.length; i++) {
+			InputTransition.load(loadedData.transitions[i]);
+		}
+		
+		//Load state connections
+		for(var i = 0; i < loadedData.states.length; i++) {
+			for(var n = 0; n < this.stateList.length; n++) {
+				if(loadedData.states[i].stateId == this.stateList[n].htmlId) {
+					for(var j = 0; j < loadedData.states[i].inputConnections.length; j++) {
+						for(var l = 0; l < this.connectionList.length; l++) {
+							if(loadedData.states[i].inputConnections[j] == this.connectionList[l].connectionId) {
+								this.stateList[n].inputConnections.push(this.connectionList[l]);
+								this.connectionList[l].connectionTo = this.stateList[n];
+							}
+						}
+					}
+					for(var j = 0; j < loadedData.states[i].outputConnections.length; j++) {
+						for(var l = 0; l < this.connectionList.length; l++) {
+							if(loadedData.states[i].outputConnections[j] == this.connectionList[l].connectionId) {
+								this.stateList[n].outputConnections.push(this.connectionList[l]);
+								this.connectionList[l].connectionFrom = this.stateList[n];
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//Load connection transition
+		for(var i = 0; i < loadedData.connections.length; i++) {
+			if(loadedData.connections[i].transition != null) {
+				for(var n = 0; n < this.connectionList.length; n++) {
+					if(this.connectionList[n].connectionId == loadedData.connections[i].connectionId) {
+						for(var j = 0; j < this.transitionList.length; j++) {
+							if(this.transitionList[j].overlayId == loadedData.connections[i].transition) {
+								this.connectionList[n].transition = this.transitionList[j];
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//Load transition connection
+		for(var i = 0; i < loadedData.transitions.length; i++) {
+			if(loadedData.transitions[i].connection != null) {
+				for(var n = 0; n < this.transitionList.length; n++) {
+					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
+						for(var j = 0; j < this.connectionList.length; j++) {
+							if(this.connectionList[j].connectionId == loadedData.transitions[n].connection) {
+								this.transitionList[n].connection = this.connectionList[j];
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//Have the transitions revalidate
+		for(var i = 0; i < this.transitionList.length; i++) {
+			this.transitionList[i].onChange();
+		}
+		
+		//Have the states revalidate
+		for(var i = 0; i < this.stateList.length; i++) {
+			this.stateList[i].onChange();
+		}
+		
+		this.checkButtons();
+	},
+
+	checkButtons : function() {
+		if(this.undoHistory.length > 1 || (this.undoHistory.length >= 1 && this.redoHistory.length > 0)) { 
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setEnabled(true);
+		} else {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setEnabled(false);
+		}
+		if(this.redoHistory.length > 0) {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setEnabled(true);
+		}else {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setEnabled(false);
+		}
 	},
 	
 	// setupScrolling : function() {

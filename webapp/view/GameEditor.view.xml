@@ -31,6 +31,16 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
+					<Button id="undoButton" text="Undo" type="Transparent" icon="sap-icon://undo" press="undo" enabled="false" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="redoButton" text="Redo" type="Transparent" icon="sap-icon://redo" press="redo" enabled="false" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
 					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
