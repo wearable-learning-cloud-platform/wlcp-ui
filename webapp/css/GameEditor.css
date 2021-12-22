@@ -61,11 +61,15 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 
 .toolBoxButton {
 	width: 150px;
+	left: 50%;
+	margin-left: -75px;
 }
 
 .clickableToolBoxButton {
 	top : 288px;
 	width: 150px;
+	left: 50%;
+	margin-left: -75px;
 }
 
 .toolBoxText {

@@ -912,7 +912,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
 					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected(), saveType : saveType}, true, 
 					function(data) {
-						if(this.archivedGame) { this.goBack2(); }
+						if(this.archivedGame) { this.goBackSetVisible(); }
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
 						dialog.close();
 						this.reloadGame(newGameId);
@@ -1437,11 +1437,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	goBack : function() {
 		this.gameModel.gameId = this.archivedGameData.masterGameId;
 		this.resetEditor();
-		this.goBack2();
+		this.goBackSetVisible();
 		this.load();
 	},
 
-	goBack2 : function() {
+	goBackSetVisible : function() {
 		$("#container-wlcp-ui---gameEditor--toolboxTitle").show();
 		$("#container-wlcp-ui---gameEditor--toolboxOutputState").show();
 		$("#container-wlcp-ui---gameEditor--toolboxTransition").show();
