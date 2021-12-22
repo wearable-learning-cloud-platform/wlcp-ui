@@ -153,7 +153,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 
 	selectGame : function (oEvent) {
 		sap.ui.getCore().byId("load").setEnabled(true);
-		sap.ui.getCore().byId("advance").setEnabled(true);
 		this.selectedGame = oEvent.getParameters().item.getText();
 		if(sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().getProperty("size") === "50%"){
 			this.showAdvance(oEvent);
@@ -162,7 +161,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 
 	selectDetail : function(oEvent) {
 		sap.ui.getCore().byId("load").setEnabled(true);
-		sap.ui.getCore().byId("advance").setEnabled(true);
 		this.selectedSave = oEvent.getSource().getBindingContext().getModel().getProperty(oEvent.getSource().getBindingContext().getPath());
 		this.selectedDetail = oEvent.getParameters().item.getKey().split(" ")[0];
 		this.type = oEvent.getParameters().item.getKey().split(" ")[1];
@@ -171,14 +169,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	setExpansionGame : function(oEvent) {
 		oEvent.getSource().setExpanded(!oEvent.getSource().getExpanded());
 		sap.ui.getCore().byId("load").setEnabled(false);
-		sap.ui.getCore().byId("advance").setEnabled(false);
 		this.selectedGame = null;
 	},
 
 	setExpansionDetail : function(oEvent) {
 		oEvent.getSource().setExpanded(!oEvent.getSource().getExpanded());
 		sap.ui.getCore().byId("load").setEnabled(false);
-		sap.ui.getCore().byId("advance").setEnabled(false);
 		this.selectedSave = null;
 		this.selectedDetail = null;
 		this.type = null;

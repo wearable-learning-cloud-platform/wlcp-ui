@@ -8,7 +8,6 @@
 	<Dialog id="loadGame" title="{i18n>gameEditor.load.title}">
 		<buttons>
 			<Button id="load" text="{i18n>gameEditor.load.load}" type="Accept" enabled="false" press="loadGame" />
-			<Button visible="false" id="advance" text="{i18n>gameEditor.load.advanced}" type="Attention" enabled="false" press="showAdvance"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="cancelLoadGame" />
 		</buttons>
 		<content>
@@ -33,19 +32,6 @@
 							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
 						</tnt:NavigationListItem>
 					</tnt:NavigationList>
-				</Panel>
-				<Panel id="saveDetails" headerText="{i18n>gameEditor.load.saveDetails}">
-					<tnt:NavigationList>
-						<tnt:NavigationListItem text="{i18n>gameEditor.load.userSaves}" icon="sap-icon://employee" items="{path : '/manualSaves', sorter : {path:'version', descending: true}}" select="setExpansionDetail" expanded="false">
-							<tnt:NavigationListItem key="{version} {type}" text="Version {version}: ({description})" select="selectDetail"/>
-						</tnt:NavigationListItem>
-						<tnt:NavigationListItem text="{i18n>gameEditor.load.autoSaves}" icon="sap-icon://building" items="{path : '/autoSaves', sorter : {path:'version', descending: true}}" select="setExpansionDetail" expanded="false">
-							<tnt:NavigationListItem key="{version} {type}" text="Version {version}: ({description})" select="selectDetail"/>
-						</tnt:NavigationListItem>
-					</tnt:NavigationList>
-					<layoutData>
-						<l:SplitterLayoutData size="0%" resizable="false" />
-					</layoutData>
 				</Panel>
 			</l:Splitter>
 		</content>

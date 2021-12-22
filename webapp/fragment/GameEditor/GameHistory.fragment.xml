@@ -3,7 +3,7 @@
 	xmlns:core="sap.ui.core">
 	<Popover
 		id="gameHistoryPopover"
-		title="Game History"
+		title="{i18n>gameEditor.history.title}"
 		class="sapUiResponsivePadding--header sapUiResponsivePadding--footer"
 		placement="Bottom">
 		<footer>
@@ -11,13 +11,13 @@
 				<ToolbarSpacer/>
 				<Button
 					id="revertTo"
-					text="Revert To"
+					text="{i18n>gameEditor.history.revertTo}"
 					press="revertToSelectedArchivedGame"
 					icon="sap-icon://reset"
 					type="Reject" />
 				<Button
 					id="loadSelectedArchivedGame"
-					text="View"
+					text="{i18n>gameEditor.history.view}"
 					type="Accept"
 					icon="sap-icon://detail-view"
 					press="loadSelectedArchivedGame" />

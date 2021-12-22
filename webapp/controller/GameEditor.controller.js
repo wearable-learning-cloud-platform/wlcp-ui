@@ -155,8 +155,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				"state-create"
 			)
 		);
-
-		GameEditor.getEditorController().autoSave("State Created");
+		
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.addState"));
 
 	},
 	
@@ -218,7 +218,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				)
 			);
 
-			GameEditor.getEditorController().autoSave("Transition Created");
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.addTransition"));
 
 		} else {
 			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.cannotPlaceTransition"));
@@ -280,7 +280,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			)
 		);
 
-		GameEditor.getEditorController().autoSave("Connection Created");
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.addConnection"));
 
 		return false;
 	},
@@ -346,7 +346,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 											)
 										);
 
-										GameEditor.getEditorController().autoSave("Connection Removed");
+										GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteConnection"));
 									}
 									// CASE: User attempts to remove a connection -> confirmation box displayed -> user cancels "Cancel"
 									else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
@@ -413,7 +413,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 							)
 						);
 
-						GameEditor.getEditorController().autoSave("Connection Removed");
+						GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteConnection"));
 
 						return true;
 					}
@@ -562,7 +562,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.gameModel.username.usernameId = loadedData.username.usernameId;
 
 		//Set the game name
-		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
+		if(!this.archivedGame) {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
+		} else {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.archivedGameData.masterGameId + " Version " + this.archivedGameData.gameSaveId + " " + this.archivedGameData.type + " " + this.archivedGameData.description);
+		}
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -685,12 +689,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		if(showDescriptionDialog) {
 			var dialog = new sap.m.Dialog({
-				title : "Save Description",
+				title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.saveDialog.title"),
 				content : new sap.m.Input({
-					placeholder : "Save Description"
+					placeholder : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.saveDialog.title")
 				}),
 				beginButton : new sap.m.Button({
-					text : "Save",
+					text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.save"),
 					type : sap.m.ButtonType.Accept,
 					press : $.proxy(function(oAction) {
 						this.busy = new sap.m.BusyDialog();
@@ -797,7 +801,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	runGame : function() {
 		if(!this.archivedGame) {
 			this.saveRun = true;
-			this.save("Run and Debug", 3);
+			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage") + " - " + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebugMessage"), 3);
 		} else {
 			sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.transpileDebug"));
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/checkDebugInstanceRunning/" + sap.ui.getCore().getModel("user").oData.username, true, this.checkForRunningDebugInstanceSuccess, this.checkForRunningDebugInstanceError, this);
@@ -1354,12 +1358,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	revertToSelectedArchivedGame : function(oEvent) {
-		console.log("test")
 		var data = oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getModel().getProperty(oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getPath());
 		sap.m.MessageBox.confirm(
-			"Continuing will overwrite the current game with this version.", 
+			sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.history.revertTo.overwriteMessage"),
 			{
-				title: "Overwrite?", 
+				title: sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.history.revertTo.overwrite"), 
 				onClose : function (oEvent2) {
 					if(oEvent2 == sap.m.MessageBox.Action.OK) {
 						RestAPIHelper.post(
@@ -1424,14 +1427,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
-
-		// this.getView().addEventDelegate({
-		// 	onAfterRendering: function() {
-		// 		if(this.archivedGameArgs) {
-		// 			this.loadArchivedGame(this.archivedGameArgs.referenceGameId);
-		// 		}
-		// 	}.bind(this),
-		// }, this);
 	},
 
 	onRouteMatched : function (oEvent) {

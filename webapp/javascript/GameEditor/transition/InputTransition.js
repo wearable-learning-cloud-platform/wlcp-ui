@@ -518,7 +518,7 @@ var InputTransition = class InputTransition extends Transition {
 			)
 		);
 
-		GameEditor.getEditorController().autoSave("Transition Edited");
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editTransition"));
     }
     
 	/**
@@ -550,7 +550,7 @@ var InputTransition = class InputTransition extends Transition {
 				)
 			);
 
-			GameEditor.getEditorController().autoSave("Transition Edited");
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editTransition"));
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -648,7 +648,7 @@ var InputTransition = class InputTransition extends Transition {
 				)
 			);
 
-			GameEditor.getEditorController().autoSave("Transition Removed");
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteTransition"));
 		}
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
 		else if(oAction == sap.m.MessageBox.Action.CANCEL) {
