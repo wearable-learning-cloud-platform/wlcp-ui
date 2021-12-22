@@ -1248,6 +1248,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
+
+		this.resetUndoRedo();
 	},
 	
 	onGotoLogin: function() {
