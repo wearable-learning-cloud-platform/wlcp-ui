@@ -40,11 +40,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	scroller : new GameEditorScroller(),
 	
-	autoSaveEnabled : false,
+	autoSaveEnabled : true,
 	archivedGame : false,
 
 	firstRouteMatched : true,
 
+	undoRedoEnabled : true,
 	undoHistory : [],
 	redoHistory : [],
 	historyIndex : 0,
@@ -1401,6 +1402,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.autoSaveEnabled = false;
 		this.archivedGameData = data;
 		this.archivedGame = true;
+		this.resetUndoRedo();
+		this.undoRedoEnabled = false;
 
 		//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView2", {archivedGame : true, masterGameId: data.masterGameId, referenceGameId: data.referenceGameId});
 	},
@@ -1461,6 +1464,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").hide();
 		this.autoSaveEnabled = true;
 		this.archivedGame = false;
+		this.undoRedoEnabled = true;
 	},
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -1522,6 +1526,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	undoRedoChange : function() {
+		if(!this.undoRedoEnabled) { return; }
 		if(this.redoHistory.length != 0) { 
 			this.undoHistory.push(this.redoHistory.pop());
 			this.redoHistory = [];
