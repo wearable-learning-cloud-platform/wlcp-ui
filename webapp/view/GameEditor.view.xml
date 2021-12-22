@@ -81,7 +81,7 @@
 						</html:div>
 						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
 						<VBox id="clickableToolbox" visible="false">
-							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="{i18n>gameEditor.history.buttonTitle}" class="centerToolboxState toolBoxButton">
+							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="{i18n>gameEditor.history.buttonTitle}" class="toolBoxButton">
 								<customData>
 									<BadgeCustomData
 										key="badge"
@@ -90,21 +90,21 @@
 								</customData>
 								<layoutData>
 									<FlexItemData
-										styleClass="centerToolboxState clickableToolBoxButton"/>
+										styleClass="clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
-							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="centerToolboxState toolBoxButton">
+							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton">
 								<layoutData>
 									<FlexItemData
-										styleClass="centerToolboxState clickableToolBoxButton"/>
+										styleClass="clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
 						</VBox>
 						<VBox id="gettingStarted" visible="true">
 							<FlexBox alignItems="Center" justifyContent="Center">
-								<FormattedText width="150px" renderWhitespace="true" wrapping="true" textAlign="Center" class="toolBoxText" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
+								<FormattedText width="150px" textAlign="Center" class="toolBoxText" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
 							</FlexBox>
-							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="centerToolboxState toolBoxButton"/>
+							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton"/>
 						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">

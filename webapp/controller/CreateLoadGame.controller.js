@@ -154,9 +154,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	selectGame : function (oEvent) {
 		sap.ui.getCore().byId("load").setEnabled(true);
 		this.selectedGame = oEvent.getParameters().item.getText();
-		if(sap.ui.getCore().byId("gameLoadSplitter").getContentAreas()[1].getLayoutData().getProperty("size") === "50%"){
-			this.showAdvance(oEvent);
-		}
 	},
 
 	selectDetail : function(oEvent) {
