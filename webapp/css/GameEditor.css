@@ -28,6 +28,10 @@
 	background : #3f5161; 
 }
 
+.sapMMenuBtn.sapMMenuBtnRegular .sapMBtnInner {
+	text-align: center !important;
+}
+
 html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	display : none;
 }
@@ -60,16 +64,20 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .toolBoxButton {
-	width: 150px;
+	width: 200px;
 	left: 50%;
-	margin-left: -75px;
+	margin-left: -100px;
+	position: relative;
+	max-width: 200px;
 }
 
 .clickableToolBoxButton {
 	top : 288px;
-	width: 150px;
+	width: 200px;
 	left: 50%;
-	margin-left: -75px;
+	margin-left: -100px;
+	position: relative;
+	max-width: 200px;
 }
 
 .toolBoxText {
