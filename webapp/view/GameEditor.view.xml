@@ -9,12 +9,8 @@
 					<tnt:layoutData>
 						<l:SplitterLayoutData size="48px" resizable="false"/>
 					</tnt:layoutData>
-					<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="NeverOverflow" />
-						</layoutData>
-					</Button>
-					<ToolbarSpacer width="200px"/>
+					<Label class="noselect titleText" text = "{i18n>gameEditor.title}"/>
+					<ToolbarSpacer width="20px"/>
 					<Button id="newButton" text="{i18n>gameEditor.new}" type="Transparent" icon="sap-icon://create" press="newGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
@@ -48,13 +44,7 @@
 							</Menu>
 						</menu>
 					</MenuButton>
-					<Label class="noselect" text = "{i18n>gameEditor.title}" textAlign="Center">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="Disappear" />
-						</layoutData>
-					</Label>
 					<ToolbarSpacer/>
-					<!-- <f:Avatar class="noselect" displaySize="XS" initials="MM" press="handleAvatarPress"/> -->
 					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
 					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>

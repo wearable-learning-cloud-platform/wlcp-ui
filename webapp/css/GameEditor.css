@@ -55,6 +55,10 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 									supported by Chrome, Opera and Firefox */
 }
 
+.titleText {
+	max-width: 240px;
+}
+
 .stateDescriptionHBox {
 	background-color : #eff4f9;
 }
@@ -276,8 +280,10 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .sequencePressColorList {
 	display:inline-block;
 	float:left;
-	height:100px;
+	height:120px;
 	width:500px;
+	margin: 5px;
+    padding: 5px;
 	outline-style: solid;
 }
 
@@ -285,7 +291,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	display : inline-block !important;
 	float: left;
     width: 100px;
-    margin: 5px;
+    margin: 7.5px;
     padding: 5px;
     height: 100px;
 }

@@ -9,6 +9,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 	getNavigationListItem() {
 		return {	
 			text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playSound"),
+			type : StateConfigType.PLAY_SOUND,
 			icon : "sap-icon://sound-loud"	
 		}
 	}
@@ -17,6 +18,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 	getNavigationContainerPage() {
 		return {
 			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.outputState.playSound"),
+			type : StateConfigType.PLAY_SOUND,
 			url : "",
 		}
     }
@@ -30,7 +32,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
 						this.playSoundPage = i;
 						break;
 					}
@@ -62,7 +64,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
 						this.playSoundPage = iconTabs[i].navigationContainerPages[n];
 						this.playSoundPage.url = ServerConfig.getServerAddress() + "/objectStoreController/files/" + sResponse;
                         this.state.model.setData(this.state.modelJSON);
@@ -88,7 +90,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-					if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
                         this.sound = new Audio(iconTabs[i].navigationContainerPages[n].url);
                         this.sound.play();
 						break;
@@ -113,7 +115,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
 					if(iconTabs[i].navigationContainerPages[n].url != "") {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -130,7 +132,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+						if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
 							iconTabs[i].navigationContainerPages[n].url = loadData.soundOutputs[key].url;
 							this.playSoundPage = iconTabs[i].navigationContainerPages[n];
 						}
@@ -147,7 +149,7 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_SOUND) {
 					if(iconTabs[i].navigationContainerPages[n].url != "") {
 						outputStateData[iconTabs[i].scope] = {
 							    url : iconTabs[i].navigationContainerPages[n].url,

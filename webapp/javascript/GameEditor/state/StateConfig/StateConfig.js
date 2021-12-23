@@ -11,13 +11,15 @@ var StateConfig = class StateConfig {
 	getNavigationListItem() {
 		return {
 			text : "",
+			type : "",
 			icon : ""
 		}
 	}
 	
 	getNavigationContainerPage() {
 		return {
-			title : ""
+			title : "",
+			type : ""
 		}
 	}
 	

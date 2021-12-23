@@ -1,7 +1,7 @@
 FROM node:12-alpine
 RUN apk add curl jq
 EXPOSE 3000
-COPY /dist /usr/src/app/webapp
+COPY /dist/webapp /usr/src/app/webapp
 COPY /lib /usr/src/app/lib
 COPY /package.json /usr/src/app
 COPY /ui5-*.yaml /usr/src/app/

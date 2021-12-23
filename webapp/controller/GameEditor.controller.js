@@ -182,7 +182,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				}
 			}
 			
-			inputTransition.onChange(connection);
+			inputTransition.onChange(connection, true, false);
 			
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.connectionTo.htmlId) {
@@ -798,10 +798,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				type : sap.m.ButtonType.Accept,
 				press : $.proxy(function(oAction) {
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
-					if(!newGameId.match(/^[a-zA-Z]+$/)) {
-						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
-						return;
-					}
 					RestAPIHelper.post("/gameController/copyGame", {oldGameId : this.gameModel.gameId, newGameId : newGameId, usernameId : sap.ui.getCore().getModel("user").oData.username, visibility : oAction.oSource.getParent().mAggregations.content[1].getSelected()}, true, 
 					function(data) {
 						sap.m.MessageToast.show(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.copied"));
@@ -880,11 +876,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				press : $.proxy(function(oAction) {
 
 					var newGameId = oAction.oSource.getParent().mAggregations.content[0].getValue();
-					
-					if(!newGameId.match(/^[a-zA-Z]+$/)) {
-						sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.gameNameError"));
-						return;
-					}
 					
 					RestAPIHelper.post(
 						"/gameController/renameGame", 

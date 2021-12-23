@@ -29,6 +29,11 @@
 		</FlexBox>
 		<FlexBox alignItems="Start" justifyContent="Center">
 			<items>
+				<Button icon="sap-icon://delete" press="clearSequence" class="sequenceDeleteButton"/>
+			</items>
+		</FlexBox>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
 				<VBox>
 					<html:div id="colorListSortable-listUl" class="sequencePressColorList">
 					</html:div>
