@@ -398,6 +398,8 @@ var OutputState = class OutputState extends State {
 		this.dialog.destroy();
 		
 		this.changeText();
+
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editState"));
     }
     
 	/**
@@ -428,6 +430,8 @@ var OutputState = class OutputState extends State {
 					"state-editor-accept-withchanges-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editState"));
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
