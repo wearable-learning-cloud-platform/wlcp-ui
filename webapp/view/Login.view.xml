@@ -5,7 +5,19 @@
 	xmlns:mvc="sap.ui.core.mvc">
 	<!-- <App id="mainApp">
 		<pages> -->
-			<Page title="Title" showHeader="false" class="page">
+		<NavContainer id="loginNavContainer">
+			<Page id="test" title="Title" showHeader="false" class="page">
+				<content>
+					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+						<items>
+							<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
+							<Button width="12em" text="Go To Editor!" type="Emphasized" press="changeToLogin"/>
+							<Button width="12em" text="Play a game!" type="Emphasized" press="changeToPlayAGame"/>
+						</items>
+					</VBox>
+				</content>
+			</Page>
+			<Page id="test2" title="Title" showHeader="false" class="page">
 				<content>
 					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 						<items>
@@ -26,6 +38,7 @@
 					</VBox>
 				</content>
 			</Page>
+		</NavContainer>
 		<!-- </pages>
 	</App> -->
 </mvc:View>

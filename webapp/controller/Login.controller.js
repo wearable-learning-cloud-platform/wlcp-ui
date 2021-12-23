@@ -94,6 +94,25 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		this.getView().setModel(this.model);
 	},
 
+	changeToLogin() {
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--test2");
+	},
+
+	changeToPlayAGame() {
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
+            username : this.createUUID(),
+            gameInstanceId : 0,
+            debugMode : false
+        });
+	},
+
+	createUUID() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		   return v.toString(16);
+		});
+	 },
+
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
