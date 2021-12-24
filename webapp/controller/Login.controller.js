@@ -95,7 +95,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 
 	changeToLogin() {
-		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--test2");
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainLogin");
 	},
 
 	changeToPlayAGame() {
@@ -107,7 +107,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 
 	changeToMainPage() {
-		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--test");
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainMenu");
 	},
 
 /**
