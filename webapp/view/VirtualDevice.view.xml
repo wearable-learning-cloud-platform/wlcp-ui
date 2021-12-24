@@ -20,6 +20,22 @@
 					</items>
 				</VBox>
 			</Page>
+			<Page id="enterTempName" showHeader="false" class="virtualDeviceBackground">
+				<content>
+					<tnt:ToolHeader>
+						<ToolbarSpacer />
+						<ToolbarSpacer />
+						<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+					</tnt:ToolHeader>
+					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+						<items>
+							<Text text="Enter a player name:" class="sapUiSmallMarginBottom"/>
+							<Input id="tempNameInput" width="12em" placeholder="Player name"/>
+							<Button width="12em" text="Continue" type="Emphasized" press="changeToEnterGamePin"></Button>
+						</items>
+					</VBox>
+				</content>
+			</Page>
 			<Page id="selectTeamPlayer" showHeader="false">
 				<tnt:ToolHeader>
 					<ToolbarSpacer />
