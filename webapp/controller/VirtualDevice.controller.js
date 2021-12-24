@@ -91,6 +91,19 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	joinGameInstance : function() {
+		if(this.username === "*") { 
+			var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
+			if(gameInstanceId != "") {
+				this.gameInstanceId = parseInt(gameInstanceId);
+				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function() {
+					sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
+				}, this.gameInstanceIdError, this);
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+			} else {
+				sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
+			}
+			return; 
+		}
 		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
@@ -99,6 +112,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
 		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+	},
+
+	changeToEnterGamePin : function(oEvent) {
+		this.username = oEvent.getSource().getParent().getItems()[1].getValue();
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.gameInstanceIdError, this);
 	},
 	
 	joinDebugGameInstance : function() {
@@ -311,8 +330,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		var that = this;
 		if(!this.debugMode) {
 			sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
-				that.onHomeButtonPress();
-			}});
+				this.onHomeButtonPress();//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");//that.onHomeButtonPress();
+			}.bind(this)});
 		} else {
 			window.close();
 		}
@@ -370,7 +389,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	onHomeButtonPress : function() {
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		if(this.tempPlayer) {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView", {
+			});
+		} else {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		}
 	},
 
 	waitForElementToDisplay : function(selector, callback, checkFrequencyInMs, timeoutInMs) {
@@ -433,6 +457,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.debugMode = false;
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
+			this.tempPlayer = this.username === "*" ? true : false;
 		}
 		this.getView().setModel(this.model);
 	},

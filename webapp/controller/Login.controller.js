@@ -100,10 +100,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 
 	changeToPlayAGame() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
-            username : this.createUUID(),
+			username : "*",//"tempuser" + this.createUUID(),
             gameInstanceId : 0,
             debugMode : false
         });
+	},
+
+	changeToMainPage() {
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--test");
 	},
 
 	createUUID() {

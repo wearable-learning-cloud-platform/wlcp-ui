@@ -34,6 +34,7 @@
 									<Link text="{i18n>login.register}" class="sapUiSmallMarginTop" press="registerNewUser"/>
 								</items>
 							</HBox>
+							<Link text="Back" press="changeToMainPage"/>
 						</items>
 					</VBox>
 				</content>
