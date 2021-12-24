@@ -330,7 +330,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		var that = this;
 		if(!this.debugMode) {
 			sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
-				this.onHomeButtonPress();//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");//that.onHomeButtonPress();
+				this.onHomeButtonPress();
 			}.bind(this)});
 		} else {
 			window.close();
@@ -390,8 +390,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 
 	onHomeButtonPress : function() {
 		if(this.tempPlayer) {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView", {
-			});
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
 		} else {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
 		}

@@ -100,7 +100,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 
 	changeToPlayAGame() {
 		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
-			username : "*",//"tempuser" + this.createUUID(),
+			username : "*",
             gameInstanceId : 0,
             debugMode : false
         });
@@ -109,13 +109,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	changeToMainPage() {
 		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--test");
 	},
-
-	createUUID() {
-		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-		   return v.toString(16);
-		});
-	 },
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
