@@ -146,6 +146,8 @@ var State = class State {
 					"state-remove-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteState"));
 		}
 		else if (oAction == sap.m.MessageBox.Action.CANCEL) {
 
@@ -252,6 +254,8 @@ var State = class State {
 			);
 
 		}
+
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.moveState"));
 	}
 	
 	save() {

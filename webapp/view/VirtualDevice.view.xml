@@ -97,6 +97,11 @@
 						</FlexBox>
 					</Page>
 					<Page id="singleButtonPress" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<items>
+								<Text id="timerTextSingle" class="noStateNoTransition" visible="false" />
+							</items>
+						</FlexBox>
 						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
 							<items>
 								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed"></Button>
@@ -107,6 +112,11 @@
 						</FlexBox>
 					</Page>
 					<Page id="sequenceButtonPress" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<items>
+								<Text id="timerTextSequence" class="noStateNoTransition" visible="false"/>
+							</items>
+						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
 								<VBox>
@@ -135,6 +145,11 @@
 						</FlexBox>
 					</Page>
 					<Page id="keyboardInput" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<items>
+								<Text id="timerTextKeyboard" class="noStateNoTransition" visible="false"/>
+							</items>
+						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
 								<Input id="keyboardInputField" placeholder="Enter keyboard input"></Input>

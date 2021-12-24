@@ -1,47 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <core:FragmentDefinition xmlns="sap.m"
-	xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Dialog id="loadGame" title="Load Game">
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:tnt="sap.tnt">
+	<Dialog id="loadGame" title="{i18n>gameEditor.load.title}">
 		<buttons>
-			<Button text="{i18n>gameEditor.load.load}" type="Accept" press="loadGame" />
+			<Button id="load" text="{i18n>gameEditor.load.load}" type="Accept" enabled="false" press="loadGame" />
 			<Button text="{i18n>button.cancel}" type="Reject" press="cancelLoadGame" />
 		</buttons>
 		<content>
-			<html:style>
-				.sapUiPopupWithPadding .sapMDialogScrollCont {
-				padding :
-				0;
-				}
-			</html:style>
-			<IconTabBar>
-				<items>
-					<IconTabFilter text="{i18n>gameEditor.load.yourGames}">
-						<FlexBox alignItems="Center" justifyContent="Center">
-							<Label textAlign="Center" text="{i18n>gameEditor.load.selectYourGame}:" />
-						</FlexBox>
-						<FlexBox alignItems="Center" justifyContent="Center">
-							<ComboBox id="userLoadGameComboBox"
-								items="{/privateGames}"
-								placeholder="{i18n>gameEditor.load.selectGame}">
-								<core:Item key="{gameId}" text="{gameId}" />
-							</ComboBox>
-						</FlexBox>
-					</IconTabFilter>
-					<IconTabFilter text="{i18n>gameEditor.load.publicGames}">
-						<FlexBox alignItems="Center" justifyContent="Center">
-							<Label textAlign="Center" text="{i18n>gameEditor.load.selectPublicGame}:" />
-						</FlexBox>
-						<FlexBox alignItems="Center" justifyContent="Center">
-							<ComboBox id="publicLoadGameComboBox"
-								items="{/publicGames}"
-								placeholder="{i18n>gameEditor.load.selectGame}">
-								<core:Item key="{gameId}" text="{gameId}" />
-							</ComboBox>
-						</FlexBox>
-					</IconTabFilter>
-				</items>
-			</IconTabBar>
+			<l:Splitter id="gameLoadSplitter" height="500px">
+				<Panel>
+					<headerToolbar>
+						<OverflowToolbar >
+							<Title level="H3" text="{i18n>gameEditor.load.select}" />
+							<ToolbarSpacer/>
+							<SearchField placeholder="{i18n>gameEditor.load.search}" liveChange="onSearch">
+								<layoutData>
+									<OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/>
+								</layoutData>
+							</SearchField>
+						</OverflowToolbar>
+					</headerToolbar>
+					<tnt:NavigationList>
+						<tnt:NavigationListItem id="publicGames" text="{i18n>gameEditor.load.publicGames}" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
+							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+						</tnt:NavigationListItem>
+						<tnt:NavigationListItem id="privateGames" text="{i18n>gameEditor.load.yourGames}" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
+							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+						</tnt:NavigationListItem>
+					</tnt:NavigationList>
+				</Panel>
+			</l:Splitter>
 		</content>
 	</Dialog>
 </core:FragmentDefinition>
