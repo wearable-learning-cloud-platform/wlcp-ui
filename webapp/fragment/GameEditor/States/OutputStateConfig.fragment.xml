@@ -9,7 +9,7 @@
 	xmlns:u="sap.ui.unified"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	
-	<Dialog id="outputStateDialog" title="{i18n>gameEditor.outputState.title}" contentWidth="50%" contentHeight="50%">
+	<Dialog id="outputStateDialog" title="{i18n>gameEditor.outputState.title}">
 		<buttons>
 			<Button text="{i18n>button.accept}" type="Accept" press="acceptDialog"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
@@ -27,7 +27,7 @@
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
 								<tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
 							</tnt:NavigationList>
-							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
+							<NavContainer height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
 								<Page/>
 							</NavContainer>
