@@ -92,6 +92,11 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	margin-right : 5px;
 }
 
+#outputStateDialog-scroll {
+	width: auto !important;
+}
+
+
 #outputStateDialog-scrollCont {
 	padding:0rem;
 }
