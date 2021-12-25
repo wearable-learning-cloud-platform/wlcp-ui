@@ -80,14 +80,47 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
+		document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.height = this.inputBoxHeight.toString() + "px";
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
 	},
 	
 	onAfterRenderingSequence : function() {
-		$("#container-wlcp-ui---virtualDevice--colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable();
+		this.inputBoxHeight = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList2")).height.replace("px", ""));
+		$("#container-wlcp-ui---virtualDevice--colorListRed").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListRed").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListGreen").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListGreen").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListBlue").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListBlue").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListBlack").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListBlack").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable({
+			disabled: true,
+			update: function(event, ui) {
+				var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+				if(sequence.length % 4 == 0) {
+					var newHeight = document.getElementById("colorListSortable-listUl").clientHeight + this.inputBoxHeight;
+					document.getElementById("colorListSortable-listUl").style.height = newHeight.toString() + "px";
+				}
+			}.bind(this)
+		});
+	},
+
+	up() {
+		var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+			if(sequence.length % 4 == 0) {
+				var newHeight = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientHeight + this.inputBoxHeight;
+				document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.height = newHeight.toString() + "px";
+			}
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
 	},
 
 	joinGameInstance : function() {
