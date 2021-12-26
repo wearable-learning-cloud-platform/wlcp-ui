@@ -113,7 +113,7 @@
 						</VBox>
 						<VBox id="gettingStarted" visible="true">
 							<FlexBox alignItems="Center" justifyContent="Center">
-								<FormattedText width="150px" textAlign="Center" class="toolBoxText" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
+								<FormattedText width="150px" textAlign="Center" class="toolBoxText noselect" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
 							</FlexBox>
 							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton"/>
 						</VBox>
