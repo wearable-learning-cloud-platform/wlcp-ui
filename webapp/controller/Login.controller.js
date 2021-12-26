@@ -86,7 +86,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
-		this.resetDataModel();
+		this.modelData.newUser.usernameId = "";
+		this.modelData.newUser.password = "";
+		this.modelData.newUser.firstName = "";
+		this.modelData.newUser.lastName = "";
+		this.getView().setModel(this.model);
 	},
 
 	resetDataModel() {
@@ -107,6 +111,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 
 	changeToMainPage() {
+		this.resetDataModel();
 		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainMenu");
 	},
 
