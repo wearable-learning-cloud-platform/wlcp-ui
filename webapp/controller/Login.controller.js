@@ -41,6 +41,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		} else {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
 		}
+		this.loginPasswordObserver.disconnect();
 		this.resetDataModel();
 	},
 	
@@ -58,6 +59,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		
 		//Open the dialog
 		this.registerNewUserDialog.open();
+
+		this.registerPasswordObserver = this.createObserver("#password-inner");
+		
 	},
 
 	confirmRegisterNewUser : function() {
@@ -84,9 +88,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	cancelRegisterNewUser : function() {
+		this.registerPasswordObserver.disconnect();
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
-		this.resetDataModel();
+		this.modelData.newUser.usernameId = "";
+		this.modelData.newUser.password = "";
+		this.modelData.newUser.firstName = "";
+		this.modelData.newUser.lastName = "";
+		this.getView().setModel(this.model);
 	},
 
 	resetDataModel() {
@@ -96,6 +105,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 
 	changeToLogin() {
 		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainLogin");
+		this.loginPasswordObserver = this.createObserver("#__xmlview0--pasw-inner");
 	},
 
 	changeToPlayAGame() {
@@ -107,7 +117,54 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 
 	changeToMainPage() {
+		$("#__xmlview0--pasw-inner")[0].classList.remove("password");
+		this.loginPasswordLiveChangeValue = false;
+		this.loginPasswordObserver.disconnect();
+		this.resetDataModel();
 		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainMenu");
+	},
+
+	createObserver(elementId) {
+		var observer = new MutationObserver(function(mutations) {
+			var foundTest = false;
+			$(elementId)[0].classList.forEach(function(e) {
+				if(e === "password") {foundTest = true; return;}
+			});
+			if(mutations[0].target.id === "__xmlview0--pasw-inner") {
+				if(!foundTest && this.loginPasswordLiveChangeValue) { $(elementId)[0].classList.add("password"); }
+				if(foundTest && !this.loginPasswordLiveChangeValue) { $(elementId)[0].classList.remove("password"); }  
+			}
+			else if(mutations[0].target.id === "password-inner") {
+				if(!foundTest && this.registerPasswordLiveChangeValue) { $(elementId)[0].classList.add("password"); }
+				if(foundTest && !this.registerPasswordLiveChangeValue) { $(elementId)[0].classList.remove("password"); }  
+			}
+		}.bind(this));
+		
+		observer.observe(document.getElementById(elementId.substring(1)), { attributes : true, attributeFilter : ['class'] });
+
+		return observer;
+	},
+
+	loginPasswordLiveChangeValue : false,
+	loginPasswordLiveChange(oEvent) {
+		if(oEvent.getParameters().value === "") {
+			$("#__xmlview0--pasw-inner")[0].classList.remove("password");
+			this.loginPasswordLiveChangeValue = false;
+		} else {
+			$("#__xmlview0--pasw-inner")[0].classList.add("password");
+			this.loginPasswordLiveChangeValue = true;
+		}
+	},
+
+	registerPasswordLiveChangeValue : false,
+	registerPasswordLiveChange(oEvent) {
+		if(oEvent.getParameters().value === "") {
+			$("#password-inner")[0].classList.remove("password");
+			this.registerPasswordLiveChangeValue = false;
+		} else {
+			$("#password-inner")[0].classList.add("password");
+			this.registerPasswordLiveChangeValue = true;
+		}
 	},
 
 /**

@@ -14,3 +14,16 @@
 	margin-top: -175px;
     margin-left: -175px;
 }
+
+@font-face {
+	font-family: 'password';
+	font-style: normal;
+	font-weight: 400;
+	src: url(password.ttf);
+  }
+
+.password {
+	font-family: password;
+	/* Use -webkit-text-security if the browser supports it */
+	-webkit-text-security: disc;
+}

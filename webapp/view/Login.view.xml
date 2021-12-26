@@ -20,8 +20,8 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
-						<Input width="12em" id="uid" placeholder="{i18n>login.username}" value="{/username}" autocomplete="off"></Input>
-						<Input width="12em" id="pasw" placeholder="{i18n>login.password}" value="{/password}" type="Password" autocomplete="off"></Input>
+						<Input width="12em" id="uid" placeholder="{i18n>login.username}" value="{/username}" type="Text"></Input>
+						<Input width="12em" id="pasw" placeholder="{i18n>login.password}" value="{/password}" type="Text" liveChange="loginPasswordLiveChange"></Input>
 						<Button width="12em" text="{i18n>login.loginButton}" type="Emphasized" press="validateLogin"></Button>
 						<HBox>
 							<items>
