@@ -266,7 +266,7 @@ var InputTransition = class InputTransition extends Transition {
 	doubleClick() {
 
 		if(this.scopeMask == 0){
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.emptyState"));
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.transition.filledScope"));
 			// , {title:"test"} // For title of error box
 			
 			// Log TRANSITION event: transition-edit-attempt-error
