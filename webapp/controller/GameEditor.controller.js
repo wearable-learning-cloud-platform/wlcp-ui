@@ -40,7 +40,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	scroller : new GameEditorScroller(),
 	
-	autoSaveEnabled : true,
+	autoSaveEnabled : false,
 	archivedGame : false,
 
 	firstRouteMatched : true,
@@ -1237,6 +1237,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 
 		$("#container-wlcp-ui---gameEditor--toolboxTitle").show();
@@ -1397,6 +1399,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
@@ -1459,6 +1463,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
@@ -1698,6 +1704,170 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 	},
 	
+	zoomOut : function() {
+		this.testScale();
+	},
+
+	zoomIn : function() {
+		this.testScale(-1);
+	},
+
+	scale : 1,
+	oldScale : 1,
+	lowestXList : [],
+	stateFontStack : [],
+	transitionFontStack : [],
+	testScale : function(direction = 1) {
+
+		//direction -1 = zoom in ; direction 1 = zoom out
+		var scale = 0.25
+
+		//Set the origin to the start state
+		var x = 0;
+		var y = 0;
+		this.stateList.forEach(function(state) {
+			if(state.stateType === "START_STATE") {
+				x = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", ""));
+				y = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", ""));
+			}
+		}.bind(this));
+
+		//Loop through each state on the screen
+		this.stateList.forEach(function(state) {
+			//Calcaulate the change in x and y based on the difference between the origin and the state
+			var dx = -(parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) - x) * direction;
+			var dy = -(parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) - y) * direction;
+			if(direction == 1) {
+				dx = dx * scale;
+				dy = dy * scale;
+			} else {
+				dx = dx / (1 - scale) * scale;
+				dy = dy / (1 - scale) * scale;
+				console.log("idk")
+			}
+
+			//position
+			document.getElementById(state.htmlId).style.top = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) + dy + "px";
+			document.getElementById(state.htmlId).style.left = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) + dx + 'px';
+
+			//Calculate size
+			var stateWidth = document.getElementById(state.htmlId).getBoundingClientRect().width;
+			var stateHeight = document.getElementById(state.htmlId).getBoundingClientRect().height;
+			var stateHeight2 = document.getElementById(state.htmlId).children[0].getBoundingClientRect().height;
+			var stateHeight3 = document.getElementById(state.htmlId).children[1].getBoundingClientRect().height;
+			var radius = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(0).endpoint.radius;
+			var fontSize = parseInt(window.getComputedStyle(document.getElementById(state.htmlId).children[0].children[0]).fontSize.replace("px", ""));
+			if(direction==1) {
+				stateWidth = stateWidth * (1 - scale);
+				stateHeight = stateHeight * (1 - scale);
+				stateHeight2 = stateHeight2 * (1 - scale);
+				stateHeight3 = stateHeight3 * (1 - scale);
+				radius = radius * (1 - scale);
+				if(fontSize != 1) {
+					fontSize = Math.floor(fontSize * (1 - scale));
+				} else {
+					this.stateFontStack.push("");
+				}
+			} else {
+				stateWidth = stateWidth / (1 - scale);
+				stateHeight = stateHeight / (1 - scale);
+				stateHeight2 = stateHeight2 / (1 - scale);
+				stateHeight3 = stateHeight3 / (1 - scale);
+				radius = radius / (1 - scale);
+				if(this.stateFontStack.length == 0) {
+					fontSize = Math.ceil(fontSize / (1 - scale));
+				} else {
+					this.stateFontStack.pop();
+				}
+			}
+
+			//size
+			document.getElementById(state.htmlId).style.width = stateWidth + "px";
+			document.getElementById(state.htmlId).style.height = stateHeight + "px";
+
+			//size child 0
+			document.getElementById(state.htmlId).children[0].style.width = stateWidth + "px";
+			document.getElementById(state.htmlId).children[0].style.height = stateHeight2 + "px";
+
+			//size endpoints
+			GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(0).endpoint.radius=radius;
+			
+			//size font
+			document.getElementById(state.htmlId).children[0].children[0].style.fontSize = fontSize + "px";
+			
+			//Handle start states and output states separately
+			if(state.stateType === "START_STATE") {
+				
+			} else {
+				//size child 1
+				document.getElementById(state.htmlId).children[1].style.width = stateWidth + "px";
+				document.getElementById(state.htmlId).children[1].style.height = stateHeight3 + "px";
+				//size endpoints
+				GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(1).endpoint.radius=radius;
+			}
+		}.bind(this));
+
+		//Loop through each transition on the screen
+		this.transitionList.forEach(function(transition) {
+			var transitionWidth = document.getElementById(transition.htmlId).getBoundingClientRect().width;
+			var transitionHeight = document.getElementById(transition.htmlId).getBoundingClientRect().height;
+			var connection = GameEditor.getEditorController().jsPlumbInstance.getConnections({source: transition.connection.connectionFrom.htmlId, target : transition.connection.connectionTo.htmlId});
+			var transitionFont = parseInt(window.getComputedStyle(connection[0].getOverlay(transition.overlayId).canvas).fontSize.replace("px", ""))
+			if(direction==1) {
+				transitionWidth = transitionWidth * (1 - scale);
+				transitionHeight = transitionHeight * (1 - scale);
+				if(transitionFont != 1) {
+					transitionFont = Math.floor(transitionFont * (1 - scale));
+				} else {
+					this.transitionFontStack.push("");
+				}
+			} else {
+				transitionWidth = transitionWidth / (1 - scale);
+				transitionHeight = transitionHeight / (1 - scale);
+				if(this.transitionFontStack.length == 0) {
+					transitionFont = Math.ceil(transitionFont / (1 - scale));
+				} else {
+					this.transitionFontStack.pop();
+				}
+			}
+			//size
+			document.getElementById(transition.htmlId).style.width = transitionWidth + "px";
+			document.getElementById(transition.htmlId).style.height = transitionHeight + "px";
+			//font
+			connection[0].getOverlay(transition.overlayId).canvas.style.fontSize = transitionFont + "px";
+		}.bind(this));
+
+		var lowestX = 0;
+		var list = [];
+		this.stateList.forEach(function(state) {
+			if(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) < lowestX) {
+				lowestX = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
+			}
+			list.push(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")));
+		}.bind(this));
+		this.transitionList.forEach(function(transition) {
+			if(parseInt(document.getElementById(transition.htmlId).style.left.replace("px", "")) < lowestX) {
+				lowestX = parseInt(document.getElementById(transition.htmlId).style.left.replace("px", ""));
+			}
+			list.push(parseInt(document.getElementById(transition.htmlId).style.left.replace("px", "")));
+		}.bind(this));
+
+		// if(direction == 1) {
+		// 	this.moveAllStatesByDelta(this.lowestXList.pop() * -1, 0);
+		// } else {
+		// 	if(lowestX < 0) {
+		// 		this.moveAllStatesByDelta(lowestX * -1 + 250, 0);
+		// 		this.lowestXList.push(lowestX * -1 + 250);
+		// 	}
+		// }
+		GameEditor.getEditorController().jsPlumbInstance.repaintEverything()
+	},
+	moveAllStatesByDelta : function (dx, dy) {
+		this.stateList.forEach(function(state) {
+			document.getElementById(state.htmlId).style.top = parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + dy + "px";
+			document.getElementById(state.htmlId).style.left = parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + dx + 'px';
+		});
+	},
 	// setupScrolling : function() {
 	// 	var that = this;
 	// 	this.oldX = 0;
