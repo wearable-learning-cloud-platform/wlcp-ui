@@ -89,6 +89,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 
 		sap.ui.getCore().byId("createGame").close();
 		sap.ui.getCore().byId("createGame").destroy();
+
+		GameEditor.getEditorController().newGameModel.gameId = "";
+		GameEditor.getEditorController().newGameModel.teamCount = 3;
+		GameEditor.getEditorController().newGameModel.playersPerTeam = 3;
+		GameEditor.getEditorController().newGameModel.visibility = true;
 	},
 	
 	cancelLoadGame : function() {

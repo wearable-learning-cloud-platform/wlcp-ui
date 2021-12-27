@@ -423,6 +423,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	onHomeButtonPress : function() {
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
 		if(this.tempPlayer) {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
 		} else {
