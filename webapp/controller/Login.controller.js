@@ -86,11 +86,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
-		this.modelData.newUser.usernameId = "";
-		this.modelData.newUser.password = "";
-		this.modelData.newUser.firstName = "";
-		this.modelData.newUser.lastName = "";
-		this.getView().setModel(this.model);
+		this.model.setProperty("/newUser/usernameId", "");
+		this.model.setProperty("/newUser/password", "");
+		this.model.setProperty("/newUser/firstName", "");
+		this.model.setProperty("/newUser/lastName", "");
 	},
 
 	resetDataModel() {
