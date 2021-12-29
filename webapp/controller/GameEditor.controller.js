@@ -1251,7 +1251,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
-		GameEditor.resetScroll();
+		//GameEditor.resetScroll();
 		this.resetZoom();
 
 		this.resetUndoRedo();
@@ -1499,7 +1499,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.firstRouteMatched) {
 
 			//Setup scrolling via mouse
-			this.setupScrolling();
+			//this.setupScrolling();
 
 			//Load the toolbox text
 			this.initToolboxText();
@@ -1583,7 +1583,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
-		GameEditor.resetScroll();
+		//GameEditor.resetScroll();
 
 		loadedData = game
 
@@ -1706,11 +1706,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	zoomOut : function() {
+		if(this.zoomLevel == -5) { return; }
+		this.zoomLevel--;
 		this.testScale();
+		this.oldZoomLevel = this.zoomLevel;
 	},
 
 	zoomIn : function() {
+		if(this.zoomLevel == 5) { return; }
+		this.zoomLevel++;
 		this.testScale(-1);
+		this.oldZoomLevel = this.zoomLevel;
 	},
 
 	resetZoom : function() {
@@ -1718,6 +1724,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.stateFontStack = [];
 		this.transitionFontStack = [];
 		this.stack1 = [];
+
+		
+		this.zoomLevel = 0;
+		this.oldZoomLevel = 0;
+		this.font = 0;
 	},
 
 	lowestXList : [],
@@ -1725,7 +1736,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	transitionFontStack : [],
 	stack1 : [],
 	changeList : [],
-	testScale : function(direction = 1) {
+
+	
+	zoomLevel : 0,
+	oldZoomLevel : 0,
+	font : 0,
+	testScale : function() {
 
 		var scale = 0.25;
 
@@ -1739,12 +1755,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}
 		}.bind(this));
 
+		
+
 		//Loop through each state on the screen
 		this.stateList.forEach(function(state) {
 			//Calcaulate the change in x and y based on the difference between the origin and the state
-			var dx = -(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) - x) * direction;
-			var dy = -(parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) - y) * direction;
-			if(direction == 1) {
+			var dx = (parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) - x) * (this.zoomLevel < this.oldZoomLevel ? -1 : 1);
+			var dy = (parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) - y) *  (this.zoomLevel < this.oldZoomLevel ? -1 : 1);
+			if(this.zoomLevel < this.oldZoomLevel) {
 				dx = dx * scale;
 				dy = dy * scale;
 			} else {
@@ -1757,25 +1775,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			state.setPositionX(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(dx))
 			state.setPositionY(parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(dy));
 
-			// //Save the dx and dy so they can be replayed in the opposite direction
-			// var change = {
-			// 	htmlId: state.htmlId,
-			// 	direction: direction,
-			// 	change: { dx: dx, dy: dy }
-			// }
-			// if (state.changeList.length != 0) {
-			// 	if (state.changeList[0].direction == direction) {
-			// 		state.changeList.push(change);
-			// 	} else {
-			// 		state.changeList.pop();
-			// 	}
-			// } else {
-			// 	state.changeList.push(change);
-			// }
+			console.log(state.htmlId + " dx: " + state.dx + " dy: " + state.dy);
 
 			//position
-			document.getElementById(state.htmlId).style.top = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(dy) + "px";
-			document.getElementById(state.htmlId).style.left = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(dx) + 'px';
+			document.getElementById(state.htmlId).style.top = parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(dy) + "px";
+			document.getElementById(state.htmlId).style.left = parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(dx) + 'px';
 
 			//Calculate size
 			var stateWidth = document.getElementById(state.htmlId).getBoundingClientRect().width;
@@ -1784,12 +1788,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			var stateHeight3 = document.getElementById(state.htmlId).children[1].getBoundingClientRect().height;
 			var radius = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(0).endpoint.radius;
 			var fontSize = parseInt(window.getComputedStyle(document.getElementById(state.htmlId).children[0].children[0]).fontSize.replace("px", ""));
-			if(direction==1) {
+			if(this.zoomLevel < this.oldZoomLevel) {
 				stateWidth = stateWidth * (1 - scale);
 				stateHeight = stateHeight * (1 - scale);
 				stateHeight2 = stateHeight2 * (1 - scale);
 				stateHeight3 = stateHeight3 * (1 - scale);
 				radius = radius * (1 - scale);
+				// if(fontSize != 1) {
+				// 	fontSize = Math.floor(fontSize * (1 - scale));
+				// } else {
+				// 	this.font++;  
+				// }
 				if(fontSize != 1) {
 					fontSize = Math.floor(fontSize * (1 - scale));
 				} else {
@@ -1801,6 +1810,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				stateHeight2 = stateHeight2 / (1 - scale);
 				stateHeight3 = stateHeight3 / (1 - scale);
 				radius = radius / (1 - scale);
+				//fontSize = Math.ceil(fontSize / (1 - scale));
+				// if(this.font == 0) {
+				// 	fontSize = Math.ceil(fontSize / (1 - scale));
+				// } else {
+				// 	this.font--;
+				// }
 				if(this.stateFontStack.length == 0) {
 					fontSize = Math.ceil(fontSize / (1 - scale));
 				} else {
@@ -1833,7 +1848,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(1).endpoint.radius=radius;
 				//delete
 				var fontSize2 = parseInt(window.getComputedStyle(document.getElementById(state.htmlId+"delete")).fontSize.replace("px", ""));
-				if(direction==1) {
+				if(this.zoomLevel < this.oldZoomLevel) {
 					if(fontSize2 != 1) {
 						fontSize2 = Math.floor(fontSize2 * (1 - scale));
 					} else {
@@ -1856,7 +1871,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			var transitionHeight = document.getElementById(transition.htmlId).getBoundingClientRect().height;
 			var connection = GameEditor.getEditorController().jsPlumbInstance.getConnections({source: transition.connection.connectionFrom.htmlId, target : transition.connection.connectionTo.htmlId});
 			var transitionFont = parseInt(window.getComputedStyle(connection[0].getOverlay(transition.overlayId).canvas).fontSize.replace("px", ""))
-			if(direction==1) {
+			if(this.zoomLevel < this.oldZoomLevel) {
 				transitionWidth = transitionWidth * (1 - scale);
 				transitionHeight = transitionHeight * (1 - scale);
 				if(transitionFont != 1) {
@@ -1880,7 +1895,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			connection[0].getOverlay(transition.overlayId).canvas.style.fontSize = transitionFont + "px";
 			//delete
 			var fontSize2 = parseInt(window.getComputedStyle(document.getElementById(transition.overlayId+"_delete")).fontSize.replace("px", ""));
-				if(direction==1) {
+				if(this.zoomLevel < this.oldZoomLevel) {
 					if(fontSize2 != 1) {
 						fontSize2 = Math.floor(fontSize2 * (1 - scale));
 					}
