@@ -12,6 +12,9 @@ var State = class State {
 		this.newDescriptionText = null;
 		this.positionX = 0;
 		this.positionY = 0;
+		this.dx = 0;
+		this.dy = 0;
+		this.changeList = [];
 		this.width = 0;
 		this.height = 0;
 		this.jsPlumbInstance = jsPlumbInstance;
@@ -203,10 +206,187 @@ var State = class State {
 	 * @param {*} event 
 	 */
 	moved(event) {
+
+		var scale = 0.25;
+		// var direction = 1;
+
+		// var startState = null;
+		// GameEditor.getEditorController().stateList.forEach(function(state) {
+		// 	if(state.stateType === "START_STATE") {
+		// 		startState = state;
+		// 		return;
+		// 	}
+		// }.bind(this));
+
+		// var x = parseInt(document.getElementById(startState.htmlId).style.left.replace("px", ""));
+		// var y = parseInt(document.getElementById(startState.htmlId).style.top.replace("px", ""));
+
+		// var newX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		// var oldX = this.positionX;
+		// var changeX = newX - oldX;
+
+		// var newY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
+		// var oldY = this.positionY;
+		// var changeY = newY - oldY;
+
+		// var statex = (oldX - this.dx) + changeX;
+		// var statey = (oldY - this.dy) + changeY;
+
+		// var testdx = 0;
+		// var testdy = 0;
+
+		// for(var i = 0; i < 2; i++) {
+		// 	var dx = -(statex - x) * direction;
+		// 	var dy = -(statey - y) * direction;
+		// 	if(direction == 1) {
+		// 		dx = dx * scale;
+		// 		dy = dy * scale;
+		// 	} else {
+		// 		dx = dx / (1 - scale) * scale;
+		// 		dy = dy / (1 - scale) * scale;
+		// 	}
+
+		// 	testdx = testdx + parseInt(dx);
+		// 	testdy = testdy + parseInt(dy);
+
+		// 	statex = statex + parseInt(dx);
+		// 	statey = statey + parseInt(dy);
+
+		// }
+
+		// this.dx = testdx;
+		// this.dy = testdy;
+		
+		// //Update the position
+		//  this.positionX = newX;
+		//  this.positionY = newY;
+		
+		var direction = -1;
+		var startState = null;
+		GameEditor.getEditorController().stateList.forEach(function(state) {
+			if(state.stateType === "START_STATE") {
+				startState = state;
+				return;
+			}
+		}.bind(this));
+
+		var x = parseInt(document.getElementById(startState.htmlId).style.left.replace("px", ""));
+		var y = parseInt(document.getElementById(startState.htmlId).style.top.replace("px", ""));
+
+		var testdx = this.dx;
+		var testdy = this.dy;
+
+		var statex = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));//this.positionX;//parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		var statey = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));//this.positionY;//parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
+
+		for(var i = 0; i < 2; i++) {
+			var dx = -(statex - x) * direction;
+			var dy = -(statey - y) * direction;
+			if(direction == 1) {
+				dx = dx * scale;
+				dy = dy * scale;
+			} else {
+				dx = dx / (1 - scale) * scale;
+				dy = dy / (1 - scale) * scale;
+			}
+	
+			testdx = testdx + parseInt(dx);
+			testdy = testdy + parseInt(dy);
+
+			statex = statex + parseInt(dx);
+			statey = statey + parseInt(dy);
+		}
+
+		direction = 1;
+
+		var newX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		var oldX = this.positionX;
+		var changeX = newX - oldX;
+
+		var newY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
+		var oldY = this.positionY;
+		var changeY = newY - oldY;
+
+		//statex = statex + changeX;
+		//statey = statey + changeY;
+		testdx = 0;
+		testdy = 0;
+
+		for(var i = 0; i < 2; i++) {
+			var dx = -(statex - x) * direction;
+			var dy = -(statey - y) * direction;
+			if(direction == 1) {
+				dx = dx * scale;
+				dy = dy * scale;
+			} else {
+				dx = dx / (1 - scale) * scale;
+				dy = dy / (1 - scale) * scale;
+			}
+	
+			testdx = testdx + parseInt(dx);
+			testdy = testdy + parseInt(dy);
+
+			statex = statex + parseInt(dx);
+			statey = statey + parseInt(dy);
+		}
+		
+		this.dx = testdx;
+		this.dy = testdy;
 		
 		//Update the position
-		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
-		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
+		 this.positionX = statex;
+		 this.positionY = statey;
+
+
+
+
+		
+		// var newX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		// var oldX = this.positionX;
+		// var changeX = newX - oldX;
+
+		// var newY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
+		// var oldY = this.positionY;
+		// var changeY = newY - oldY;
+
+		// this.dx -= changeX;
+		// this.dy += changeY;
+		
+		// //Update the position
+		// this.positionX = oldX + changeX;
+		// this.positionY = oldY + changeY;
+
+		// var startState = null;
+		// GameEditor.getEditorController().stateList.forEach(function(state) {
+		// 	if(state.stateType === "START_STATE") {
+		// 		startState = state;
+		// 		return;
+		// 	}
+		// }.bind(this));
+		// var x = parseInt(document.getElementById(startState.htmlId).style.left.replace("px", ""));
+		// var y = parseInt(document.getElementById(startState.htmlId).style.top.replace("px", ""));
+
+		// var oldx = -(oldX - x) * direction;
+		// var oldy = -(oldY - y) * direction;
+		// var newx = -(newX - x) * direction;
+		// var newy = -(newY - y) * direction;
+		// if(direction == 1) {
+		// 	oldx = oldx;
+		// 	oldy = oldy;
+		// 	newx = newx;
+		// 	newy = newy;
+		// } else {
+		// 	oldx = oldx / (1 - scale) * scale;
+		// 	oldy = oldy / (1 - scale) * scale;
+		// 	newx = newx / (1 - scale) * scale;
+		// 	newy = newy / (1 - scale) * scale;
+		// }
+
+		//  this.dx = this.dx + (newx - oldx);
+		//  this.dy = this.dy + (newy - oldy);
+
+		//  this.positionX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		//  this.positionY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
 		
 		this.addPadSpace();
 

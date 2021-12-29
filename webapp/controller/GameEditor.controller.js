@@ -1252,6 +1252,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
+		this.resetZoom();
 
 		this.resetUndoRedo();
 	},
@@ -1712,43 +1713,69 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.testScale(-1);
 	},
 
-	scale : 1,
-	oldScale : 1,
+	resetZoom : function() {
+		this.lowestXList = [];
+		this.stateFontStack = [];
+		this.transitionFontStack = [];
+		this.stack1 = [];
+	},
+
 	lowestXList : [],
 	stateFontStack : [],
 	transitionFontStack : [],
+	stack1 : [],
+	changeList : [],
 	testScale : function(direction = 1) {
 
-		//direction -1 = zoom in ; direction 1 = zoom out
-		var scale = 0.25
+		var scale = 0.25;
 
 		//Set the origin to the start state
 		var x = 0;
 		var y = 0;
 		this.stateList.forEach(function(state) {
 			if(state.stateType === "START_STATE") {
-				x = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", ""));
-				y = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", ""));
+				x = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
+				y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
 			}
 		}.bind(this));
 
 		//Loop through each state on the screen
 		this.stateList.forEach(function(state) {
 			//Calcaulate the change in x and y based on the difference between the origin and the state
-			var dx = -(parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) - x) * direction;
-			var dy = -(parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) - y) * direction;
+			var dx = -(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) - x) * direction;
+			var dy = -(parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) - y) * direction;
 			if(direction == 1) {
 				dx = dx * scale;
 				dy = dy * scale;
 			} else {
 				dx = dx / (1 - scale) * scale;
 				dy = dy / (1 - scale) * scale;
-				console.log("idk")
 			}
 
+			state.dx = state.dx + parseInt(dx);
+			state.dy = state.dy + parseInt(dy);
+			state.setPositionX(parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(dx))
+			state.setPositionY(parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(dy));
+
+			// //Save the dx and dy so they can be replayed in the opposite direction
+			// var change = {
+			// 	htmlId: state.htmlId,
+			// 	direction: direction,
+			// 	change: { dx: dx, dy: dy }
+			// }
+			// if (state.changeList.length != 0) {
+			// 	if (state.changeList[0].direction == direction) {
+			// 		state.changeList.push(change);
+			// 	} else {
+			// 		state.changeList.pop();
+			// 	}
+			// } else {
+			// 	state.changeList.push(change);
+			// }
+
 			//position
-			document.getElementById(state.htmlId).style.top = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) + dy + "px";
-			document.getElementById(state.htmlId).style.left = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) + dx + 'px';
+			document.getElementById(state.htmlId).style.top = parseFloat(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(dy) + "px";
+			document.getElementById(state.htmlId).style.left = parseFloat(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(dx) + 'px';
 
 			//Calculate size
 			var stateWidth = document.getElementById(state.htmlId).getBoundingClientRect().width;
@@ -1804,6 +1831,22 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				document.getElementById(state.htmlId).children[1].style.height = stateHeight3 + "px";
 				//size endpoints
 				GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : state.htmlId}).get(1).endpoint.radius=radius;
+				//delete
+				var fontSize2 = parseInt(window.getComputedStyle(document.getElementById(state.htmlId+"delete")).fontSize.replace("px", ""));
+				if(direction==1) {
+					if(fontSize2 != 1) {
+						fontSize2 = Math.floor(fontSize2 * (1 - scale));
+					} else {
+						this.stack1.push("");
+					}
+				} else {
+					if(this.stack1.length == 0) {
+						fontSize2 = Math.ceil(fontSize2 / (1 - scale));
+					} else {
+						this.stack1.pop();
+					}
+				}
+				document.getElementById(state.htmlId+"delete").style.fontSize = fontSize2 + "px";
 			}
 		}.bind(this));
 
@@ -1835,6 +1878,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			document.getElementById(transition.htmlId).style.height = transitionHeight + "px";
 			//font
 			connection[0].getOverlay(transition.overlayId).canvas.style.fontSize = transitionFont + "px";
+			//delete
+			var fontSize2 = parseInt(window.getComputedStyle(document.getElementById(transition.overlayId+"_delete")).fontSize.replace("px", ""));
+				if(direction==1) {
+					if(fontSize2 != 1) {
+						fontSize2 = Math.floor(fontSize2 * (1 - scale));
+					}
+				} else {
+					if(this.stack1.length == 0) {
+						fontSize2 = Math.ceil(fontSize2 / (1 - scale));
+					}
+				}
+				document.getElementById(transition.overlayId+"_delete").style.fontSize = fontSize2 + "px";
 		}.bind(this));
 
 		var lowestX = 0;
