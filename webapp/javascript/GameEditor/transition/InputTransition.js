@@ -323,6 +323,8 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the on after rendering
 		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
+
+		this.dialog.attachAfterOpen($.proxy(this.onAfterOpen, this)); 
 			
 		//Open the dialog
 		this.dialog.open();
@@ -363,6 +365,12 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		for(var i = 0; i < this.transitionConfigs.length; i++) {
 			this.transitionConfigs[i].onAfterRenderingDialog();
+		}
+	}
+
+	onAfterOpen() {
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			this.transitionConfigs[i].onAfterOpen();
 		}
 	}
 

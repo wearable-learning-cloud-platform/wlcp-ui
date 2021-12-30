@@ -91,6 +91,28 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		};
 	}
 	
+	onAfterOpen(oEvent) {
+		var iconTabs = this.transition.dialog.getContent()[0].getItems();
+		for(var i = 0; i < iconTabs.length; i++) {
+			for(var n = 0; n < iconTabs[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+				if(this.transition.model.getProperty(iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getBindingContext().getPath()).type == TransitionConfigType.KEYBOARD_INPUT) {
+					var keyboardField = this.transition.model.getProperty(iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getBindingContext().getPath()).keyboardField;
+					if(keyboardField.length == 1) {
+						if(keyboardField[0].value === "") {
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[1].getItems()[0].setVisible(false);
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[1].getItems()[1].setSelected(true);
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[2].setVisible(false);
+						} else {
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[1].getItems()[1].setVisible(false);
+						}
+					} else if(keyboardField.length != 0) {
+						iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[1].getItems()[1].setVisible(false);
+					}
+				}
+			}
+		}
+	}
+
 	closeDialog() {
 		this.dialog.close();
 		this.dialog.destroy();
@@ -106,6 +128,8 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 		//Store the scopes path
 		this.navigationContainerPagePath = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
 		this.iconTabPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath();
+
+		this.selectAllOther = oEvent.getSource().getParent().getItems()[1];
 	}
 	
 	closeKeyboardInput(oEvent) {
@@ -121,11 +145,13 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			data.push({value : keyboardInputValue});
 			this.transition.model.setProperty(this.navigationContainerPagePath + "/keyboardField", data);
 			this.onChange();
+			this.selectAllOther.setVisible(false);
 			this.closeDialog();
 		}
 	}
 	
 	deleteKeyboardField(oEvent) {
+		this.selectAllOther = oEvent.getSource().getParent().getParent().getParent().getParent().getParent().getContent()[1].getItems()[1];
 		this.deletePath = oEvent.getSource().getBindingContext().getPath();
 		this.deleteKeyboardPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath() + "/keyboardField";
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.remove"), {onClose : $.proxy(this.keyboardDeleteOnClose, this)});
@@ -139,7 +165,29 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 			sequenceArray.splice(index, 1);
 			this.transition.model.setProperty(this.deleteKeyboardPath, sequenceArray);
 			this.onChange();
+			if(sequenceArray.length == 0) { this.selectAllOther.setVisible(true); }
 		}
+	}
+
+	selectAllOtherInputs(oEvent) {
+		var data = this.transition.model.getProperty(oEvent.getSource().getBindingContext().getPath() + "/keyboardField");
+		if(oEvent.getSource().getSelected()) {
+			var keyboardValidation = new TransitionKeyboardInputValidationRule();
+			if(!keyboardValidation.validate(this.transition, "", this.transition.model.getProperty(oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath()).scope)) {
+				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput.alreadyExists"));
+				oEvent.getSource().getParent().getItems()[1].setSelected(false);
+			} else {
+			oEvent.getSource().getParent().getItems()[0].setVisible(false);
+			oEvent.getSource().getParent().getParent().getContent()[2].getItems()[0].setVisible(false);
+			data.push({ value : ""});
+			this.transition.model.setProperty(oEvent.getSource().getBindingContext().getPath() + "/keyboardField", data);
+		}
+		} else {
+			oEvent.getSource().getParent().getItems()[0].setVisible(true);
+			oEvent.getSource().getParent().getParent().getContent()[2].getItems()[0].setVisible(true)
+			this.transition.model.setProperty(oEvent.getSource().getBindingContext().getPath() + "/keyboardField", []);
+		}
+		this.onChange();
 	}
 
 }
