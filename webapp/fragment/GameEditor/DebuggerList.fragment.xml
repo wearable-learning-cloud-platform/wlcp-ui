@@ -18,7 +18,7 @@
 			</OverflowToolbar>
 		</footer>
 			<SelectList
-					items="{path: '/debuggers'}" itemPress="debuggerListPopover">
+					items="{path: '/debuggers'}" itemPress="debuggerPressed">
 					<core:Item key="{key}" text="{text}" />
 				</SelectList>
 	</Popover>
