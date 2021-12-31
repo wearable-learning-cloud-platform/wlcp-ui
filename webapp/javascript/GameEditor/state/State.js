@@ -255,6 +255,9 @@ var State = class State {
 
 		}
 
+		GameEditor.getEditorController().scroller.leftMouseDown = false;
+		GameEditor.getEditorController().scroller.handleMousemove(event.e);
+
 		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.moveState"));
 	}
 	
