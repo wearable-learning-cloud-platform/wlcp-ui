@@ -61,6 +61,10 @@ var OutputState = class OutputState extends State {
 			drag: function(event) { 
 				GameEditor.getEditorController().scroller.leftMouseDown = true;
 				GameEditor.getEditorController().scroller.handleMousemove(event.e);
+			},
+			drop: function(event) {
+				GameEditor.getEditorController().scroller.leftMouseDown = false;
+				GameEditor.getEditorController().scroller.handleMousemove(event.e);
 			}}}, this.outputEndPoint);
 		
 		//Setup double click

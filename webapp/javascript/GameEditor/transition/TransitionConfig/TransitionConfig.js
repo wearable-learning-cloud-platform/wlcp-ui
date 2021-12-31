@@ -50,6 +50,10 @@ var TransitionConfig = class TransitionConfig {
 		
 	}
 	
+	onAfterOpen() {
+		
+	}
+	
 }
 
 var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidationRule extends ValidationRule {

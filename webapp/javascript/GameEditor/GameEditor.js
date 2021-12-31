@@ -35,21 +35,35 @@ var GameEditorScroller = class GameEditorScrollHelper {
 		this.leftMouseDown = false;
 	}
 
-	handleMousemove(event) {
+	handleMousemove(event, state) {
 		if(!this.leftMouseDown) { clearTimeout(this.timer); return; }
-		var edgeSize = 150;
-		var viewportX = event.clientX - document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width;
-		var viewportY = event.clientY - document.getElementById("__header0").getBoundingClientRect().height;
+
+		var clientX = event.clientX;
+		var clientY = event.clientY;
+
+		var s = state;
+		if(typeof(state) !== "undefined") {
+			state = event;
+			event = s;
+			clientX = (state.getPositionX() - document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft) + document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width;
+			clientY = (state.getPositionY() - document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop) + (document.getElementById("__header0").getBoundingClientRect().height + document.getElementById("container-wlcp-ui---gameEditor--padPage-intHeader").getBoundingClientRect().height);
+		}
+
+
+		var viewportX = clientX - document.getElementById("container-wlcp-ui---gameEditor--toolbox").getBoundingClientRect().width;
+		var viewportY = clientY - (document.getElementById("__header0").getBoundingClientRect().height + document.getElementById("container-wlcp-ui---gameEditor--padPage-intHeader").getBoundingClientRect().height);
 		//Logger.debug(viewportX + " " + viewportY);
 		var viewportWidth = document.getElementById("container-wlcp-ui---gameEditor--pad").clientWidth;
 		var viewportHeight = document.getElementById("container-wlcp-ui---gameEditor--pad").clientHeight;
+		
+		var edgeSize = 50;
 		var edgeTop = edgeSize;
 		var edgeLeft = edgeSize;
-		var edgeBottom = ( viewportHeight - edgeSize );
-		var edgeRight = ( viewportWidth - edgeSize );
-		var isInLeftEdge = ( viewportX < edgeLeft );
+		var edgeBottom = ( viewportHeight - edgeSize * 2.0 );
+		var edgeRight = ( viewportWidth - edgeSize * 2.5 );
+		var isInLeftEdge = ( viewportX < -edgeLeft );
 		var isInRightEdge = ( viewportX > edgeRight );
-		var isInTopEdge = ( viewportY < edgeTop );
+		var isInTopEdge = ( viewportY < -edgeTop );
 		var isInBottomEdge = ( viewportY > edgeBottom );
 		//Logger.debug("left: " + isInLeftEdge + " right: " + isInRightEdge + " top: " + isInTopEdge + " bottom: " + isInBottomEdge);
 		if ( ! ( isInLeftEdge || isInRightEdge || isInTopEdge || isInBottomEdge) ) {
@@ -67,7 +81,7 @@ var GameEditorScroller = class GameEditorScrollHelper {
 	
 			if ( adjustWindowScroll() ) {
 	
-				scrollHelper.timer = setTimeout( checkForWindowScroll, 30, scrollHelper );
+				scrollHelper.timer = setTimeout( checkForWindowScroll, 15, scrollHelper );
 	
 			}
 	
@@ -81,19 +95,25 @@ var GameEditorScroller = class GameEditorScrollHelper {
 			var canScrollRight = ( currentScrollX < maxScrollX );
 			var nextScrollX = currentScrollX;
 			var nextScrollY = currentScrollY;
-			var maxStep = 50;
+			var maxStep = 5;
+			var maxIntensity = 2.0;
 			if ( isInLeftEdge && canScrollLeft ) {
 				var intensity = ( ( edgeLeft - viewportX ) / edgeSize );
+				intensity = Math.min(Math.max(intensity, 0), maxIntensity);
 				nextScrollX = ( nextScrollX - ( maxStep * intensity ) );
 			} else if ( isInRightEdge && canScrollRight ) {
 				var intensity = ( ( viewportX - edgeRight ) / edgeSize );
+				intensity = Math.min(Math.max(intensity, 0), maxIntensity);
 				nextScrollX = ( nextScrollX + ( maxStep * intensity ) );
 			}
 			if ( isInTopEdge && canScrollUp ) {
 				var intensity = ( ( edgeTop - viewportY ) / edgeSize );
+				intensity = Math.min(Math.max(intensity, 0), maxIntensity);
 				nextScrollY = ( nextScrollY - ( maxStep * intensity ) );
 			} else if ( isInBottomEdge && canScrollDown ) {
 				var intensity = ( ( viewportY - edgeBottom ) / edgeSize );
+				intensity = Math.min(Math.max(intensity, 0), maxIntensity);
+				console.log("viewPortY: " + viewportY + " edgeBottom: " + edgeBottom + " intensity: " + intensity);
 				nextScrollY = ( nextScrollY + ( maxStep * intensity ) );
 			}
 			nextScrollX = Math.max( 0, Math.min( maxScrollX, nextScrollX ) );

@@ -1520,14 +1520,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		scrollPlaceHolder.style.width = "1px";
 		scrollPlaceHolder.style.position = "absolute";
 		document.getElementById("container-wlcp-ui---gameEditor--pad").appendChild(scrollPlaceHolder);
-		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousemove", $.proxy(GameEditor.getEditorController().scroller.handleMousemove, GameEditor.getEditorController().scroller), false);
-		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousedown", function(event) {
-			GameEditor.getEditorController().scroller.leftMouseDown = true;
-		}, false);
-		document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mouseup", function(event) {
-			GameEditor.getEditorController().scroller.leftMouseDown = false;
-			GameEditor.getEditorController().scroller.handleMousemove(event);
-		}, false);
+		// document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousemove", $.proxy(GameEditor.getEditorController().scroller.handleMousemove, GameEditor.getEditorController().scroller), false);
+		// document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mousedown", function(event) {
+		// 	GameEditor.getEditorController().scroller.leftMouseDown = true;
+		// }, false);
+		// document.getElementById("container-wlcp-ui---gameEditor--pad").addEventListener("mouseup", function(event) {
+		// 	GameEditor.getEditorController().scroller.leftMouseDown = false;
+		// 	GameEditor.getEditorController().scroller.handleMousemove(event);
+		// }, false);
 	},
 
 	resetUndoRedo : function() {

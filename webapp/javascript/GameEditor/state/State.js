@@ -291,7 +291,11 @@ var State = class State {
 		
 		//this.addPadSpace();
 
+<<<<<<< HEAD
 		//GameEditor.getEditorController().scroller.handleMousemove(event.e);
+=======
+		GameEditor.getEditorController().scroller.handleMousemove(this, event.e);
+>>>>>>> e3c07680bff1ac22f081b6adca14030639c76aaa
 	}
 	
 	/**
@@ -335,6 +339,9 @@ var State = class State {
 			);
 
 		}
+
+		GameEditor.getEditorController().scroller.leftMouseDown = false;
+		GameEditor.getEditorController().scroller.handleMousemove(event.e);
 
 		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.moveState"));
 	}

@@ -22,6 +22,10 @@ var StartState = class StartState extends State {
 			drag: function(event) { 
 				GameEditor.getEditorController().scroller.leftMouseDown = true;
 				GameEditor.getEditorController().scroller.handleMousemove(event.e);
+			},
+			stop: function(event) {
+				GameEditor.getEditorController().scroller.leftMouseDown = false;
+				GameEditor.getEditorController().scroller.handleMousemove(event.e);
 			}}}, this.outputEndPoint);
 		
 		//Setup double click
