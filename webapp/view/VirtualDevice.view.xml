@@ -118,14 +118,12 @@
 								<Text id="timerTextSingle" class="noStateNoTransition" visible="false" />
 							</items>
 						</FlexBox>
-						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
-							<items>
-								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed" width="200px"></Button>
-								<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed" width="200px"></Button>
-								<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" width="200px"></Button>
-								<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed" width="200px"></Button>
-							</items>
-						</FlexBox>
+						<VBox alignItems="Center">
+							<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed" width="200px"></Button>
+							<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed" width="200px"></Button>
+							<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" width="200px"></Button>
+							<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed" width="200px"></Button>
+						</VBox>
 					</Page>
 					<Page id="sequenceButtonPress" showHeader="false" enableScrolling="false">
 						<FlexBox alignItems="Center" justifyContent="Center">
