@@ -179,8 +179,8 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			this.transition.model.setProperty(this.navigationContainerPagePath + "/sequencePress", data);
 			this.onChange();
 			this.sequenceRefresh();
+			this.selectAllOther.setVisible(false);
 		}
-		this.selectAllOther.setVisible(false);
 		this.closeDialog();
 	}
 	
