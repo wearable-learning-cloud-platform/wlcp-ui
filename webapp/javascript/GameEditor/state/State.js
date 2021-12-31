@@ -210,7 +210,7 @@ var State = class State {
 		
 		this.addPadSpace();
 
-		GameEditor.getEditorController().scroller.handleMousemove(event.e);
+		GameEditor.getEditorController().scroller.handleMousemove(this, event.e);
 	}
 	
 	/**
