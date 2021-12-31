@@ -291,6 +291,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.switchToTransitionType("NoTransition");
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/singleButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
+			that.setSingleButtonPressLabels(response);
 			that.switchToTransitionType("SingleButtonPress");
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/sequenceButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
@@ -461,6 +462,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	closeBusyDialog : function() {
 		this.busyDialog.close();
 		clearTimeout(this.fallback);
+	},
+
+	setSingleButtonPressLabels : function(response) {
+		var parsedJson = JSON.parse(response.body);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--redButton").setText(parsedJson.label1);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--greenButton").setText(parsedJson.label2);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--blueButton").setText(parsedJson.label3);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--blackButton").setText(parsedJson.label4);
 	},
 	  
 
