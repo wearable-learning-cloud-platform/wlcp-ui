@@ -484,6 +484,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		if(oEvent.getParameter("arguments").debugMode == "true") {
 			this.username = oEvent.getParameter("arguments").username;
 			this.debugGameInstanceId = oEvent.getParameter("arguments").gameInstanceId;
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer").getContent()[0].getContent()[2].setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDevicePage").getContent()[0].getContent()[4].setVisible(false);
 			this.debugMode = true;
 			this.joinDebugGameInstance();
 		} else {

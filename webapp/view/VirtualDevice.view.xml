@@ -52,7 +52,7 @@
 					</items>
 				</VBox>
 			</Page>
-			<Page id="virtualDevicePage" showHeader="false">
+			<Page id="virtualDevicePage" showHeader="false" enableScrolling="false">
 			<tnt:ToolHeader>
 				<Text id="userTeamPlayer"/>
 				<ToolbarSpacer />

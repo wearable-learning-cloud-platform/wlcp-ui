@@ -120,8 +120,20 @@
 					</ScrollContainer>
 					<Page id="padPage">
 						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode. Changes will not appear in Run and Debug or Copy to New Game.</html:div></html:div>
+					<l:Splitter id="debuggerSplitter">
 						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
+							<layoutData>
+								<l:SplitterLayoutData size="100%" resizable="false"/>
+							</layoutData>
 						</ScrollContainer>
+						<NavContainer pages="{path : 'debuggerModel>/debuggers', templateShareable:false}" >
+							<Page title="{debuggerModel>text}" enableScrolling="false" showNavButton="true" navButtonPress="openDebuggerListPopover">
+								<ScrollContainer height="100%" width="100%" horizontal="true" vertical="true">
+									<core:HTML content="{debuggerModel>src}" />
+								</ScrollContainer>
+							</Page>
+						</NavContainer>
+					</l:Splitter>
 					</Page>
 				</l:Splitter>
 			</l:Splitter>

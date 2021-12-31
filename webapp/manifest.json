@@ -64,6 +64,8 @@
 				"uri" : "css/GameEditor.css"
 			}, {
 				"uri" : "css/VirtualDevice.css"
+			}, {
+				"uri" : "css/smartphone.css"
 			}]
 		},
 		"routing": {
