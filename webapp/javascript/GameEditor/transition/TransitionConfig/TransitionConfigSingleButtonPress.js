@@ -105,11 +105,11 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 							iconTabs[i].navigationContainerPages[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
 							iconTabs[i].navigationContainerPages[n].singlePress[0].label = loadData.singleButtonPresses[key].button1Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
-							iconTabs[i].navigationContainerPages[n].singlePress[0].label = loadData.singleButtonPresses[key].button2Label;
+							iconTabs[i].navigationContainerPages[n].singlePress[1].label = loadData.singleButtonPresses[key].button2Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
-							iconTabs[i].navigationContainerPages[n].singlePress[0].label = loadData.singleButtonPresses[key].button3Label;
+							iconTabs[i].navigationContainerPages[n].singlePress[2].label = loadData.singleButtonPresses[key].button3Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[3].selected = loadData.singleButtonPresses[key].button4;
-							iconTabs[i].navigationContainerPages[n].singlePress[0].label = loadData.singleButtonPresses[key].button4Label;
+							iconTabs[i].navigationContainerPages[n].singlePress[3].label = loadData.singleButtonPresses[key].button4Label;
 						}
 					}
 				}
