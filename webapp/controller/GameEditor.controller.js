@@ -946,7 +946,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	closeAllDebuggers : function(oEvent) {
-
+		//Clear all variables and set to the model
+		this.debuggerCount = 0;
+		this.debuggerData.debuggers = [];
+		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+		this.getView().setModel(this.debuggerModel, "debuggerModel");
+		//Open up the editor to 50% of the screen and disallows it to be resizable
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("resizable", false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("size", "100%");
 	},
 	
 	/**
