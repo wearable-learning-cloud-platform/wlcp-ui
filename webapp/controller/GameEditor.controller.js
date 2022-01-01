@@ -1337,7 +1337,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
-		//GameEditor.resetScroll();
+		GameEditor.resetScroll();
+		
 		this.resetZoom();
 
 		this.resetDebugger();
@@ -1587,7 +1588,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.firstRouteMatched) {
 
 			//Setup scrolling via mouse
-			//this.setupScrolling();
+			this.setupScrolling();
 
 			//Load the toolbox text
 			this.initToolboxText();
