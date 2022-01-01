@@ -1797,38 +1797,39 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	zoomOut : function() {
 		if(this.zoomLevel == -5) { return; }
 		this.zoomLevel--;
-		this.testScale();
+		this.scaleEditorPad();
 		this.oldZoomLevel = this.zoomLevel;
 	},
 
 	zoomIn : function() {
 		if(this.zoomLevel == 5) { return; }
 		this.zoomLevel++;
-		this.testScale(-1);
+		this.scaleEditorPad();
 		this.oldZoomLevel = this.zoomLevel;
 	},
 
 	resetZoom : function() {
 		this.lowestXList = [];
-		this.stateFontStack = [];
+		this.startStateFontStack = [];
+		this.outputStateFontStack = [];
 		this.transitionFontStack = [];
-		this.stack1 = [];
 
-		
 		this.zoomLevel = 0;
 		this.oldZoomLevel = 0;
 		this.font = 0;
 	},
 
 	lowestXList : [],
-	stateFontStack : [],
+
+	startStateFontStack : [],
+	outputStateFontStack : [],
 	transitionFontStack : [],
-	stack1 : [],
 	
 	zoomLevel : 0,
 	oldZoomLevel : 0,
 	font : 0,
-	testScale : function() {
+
+	scaleEditorPad : function() {
 
 		var scale = 0.25;
 
@@ -1841,8 +1842,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
 			}
 		}.bind(this));
-
-		
 
 		//Loop through each state on the screen
 		this.stateList.forEach(function(state) {
@@ -1889,7 +1888,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				if(fontSize != 1) {
 					fontSize = Math.floor(fontSize * (1 - scale));
 				} else {
-					this.stateFontStack.push("");
+					this.outputStateFontStack.push("");
 				}
 			} else {
 				stateWidth = stateWidth / (1 - scale);
@@ -1903,10 +1902,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				// } else {
 				// 	this.font--;
 				// }
-				if(this.stateFontStack.length == 0) {
+				if(this.outputStateFontStack.length == 0) {
 					fontSize = Math.ceil(fontSize / (1 - scale));
 				} else {
-					this.stateFontStack.pop();
+					this.outputStateFontStack.pop();
 				}
 			}
 
@@ -1939,13 +1938,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 					if(fontSize2 != 1) {
 						fontSize2 = Math.floor(fontSize2 * (1 - scale));
 					} else {
-						this.stack1.push("");
+						this.startStateFontStack.push("");
 					}
 				} else {
-					if(this.stack1.length == 0) {
+					if(this.startStateFontStack.length == 0) {
 						fontSize2 = Math.ceil(fontSize2 / (1 - scale));
 					} else {
-						this.stack1.pop();
+						this.startStateFontStack.pop();
 					}
 				}
 				document.getElementById(state.htmlId+"delete").style.fontSize = fontSize2 + "px";
@@ -1987,7 +1986,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						fontSize2 = Math.floor(fontSize2 * (1 - scale));
 					}
 				} else {
-					if(this.stack1.length == 0) {
+					if(this.startStateFontStack.length == 0) {
 						fontSize2 = Math.ceil(fontSize2 / (1 - scale));
 					}
 				}
@@ -2025,6 +2024,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			document.getElementById(state.htmlId).style.left = parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + dx + 'px';
 		});
 	},
+	
 	// setupScrolling : function() {
 	// 	var that = this;
 	// 	this.oldX = 0;
