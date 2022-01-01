@@ -10,7 +10,13 @@
 			<OverflowToolbar>
 				<ToolbarSpacer/>
 				<Button
-					id="closeDebugger"
+					id="closeCurrentDebugger"
+					text="{i18n>gameEditor.debuggerList.closeCurrentDebugger}"
+					press="closeCurrentDebugger"
+					icon="sap-icon://decline"
+					type="Attention" />
+				<Button
+					id="closeAllDebuggers"
 					text="{i18n>gameEditor.debuggerList.closeDebuggers}"
 					press="resetDebugger"
 					icon="sap-icon://decline"

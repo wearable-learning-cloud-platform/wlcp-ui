@@ -893,8 +893,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false, archivedGame : this.archivedGame}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		} 
 	},
-	
-	debuggerCount : 0,
+
 	openDebuggerWindow : function(debugGameInstanceId) {
 		//this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
 		
@@ -910,24 +909,22 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.restart) {
 			//Clear data
 			this.debuggerData.debuggers = [];
-			this.debuggerCount = 0;
 			//Add 1st
-			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerCount + "'");
+			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerData.debuggers.length + "'");
 			finalHtml = finalHtml.replace("iframe src=''", "iframe src='" + src + "'");
 		} else {
 			//Add 1st
-			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerCount + "'");
+			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerData.debuggers.length + "'");
 			finalHtml = finalHtml.replace("iframe src=''", "iframe src='" + src + "'");	
 		}
 
 		//Push the data to the model
-		this.debuggerData.debuggers.push({key : this.debuggerCount, text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + this.debuggerData.debuggers.length, src : finalHtml });
+		this.debuggerData.debuggers.push({key : this.debuggerData.debuggers.length, text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + this.debuggerData.debuggers.length, src : finalHtml });
 		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
 		this.getView().setModel(this.debuggerModel, "debuggerModel");
 		//Navigate to
 		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1];
 		navContainer.to(navContainer.getPages()[navContainer.getPages().length -1]);
-		this.debuggerCount++;
 	},
 
 	openDebuggerListPopover : function(oEvent) {
@@ -945,9 +942,30 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].to(sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[parseInt(oEvent.getParameter("item").getKey())]);
 	},
 
+	closeCurrentDebugger : function (oEvent) {
+		if(this.debuggerData.debuggers.length == 0 || this.debuggerData.debuggers.length == 1) {
+			this.resetDebugger(oEvent);
+			return;
+		}
+		var selectedKey = parseInt(oEvent.getSource().getParent().getParent().getContent()[0].getSelectedKey());
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1];
+		var currentPage = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[selectedKey];
+		var previousPage = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[selectedKey - 1];
+		navContainer.to(previousPage);
+		this.debuggerData.debuggers.splice(selectedKey, 1);
+		for(var i = selectedKey; i < this.debuggerData.debuggers.length; i++) {
+			document.getElementById("wlcpvdb" + this.debuggerData.debuggers[i].key).id = "wlcpvdb" + i;
+			this.debuggerData.debuggers[i].src = this.debuggerData.debuggers[i].src.replace("wlcpvdb" + this.debuggerData.debuggers[i].key, "wlcpvdb" + i);
+			this.debuggerData.debuggers[i].key = i;
+			this.debuggerData.debuggers[i].text = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + i;
+		}
+		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+		this.getView().setModel(this.debuggerModel, "debuggerModel");
+		this.debuggerListPopover.close();
+	},
+
 	resetDebugger : function(oEvent) {
 		//Clear all variables and set to the model
-		this.debuggerCount = 0;
 		this.debuggerData.debuggers = [];
 		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
 		this.getView().setModel(this.debuggerModel, "debuggerModel");
