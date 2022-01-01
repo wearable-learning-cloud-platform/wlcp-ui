@@ -3,7 +3,7 @@
 	xmlns:core="sap.ui.core">
 	<Popover
 		id="debuggerListPopover"
-		title="Currently Open Debuggers"
+		title="{i18n>gameEditor.debuggerList.title}"
 		class="sapUiContentPadding"
 		placement="Bottom">
 		<footer>
@@ -11,15 +11,14 @@
 				<ToolbarSpacer/>
 				<Button
 					id="closeDebugger"
-					text="Close All Debuggers"
-					press="closeAllDebuggers"
+					text="{i18n>gameEditor.debuggerList.closeDebuggers}"
+					press="resetDebugger"
 					icon="sap-icon://decline"
 					type="Reject" />
 			</OverflowToolbar>
 		</footer>
-			<SelectList
-					items="{path: '/debuggers'}" itemPress="debuggerPressed">
-					<core:Item key="{key}" text="{text}" />
-				</SelectList>
+			<SelectList items="{path: '/debuggers'}" itemPress="debuggerPressed">
+				<core:Item key="{key}" text="{text}" />
+			</SelectList>
 	</Popover>
 </core:FragmentDefinition>

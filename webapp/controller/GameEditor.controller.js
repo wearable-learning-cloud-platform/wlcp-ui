@@ -921,7 +921,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 
 		//Push the data to the model
-		this.debuggerData.debuggers.push({key : this.debuggerCount, text : "Run and Debug " + debugGameInstanceId + " (" + this.debuggerData.debuggers.length + ")", src : finalHtml });
+		this.debuggerData.debuggers.push({key : this.debuggerCount, text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + this.debuggerData.debuggers.length, src : finalHtml });
 		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
 		this.getView().setModel(this.debuggerModel, "debuggerModel");
 		//Navigate to
@@ -945,15 +945,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].to(sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[parseInt(oEvent.getParameter("item").getKey())]);
 	},
 
-	closeAllDebuggers : function(oEvent) {
+	resetDebugger : function(oEvent) {
 		//Clear all variables and set to the model
 		this.debuggerCount = 0;
 		this.debuggerData.debuggers = [];
 		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
 		this.getView().setModel(this.debuggerModel, "debuggerModel");
-		//Open up the editor to 50% of the screen and disallows it to be resizable
+		//Open up the editor to 100% of the screen and disallows it to be resizable
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("resizable", false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("size", "100%");
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").triggerResize(true);
 	},
 	
 	/**
@@ -1317,6 +1318,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
+
+		this.resetDebugger();
 
 		this.resetUndoRedo();
 	},
