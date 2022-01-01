@@ -14,7 +14,6 @@ var State = class State {
 		this.positionY = 0;
 		this.dx = 0;
 		this.dy = 0;
-		this.changeList = [];
 		this.width = 0;
 		this.height = 0;
 		this.jsPlumbInstance = jsPlumbInstance;

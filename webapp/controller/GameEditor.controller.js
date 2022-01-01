@@ -1824,8 +1824,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	stateFontStack : [],
 	transitionFontStack : [],
 	stack1 : [],
-	changeList : [],
-
 	
 	zoomLevel : 0,
 	oldZoomLevel : 0,
