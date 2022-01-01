@@ -113,7 +113,7 @@ var GameEditorScroller = class GameEditorScrollHelper {
 			} else if ( isInBottomEdge && canScrollDown ) {
 				var intensity = ( ( viewportY - edgeBottom ) / edgeSize );
 				intensity = Math.min(Math.max(intensity, 0), maxIntensity);
-				console.log("viewPortY: " + viewportY + " edgeBottom: " + edgeBottom + " intensity: " + intensity);
+				//console.log("viewPortY: " + viewportY + " edgeBottom: " + edgeBottom + " intensity: " + intensity);
 				nextScrollY = ( nextScrollY + ( maxStep * intensity ) );
 			}
 			nextScrollX = Math.max( 0, Math.min( maxScrollX, nextScrollX ) );

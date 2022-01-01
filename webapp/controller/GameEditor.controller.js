@@ -33,6 +33,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	stateList : [],
 	transitionList : [],
 	connectionList : [],
+
+	debuggerData : {
+		debuggers : [],
+	},
+	
+	debuggerModel : new sap.ui.model.json.JSONModel(this.debuggerData),
 	
 	jsPlumbInstance : null,
 	
@@ -877,16 +883,96 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.debugError"));
 	},
 	
+	restart : true,
 	handleDebugInstanceMessageBox : function(oAction) {
 		if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance")) {
+			this.restart = true;
 			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true, archivedGame : this.archivedGame}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		} else if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.existingInstance")) {
+			this.restart = false;
 			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false, archivedGame : this.archivedGame}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
 		} 
 	},
-	
+
 	openDebuggerWindow : function(debugGameInstanceId) {
-		this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
+		//this.debuggerWindow = window.open(window.location.origin + window.location.pathname + "#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/true");
+		
+		//Open up the debugger to 50% of the screen and allow it to be resizable
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("resizable", true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("size", "50%");
+
+		//Prepare the html for the viewer in the editor
+		var src = "./index.html#/RouteVirtualDeviceView/" + sap.ui.getCore().getModel("user").oData.username + "/" + debugGameInstanceId + "/" + true;
+		var html = "<div id='' class='smartphone' ><div class='content'><iframe src='' style='width:100%;border:none;height:100%' /></div></div>";
+
+		var finalHtml = html;
+		if(this.restart) {
+			//Clear data
+			this.debuggerData.debuggers = [];
+			//Add 1st
+			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerData.debuggers.length + "'");
+			finalHtml = finalHtml.replace("iframe src=''", "iframe src='" + src + "'");
+		} else {
+			//Add 1st
+			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerData.debuggers.length + "'");
+			finalHtml = finalHtml.replace("iframe src=''", "iframe src='" + src + "'");	
+		}
+
+		//Push the data to the model
+		this.debuggerData.debuggers.push({key : this.debuggerData.debuggers.length, text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + this.debuggerData.debuggers.length, src : finalHtml });
+		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+		this.getView().setModel(this.debuggerModel, "debuggerModel");
+		//Navigate to
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1];
+		navContainer.to(navContainer.getPages()[navContainer.getPages().length -1]);
+	},
+
+	openDebuggerListPopover : function(oEvent) {
+		if (!this.debuggerListPopover) {
+			this.debuggerListPopover = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.DebuggerList", this);
+		}
+		this.debuggerListPopover.setModel(this.getView().getModel("debuggerModel"));
+		var currentPage = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getCurrentPage();
+		this.debuggerListPopover.openBy(currentPage._navBtn);
+		var pages = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages();
+		sap.ui.getCore().byId("debuggerListPopover").getContent()[0].setSelectedKey(pages.indexOf(currentPage));
+	},
+
+	debuggerPressed : function(oEvent) {
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].to(sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[parseInt(oEvent.getParameter("item").getKey())]);
+	},
+
+	closeCurrentDebugger : function (oEvent) {
+		if(this.debuggerData.debuggers.length == 0 || this.debuggerData.debuggers.length == 1) {
+			this.resetDebugger(oEvent);
+			return;
+		}
+		var selectedKey = parseInt(oEvent.getSource().getParent().getParent().getContent()[0].getSelectedKey());
+		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1];
+		var currentPage = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[selectedKey];
+		var previousPage = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages()[selectedKey - 1];
+		navContainer.to(previousPage);
+		this.debuggerData.debuggers.splice(selectedKey, 1);
+		for(var i = selectedKey; i < this.debuggerData.debuggers.length; i++) {
+			document.getElementById("wlcpvdb" + this.debuggerData.debuggers[i].key).id = "wlcpvdb" + i;
+			this.debuggerData.debuggers[i].src = this.debuggerData.debuggers[i].src.replace("wlcpvdb" + this.debuggerData.debuggers[i].key, "wlcpvdb" + i);
+			this.debuggerData.debuggers[i].key = i;
+			this.debuggerData.debuggers[i].text = sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebug") + " " + i;
+		}
+		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+		this.getView().setModel(this.debuggerModel, "debuggerModel");
+		this.debuggerListPopover.close();
+	},
+
+	resetDebugger : function(oEvent) {
+		//Clear all variables and set to the model
+		this.debuggerData.debuggers = [];
+		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+		this.getView().setModel(this.debuggerModel, "debuggerModel");
+		//Open up the editor to 100% of the screen and disallows it to be resizable
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("resizable", false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("size", "100%");
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").triggerResize(true);
 	},
 	
 	/**
@@ -1253,6 +1339,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		
 		//GameEditor.resetScroll();
 		this.resetZoom();
+
+		this.resetDebugger();
 
 		this.resetUndoRedo();
 	},
