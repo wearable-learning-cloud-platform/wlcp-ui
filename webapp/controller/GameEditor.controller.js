@@ -149,21 +149,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset()
 		);
 
+		//If zoom is not 100% need to add specially
 		if(GameEditor.getEditorController.zoomLevel != 0) {
-			var scale = 0.25;
-
-			//Set the origin to the start state
-			var x = 0;
-			var y = 0;
-			this.stateList.forEach(function(state) {
-				if(state.stateType === "START_STATE") {
-					x = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
-					y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
-				}
-			}.bind(this));
-	
 			for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
-				GameEditorZoomHelpers.scaleState(outputState, {x : x, y : y}, scale, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
+				GameEditorZoomHelpers.scaleState(outputState, GameEditorZoomHelpers.startStateAsOrigin(), 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
 			}
 
 			outputState.setPositionX(
@@ -236,21 +225,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				}
 			}
 
+			//If zoom is not 100% need to add specially
 			if(GameEditor.getEditorController.zoomLevel != 0) {
-				var scale = 0.25;
-	
-				//Set the origin to the start state
-				var x = 0;
-				var y = 0;
-				this.stateList.forEach(function(state) {
-					if(state.stateType === "START_STATE") {
-						x = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
-						y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
-					}
-				}.bind(this));
-		
 				for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
-					GameEditorZoomHelpers.scaleTransition(inputTransition, scale, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
+					GameEditorZoomHelpers.scaleTransition(inputTransition, 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
 				}
 			}
 
@@ -1849,14 +1827,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	resetZoom : function() {
-		this.lowestXList = [];
-		this.startStateFontStack = [];
-		this.outputStateFontStack = [];
-		this.transitionFontStack = [];
-
 		this.zoomLevel = 0;
 		this.oldZoomLevel = 0;
-		this.font = 0;
 	},
 	
 	zoomLevel : 0,

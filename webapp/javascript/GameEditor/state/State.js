@@ -207,88 +207,34 @@ var State = class State {
 	moved(event) {
 
 		var scale = 0.25;
-		var direction = GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1;
+		var direction = GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1;
 		
 		if(GameEditor.getEditorController().zoomLevel != 0) {
-			var startState = null;
-			GameEditor.getEditorController().stateList.forEach(function(state) {
-				if(state.stateType === "START_STATE") {
-					startState = state;
-					return;
-				}
-			}.bind(this));
-	
-			var x = parseInt(document.getElementById(startState.htmlId).style.left.replace("px", ""));
-			var y = parseInt(document.getElementById(startState.htmlId).style.top.replace("px", ""));
-	
-			var testdx = this.dx;
-			var testdy = this.dy;
-	
-			var statex = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
-			var statey = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
-	
-			for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
-				var dx = -(statex - x) * direction;
-				var dy = -(statey - y) * direction;
-				if(direction == 1) {
-					dx = dx * scale;
-					dy = dy * scale;
-				} else {
-					dx = dx / (1 - scale) * scale;
-					dy = dy / (1 - scale) * scale;
-				}
-		
-				testdx = testdx + parseInt(dx);
-				testdy = testdy + parseInt(dy);
-	
-				statex = statex + parseInt(dx);
-				statey = statey + parseInt(dy);
+			var origin = GameEditorZoomHelpers.startStateAsOrigin();
+
+			var pos = {
+				x : parseInt(document.getElementById(this.htmlId).style.left.replace("px", "")),
+				y : parseInt(document.getElementById(this.htmlId).style.top.replace("px", "")),
+				dx : this.dx,
+				dy : this.dy
 			}
+
+			var unroll = GameEditorZoomHelpers.calculateDiff(pos, origin, scale,  direction,  0, Math.abs(GameEditor.getEditorController().zoomLevel));
 	
 			direction = GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1;
 	
-			var newX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
-			var oldX = this.positionX;
-			var changeX = newX - oldX;
-	
-			var newY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
-			var oldY = this.positionY;
-			var changeY = newY - oldY;
-	
-			testdx = 0;
-			testdy = 0;
-	
-			for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
-				var dx = -(statex - x) * direction;
-				var dy = -(statey - y) * direction;
-				if(direction == 1) {
-					dx = dx * scale;
-					dy = dy * scale;
-				} else {
-					dx = dx / (1 - scale) * scale;
-					dy = dy / (1 - scale) * scale;
-				}
-		
-				testdx = testdx + parseInt(dx);
-				testdy = testdy + parseInt(dy);
-	
-				statex = statex + parseInt(dx);
-				statey = statey + parseInt(dy);
-			}
-			
-			this.dx = testdx;
-			this.dy = testdy;
+			var reroll = GameEditorZoomHelpers.calculateDiff({x : unroll.posX, y : unroll.posY}, origin, scale, direction, 0, Math.abs(GameEditor.getEditorController().zoomLevel));
+			this.dx = reroll.totalDx;
+			this.dy = reroll.totalDy;
 			
 			//Update the position
-			 this.positionX = statex;
-			 this.positionY = statey;
+			this.positionX = reroll.posX;
+			this.positionY = reroll.posY;
 		} else {
 			this.positionX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
 			this.positionY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
+			this.addPadSpace();
 		}
-
-		
-		this.addPadSpace();
 
 		GameEditor.getEditorController().scroller.handleMousemove(this, event.e);
 	}

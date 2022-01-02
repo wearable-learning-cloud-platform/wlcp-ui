@@ -137,15 +137,16 @@ var GameEditorScroller = class GameEditorScrollHelper {
 }
 
 var GameEditorZoomHelpers = {
-	calculateDiff : function(state, origin, scale, zoomLevel, oldZoomLevel, depth) {
-		var totalDx = 0;
-		var totalDy = 0;
-		var posX = 0;
-		var posY = 0;
+
+	calculateDiff : function(pos, origin, scale, zoomLevel, oldZoomLevel, depth) {
+		var totalDx = typeof(pos.dx) === "undefined" ? 0 : pos.dx;
+		var totalDy = typeof(pos.dy) === "undefined" ? 0 : pos.dy;
+		var posX = typeof(pos.x) === "undefined" ? 0 : pos.x;
+		var posY = typeof(pos.y) === "undefined" ? 0 : pos.y;
 		for(var i = 0; i < depth; i ++) {
 			//Calcaulate the change in x and y based on the difference between the origin and the state
-			var dx = (parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) - origin.x) * (zoomLevel < oldZoomLevel ? -1 : 1);
-			var dy = (parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) - origin.y) *  (zoomLevel < oldZoomLevel ? -1 : 1);
+			var dx = (posX - origin.x) * (zoomLevel < oldZoomLevel ? -1 : 1);
+			var dy = (posY - origin.y) *  (zoomLevel < oldZoomLevel ? -1 : 1);
 			if(zoomLevel < oldZoomLevel) {
 				dx = dx * scale;
 				dy = dy * scale;
@@ -156,8 +157,8 @@ var GameEditorZoomHelpers = {
 
 			totalDx = totalDx + parseInt(dx);
 			totalDy = totalDy + parseInt(dy);
-			posX = parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + parseInt(totalDx);
-			posY = parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + parseInt(totalDy);
+			posX = posX + parseInt(dx);
+			posY = posY + parseInt(dy);
 		}
 		return { totalDx, totalDy, posX, posY };
 	},
@@ -186,19 +187,35 @@ var GameEditorZoomHelpers = {
 		}
 	},
 
+	startStateAsOrigin : function() {
+		//Set the origin to the start state
+		var x = 0;
+		var y = 0;
+		GameEditor.getEditorController().stateList.forEach(function(state) {
+			if(state.stateType === "START_STATE") {
+				x = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
+				y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
+			}
+		}.bind(this));
+		return {x : x, y : y};
+	},
+
 	scaleState : function(state, origin, scale, zoomLevel, oldZoomLevel, calculatePosition = true) {
+
 		if(calculatePosition) {
-
-
-		//Calcaulate the change in x and y based on the difference between the origin and the state
-		var diffResults = this.calculateDiff(state, {x: origin.x, y: origin.y}, scale, zoomLevel, oldZoomLevel, 1);
-		state.dx = state.dx + diffResults.totalDx;
-		state.dy = state.dy + diffResults.totalDy;
-		state.setPositionX(diffResults.posX)
-		state.setPositionY(diffResults.posY);
-		//position
-		document.getElementById(state.htmlId).style.top = state.getPositionY() + "px";
-		document.getElementById(state.htmlId).style.left = state.getPositionX() + 'px';
+			//Calcaulate the change in x and y based on the difference between the origin and the state
+			var pos = {
+				x : parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")),
+				y : parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""))
+			}
+			var diffResults = this.calculateDiff(pos, {x: origin.x, y: origin.y}, scale, zoomLevel, oldZoomLevel, 1);
+			state.dx = state.dx + diffResults.totalDx;
+			state.dy = state.dy + diffResults.totalDy;
+			state.setPositionX(diffResults.posX)
+			state.setPositionY(diffResults.posY);
+			//position
+			document.getElementById(state.htmlId).style.top = state.getPositionY() + "px";
+			document.getElementById(state.htmlId).style.left = state.getPositionX() + 'px';
 		}
 
 		//Calculate size
