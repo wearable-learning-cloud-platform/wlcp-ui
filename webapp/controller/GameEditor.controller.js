@@ -1634,7 +1634,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 		var game = this.undoHistory.pop();
 		this.redoHistory.push(game);
+		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
+		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
 		this.loadUndoRedoGame(game);
+		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 0;
 	},
 
@@ -1644,7 +1647,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}
 		var game = this.redoHistory.pop();
 		this.undoHistory.push(game);
+		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
+		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
 		this.loadUndoRedoGame(game);
+		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 1;
 	},
 
