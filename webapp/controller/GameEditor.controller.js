@@ -1662,7 +1662,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.redoHistory.push(game);
 		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
 		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
+		var zoomLevel = this.zoomLevel;
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel++ : this.zoomLevel--
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		this.loadUndoRedoGame(game);
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel-- : this.zoomLevel++
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 0;
 	},
@@ -1675,7 +1686,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.undoHistory.push(game);
 		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
 		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
+		var zoomLevel = this.zoomLevel;
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel++ : this.zoomLevel--
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		this.loadUndoRedoGame(game);
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel-- : this.zoomLevel++
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 1;
 	},
