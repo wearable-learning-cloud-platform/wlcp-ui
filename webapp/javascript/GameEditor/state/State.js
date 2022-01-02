@@ -205,9 +205,6 @@ var State = class State {
 	 * @param {*} event 
 	 */
 	moved(event) {
-
-		var scale = 0.25;
-		var direction = GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1;
 		
 		if(GameEditor.getEditorController().zoomLevel != 0) {
 			var origin = GameEditorZoomHelpers.startStateAsOrigin();
@@ -219,11 +216,9 @@ var State = class State {
 				dy : this.dy
 			}
 
-			var unroll = GameEditorZoomHelpers.calculateDiff(pos, origin, scale,  direction,  0, Math.abs(GameEditor.getEditorController().zoomLevel));
+			var unroll = GameEditorZoomHelpers.calculateDiff(pos, origin, 0.25,  GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1,  0, Math.abs(GameEditor.getEditorController().zoomLevel));
 	
-			direction = GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1;
-	
-			var reroll = GameEditorZoomHelpers.calculateDiff({x : unroll.posX, y : unroll.posY}, origin, scale, direction, 0, Math.abs(GameEditor.getEditorController().zoomLevel));
+			var reroll = GameEditorZoomHelpers.calculateDiff({x : unroll.posX, y : unroll.posY}, origin, 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, Math.abs(GameEditor.getEditorController().zoomLevel));
 			this.dx = reroll.totalDx;
 			this.dy = reroll.totalDy;
 			

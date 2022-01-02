@@ -1835,27 +1835,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	oldZoomLevel : 0,
 
 	scaleEditorPad : function() {
-
-		var scale = 0.25;
-
+		
 		//Set the origin to the start state
-		var x = 0;
-		var y = 0;
-		this.stateList.forEach(function(state) {
-			if(state.stateType === "START_STATE") {
-				x = parseInt(document.getElementById(state.htmlId).style.left.replace("px", ""));
-				y = parseInt(document.getElementById(state.htmlId).style.top.replace("px", ""));
-			}
-		}.bind(this));
+		var origin = GameEditorZoomHelpers.startStateAsOrigin();
 
 		//Loop through each state on the screen
 		this.stateList.forEach(function(state) { 
-			GameEditorZoomHelpers.scaleState(state, {x : x, y : y}, scale, this.zoomLevel, this.oldZoomLevel);
+			GameEditorZoomHelpers.scaleState(state, origin, 0.25, this.zoomLevel, this.oldZoomLevel);
 		}.bind(this));
 
 		//Loop through each transition on the screen
 		this.transitionList.forEach(function(transition) {
-			GameEditorZoomHelpers.scaleTransition(transition, scale, this.zoomLevel, this.oldZoomLevel);
+			GameEditorZoomHelpers.scaleTransition(transition, 0.25, this.zoomLevel, this.oldZoomLevel);
 		}.bind(this));
 
 		GameEditor.getEditorController().jsPlumbInstance.repaintEverything()
