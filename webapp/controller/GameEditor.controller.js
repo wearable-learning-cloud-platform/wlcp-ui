@@ -909,6 +909,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(this.restart) {
 			//Clear data
 			this.debuggerData.debuggers = [];
+			this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
+			this.getView().setModel(this.debuggerModel, "debuggerModel");
 			//Add 1st
 			finalHtml = finalHtml.replace("<div id=''", "<div id='" + "wlcpvdb" + this.debuggerData.debuggers.length + "'");
 			finalHtml = finalHtml.replace("iframe src=''", "iframe src='" + src + "'");
