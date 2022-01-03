@@ -6,7 +6,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 
 	getNavigationListItem() {
 		return {
-			title : "Global Variable", //sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.globalVariable"),
 			type : TransitionConfigType.GLOBAL_VARIABLE,
 			icon : "sap-icon://globe",
 			selected : false,
@@ -16,7 +16,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 
 	getNavigationContainerPage() {
 		return {
-			title : "Global Variable",//sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.keyboardInput"),
+			title : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.globalVariable"),
 			type : TransitionConfigType.GLOBAL_VARIABLE,
 			items : []
 		}
@@ -31,7 +31,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
 					if(iconTabs[i].navigationContainerPages[n].items.length > 0) {
 						activeScopes.push(iconTabs[i].scope);
 					}
@@ -59,7 +59,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
         var iconTabs = this.transition.modelJSON.iconTabs;
         for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
                     var globalVariables = JSON.parse(JSON.stringify(this.getGlobalVariables()));
                     globalVariables.push({name : "expression"});
                     for(var k = 0; k < iconTabs[i].navigationContainerPages[n].items.length; k++) {
@@ -80,7 +80,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
         var iconTabs = this.transition.modelJSON.iconTabs;
         for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
                     return iconTabs[i].navigationContainerPages[n].items.length;
                 }
             }
@@ -92,7 +92,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 		for(var i = 0; i < iconTabs.length; i++) {
             if(iconTabs[i].scope === oEvent.getSource().getParent().getParent().getParent().getParent().getText()) {
                 for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-                    if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+                    if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
                         iconTabs[i].navigationContainerPages[n].items.push({variableName : "", operator : "", value : "", logicalOperator : ""});
                         this.transition.model.refresh();
                         this.transition.onChange();
@@ -109,7 +109,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 		for(var i = 0; i < iconTabs.length; i++) {
             if(iconTabs[i].scope === oEvent.getSource().getParent().getParent().getParent().getParent().getParent().getParent().getText()) {
                 for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-                    if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+                    if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
                         var indexToRemove = 0;
                         for(var k in iconTabs[i].navigationContainerPages[n].items) {
                             if(iconTabs[i].navigationContainerPages[n].items[k].expression === oEvent.getSource().getParent().getCells()[0].getValue()) {
@@ -134,7 +134,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
 							for(var k = 0; k < loadData.globalVariables[key].globalVariableInputModifiers.length; k++) {
                                 iconTabs[i].navigationContainerPages[n].items.push({variableName : loadData.globalVariables[key].globalVariableInputModifiers[k].variableName, operator : loadData.globalVariables[key].globalVariableInputModifiers[k].operator, value : loadData.globalVariables[key].globalVariableInputModifiers[k].value, logicalOperator : loadData.globalVariables[key].globalVariableInputModifiers[k].logicalOperator});
 							}
@@ -150,7 +150,7 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title == this.getNavigationContainerPage().title) {
+				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
                     var globalVariableInputModifiers = [];
                     for(var k = 0; k < iconTabs[i].navigationContainerPages[n].items.length; k++) {
                         globalVariableInputModifiers.push({variableName : iconTabs[i].navigationContainerPages[n].items[k].variableName, operator : iconTabs[i].navigationContainerPages[n].items[k].operator, value : iconTabs[i].navigationContainerPages[n].items[k].value, logicalOperator : iconTabs[i].navigationContainerPages[n].items[k].logicalOperator});
