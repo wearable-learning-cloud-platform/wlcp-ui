@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+	<Button text="{i18n>gameEditor.startState.globalVariable.addGlobalVariable}" press="addGlobalVariable"/>
+	<Table items="{items}">
+		<columns>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.startState.globalVariable.table.name}" />
+			</Column>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.startState.globalVariable.table.type}" />
+			</Column>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.startState.globalVariable.table.defaultValue}" />
+			</Column>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.startState.globalVariable.table.delete}" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+					<Input value="{name}"/>
+					<ComboBox selectedKey="{type}">
+						<items>
+							<core:Item text="Number" key="NUMBER"/>
+							<core:Item text="String" key="STRING"/>
+							<core:Item text="Boolean" key="BOOLEAN"/>
+						</items>
+					</ComboBox>
+					<VBox>
+						<items>
+							<Input value="{defaultValue}" visible="{= ${type} !== 'BOOLEAN'}"/>
+							<ComboBox selectedKey="{defaultValue}" visible="{= ${type} === 'BOOLEAN'}">
+								<items>
+									<core:Item text="True" key="true"/>
+									<core:Item text="False" key="false"/>
+								</items>
+							</ComboBox>
+						</items>
+					</VBox>
+					<Button icon="sap-icon://delete" press="deleteGlobalVariable"/>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+
+</core:FragmentDefinition> 

@@ -9,6 +9,10 @@ var StartState = class StartState extends State {
 				 maxConnections: -1,
 			};
 		this.stateType = "START_STATE";
+		this.stateConfigs = [];
+		this.setupStateConfigs();
+		this.model = new sap.ui.model.json.JSONModel(this.createData());
+		this.oldModelJSON = {};
 		this.create();
 	}
 	
@@ -29,7 +33,49 @@ var StartState = class StartState extends State {
 			}}}, this.outputEndPoint);
 		
 		//Setup double click
-		$("#"+this.stateDiv.id).dblclick($.proxy(this.explainWindow, this));
+		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
+	}
+
+	doubleClick() {
+		//Create an instance of the dialog
+		this.dialog = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.States.StartStateConfig", this);
+
+		//Set the model for the dialog
+		this.dialog.setModel(this.model);
+
+		for(var n = 0; n < sap.ui.getCore().byId("navContainer").getPages().length; n++) {
+			var iconTabBarPage = sap.ui.getCore().byId("navContainer").getPages()[n];
+			if(iconTabBarPage.getContent().length == 0) {
+				this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+			}
+			iconTabBarPage.setTitle(this.stateConfigs[n].getNavigationContainerPage().title);
+		}
+
+		//Set the old scope mask
+		this.oldModelJSON = JSON.parse(JSON.stringify(this.model.getData()));
+
+		//Open the dialog
+		this.dialog.open();
+	}
+
+	setupStateConfigs() {
+		this.stateConfigs.push(new StartStateConfigGlobalVariables(this));
+	}
+
+	createData() {
+		var tempNavigationListItems = [];
+		var tempNavigationContainerPages = [];
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			tempNavigationListItems.push(this.stateConfigs[i].getNavigationListItem());
+			tempNavigationContainerPages.push(this.stateConfigs[i].getNavigationContainerPage());
+		}
+		return {
+			icon : "",
+			scope : "",
+			scopeText : "",
+			navigationListItems : tempNavigationListItems,
+			navigationContainerPages : tempNavigationContainerPages,
+		}
 	}
 	
 	static load(loadData) {
@@ -44,6 +90,15 @@ var StartState = class StartState extends State {
 		
 		//Push back the state
 		GameEditor.getEditorController().stateList.push(startState);
+
+		//Load the states components
+		startState.loadComponents(loadData);
+	}
+
+	loadComponents(loadData) {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].setLoadData(loadData);
+		}
 	}
 	
 	save() {
@@ -60,6 +115,12 @@ var StartState = class StartState extends State {
 			inputConnections : [],
 			outputConnections : tempOutputConnections
 		}
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			var data = this.stateConfigs[i].getSaveData();
+			for(var key in data) {
+				saveData[key] = data[key];
+			}
+		}
 		return saveData;
 	}
 	
@@ -74,5 +135,17 @@ var StartState = class StartState extends State {
 	explainWindow(){
 		sap.m.MessageBox.information(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.state.startExplain"));
 		return;
+	}
+
+	acceptDialog() {
+		this.dialog.close();
+		this.dialog.destroy();
+    }
+
+	closeDialog() {
+		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
+		this.model.setData(this.modelJSON);
+		this.dialog.close();
+		this.dialog.destroy();
 	}
 }
