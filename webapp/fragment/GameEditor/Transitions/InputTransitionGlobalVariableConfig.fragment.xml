@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc">
+
+    <Button text="{i18n>gameEditor.outputState.globalVariable.modifyGlobalVariable}" press="addGlobalVariable"/>
+	<Table items="{path:'items', events : { change: '.setGlobalVariables'}}">
+		<columns>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.name}" />
+			</Column>
+            <Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.operator}" />
+			</Column>
+            <Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.value}" />
+			</Column>
+            <Column width="8em" hAlign="Center">
+				<Text text="Logical Operator" />
+			</Column>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.delete}" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+                    <ComboBox selectedKey="{variableName}" items="{path:'globalVariables', templateShareable:true}">
+                        <items>
+							<core:Item text="{name}" key="{name}"/>
+                        </items>
+                    </ComboBox>
+                    <ComboBox selectedKey="{operator}" editable="{= ${variableName} !== 'expression'}">
+                        <items>
+							<core:Item text="== (Equal to)" key="=="/>
+							<core:Item text="!= (Not equal to)" key="!="/>
+							<core:Item text="&gt; (Greater than)" key="&gt;"/>
+                            <core:Item text="&lt; (Less than)" key="&lt;"/>
+                            <core:Item text="&gt;= (Greater than or equal)" key="&gt;="/>
+							<core:Item text="&lt;= (Less than or equal)" key="&lt;="/>
+						</items>
+                    </ComboBox>
+					<Input value="{value}"/>
+                    <ComboBox selectedKey="{logicalOperator}" editable="{= ${count} > 1}">
+                        <items>
+							<core:Item text="&amp;&amp;" key="&amp;&amp;"/>
+							<core:Item text="||" key="||"/>
+						</items>
+                    </ComboBox>
+					<Button icon="sap-icon://delete" press="deleteGlobalVariable"/>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+
+</core:FragmentDefinition> 

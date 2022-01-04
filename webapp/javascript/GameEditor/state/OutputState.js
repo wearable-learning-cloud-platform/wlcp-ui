@@ -76,6 +76,7 @@ var OutputState = class OutputState extends State {
 		this.stateConfigs.push(new StateConfigDisplayPhoto(this));
 		this.stateConfigs.push(new StateConfigPlaySound(this));
 		this.stateConfigs.push(new StateConfigPlayVideo(this));
+		this.stateConfigs.push(new StateConfigGlobalVariable(this));
 	}
 	
 	setupValidationRules() {
