@@ -25,7 +25,7 @@
 								<StandardListItem title="{title}" icon="{icon}" selected="{selected}" visible="{visible}"/>
 							</List>
 							<NavContainer height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
-								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
+								<layoutData><l:SplitterLayoutData minSize="750" resizable="false"/></layoutData>
 								<Page/>
 							</NavContainer>
 						</l:Splitter>
