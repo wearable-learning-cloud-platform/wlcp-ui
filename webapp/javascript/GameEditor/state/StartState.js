@@ -138,6 +138,7 @@ var StartState = class StartState extends State {
 	}
 
 	acceptDialog() {
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editStartState"));
 		this.dialog.close();
 		this.dialog.destroy();
     }

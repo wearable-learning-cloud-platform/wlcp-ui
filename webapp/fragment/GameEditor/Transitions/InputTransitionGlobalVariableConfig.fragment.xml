@@ -10,19 +10,19 @@
     <Button text="{i18n>gameEditor.outputState.globalVariable.modifyGlobalVariable}" press="addGlobalVariable"/>
 	<Table items="{path:'items', events : { change: '.setGlobalVariables'}}">
 		<columns>
-			<Column hAlign="Center">
+			<Column width="12em" hAlign="Center">
 				<Text text="{i18n>gameEditor.outputState.globalVariable.table.name}" />
 			</Column>
-            <Column hAlign="Center">
+            <Column width="12em" hAlign="Center">
 				<Text text="{i18n>gameEditor.outputState.globalVariable.table.operator}" />
 			</Column>
-            <Column hAlign="Center">
+            <Column width="12em" hAlign="Center">
 				<Text text="{i18n>gameEditor.outputState.globalVariable.table.value}" />
 			</Column>
-            <Column hAlign="Center">
+            <Column width="8em" hAlign="Center">
 				<Text text="Logical Operator" />
 			</Column>
-			<Column hAlign="Center">
+			<Column width="12em" hAlign="Center">
 				<Text text="{i18n>gameEditor.outputState.globalVariable.table.delete}" />
 			</Column>
 		</columns>
@@ -36,12 +36,12 @@
                     </ComboBox>
                     <ComboBox selectedKey="{operator}" editable="{= ${variableName} !== 'expression'}">
                         <items>
-							<core:Item text="==" key="=="/>
-							<core:Item text="!=" key="!="/>
-							<core:Item text="&gt;" key="&gt;"/>
-                            <core:Item text="&lt;" key="&lt;"/>
-                            <core:Item text="&gt;=" key="&gt;="/>
-							<core:Item text="&lt;=" key="&lt;="/>
+							<core:Item text="== (Equal to)" key="=="/>
+							<core:Item text="!= (Not equal to)" key="!="/>
+							<core:Item text="&gt; (Greater than)" key="&gt;"/>
+                            <core:Item text="&lt; (Less than)" key="&lt;"/>
+                            <core:Item text="&gt;= (Greater than or equal)" key="&gt;="/>
+							<core:Item text="&lt;= (Less than or equal)" key="&lt;="/>
 						</items>
                     </ComboBox>
 					<Input value="{value}"/>
