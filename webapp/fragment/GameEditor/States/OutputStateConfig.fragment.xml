@@ -28,7 +28,7 @@
 								<tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
 							</tnt:NavigationList>
 							<NavContainer height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
-								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
+								<layoutData><l:SplitterLayoutData minSize="750" resizable="false"/></layoutData>
 								<Page/>
 							</NavContainer>
 						</l:Splitter>
