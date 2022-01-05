@@ -28,16 +28,7 @@
 			items="{path: '/saves', sorter: {path: 'gameSaveId', descending: true}}"
 			mode="SingleSelectMaster">
 			<StandardListItem
-				title="{
-							path: 'timeStamp',
-							type: 'sap.ui.model.type.DateTime',
-							formatOptions: {
-								source: {
-									pattern: 'yyyy-MM-ddTHH:mm:ss.SSSZ'
-								},
-								pattern: 'yyyy/MM/dd hh:mm:ss'
-								}
-						} {type}"
+				title="{timeStamp} {type}"
 				description="{description}"/>
 		</List>
 	</Popover>

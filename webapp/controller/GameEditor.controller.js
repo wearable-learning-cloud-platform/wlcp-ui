@@ -1441,6 +1441,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			false,
 
 			function(data) {
+				data.forEach(function(history) {
+					history.timeStamp = new Date(history.timeStamp).toLocaleString();
+				})
 				this._pPopover.setModel(new sap.ui.model.json.JSONModel({ saves : data }));
 			}, 
 
@@ -1449,7 +1452,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			}, this, false
 		);
 	},
-
+	
 	loadSelectedArchivedGame : function(oEvent) {
 		
 		// sap.ui.core.UIComponent.getRouterFor(this).getTargets().addTarget("TargetGameEditorView2", {
