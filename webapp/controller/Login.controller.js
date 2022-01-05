@@ -45,7 +45,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	error : function(error) {
-		//sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
+		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
 	},
 	
 	registerNewUser : function() {
