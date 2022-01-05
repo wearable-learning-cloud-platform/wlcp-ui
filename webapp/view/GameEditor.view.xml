@@ -59,7 +59,7 @@
 					<ToolbarSpacer/>
 					<Button text="Home" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="NeverOverflow" />
+							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
 				</tnt:ToolHeader>
