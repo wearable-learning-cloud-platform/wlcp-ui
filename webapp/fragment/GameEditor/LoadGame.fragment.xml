@@ -11,29 +11,27 @@
 			<Button text="{i18n>button.cancel}" type="Reject" press="cancelLoadGame" />
 		</buttons>
 		<content>
-			<l:Splitter id="gameLoadSplitter" height="500px">
-				<Panel>
-					<headerToolbar>
-						<OverflowToolbar >
-							<Title level="H3" text="{i18n>gameEditor.load.select}" />
-							<ToolbarSpacer/>
-							<SearchField placeholder="{i18n>gameEditor.load.search}" liveChange="onSearch">
-								<layoutData>
-									<OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/>
-								</layoutData>
-							</SearchField>
-						</OverflowToolbar>
-					</headerToolbar>
-					<tnt:NavigationList>
-						<tnt:NavigationListItem id="publicGames" text="{i18n>gameEditor.load.publicGames}" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
-							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
-						</tnt:NavigationListItem>
-						<tnt:NavigationListItem id="privateGames" text="{i18n>gameEditor.load.yourGames}" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
-							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
-						</tnt:NavigationListItem>
-					</tnt:NavigationList>
-				</Panel>
-			</l:Splitter>
+			<Panel>
+				<headerToolbar>
+					<OverflowToolbar >
+						<Title level="H3" text="{i18n>gameEditor.load.select}" />
+						<ToolbarSpacer/>
+						<SearchField placeholder="{i18n>gameEditor.load.search}" liveChange="onSearch">
+							<layoutData>
+								<OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/>
+							</layoutData>
+						</SearchField>
+					</OverflowToolbar>
+				</headerToolbar>
+				<tnt:NavigationList>
+					<tnt:NavigationListItem id="publicGames" text="{i18n>gameEditor.load.publicGames}" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
+						<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+					</tnt:NavigationListItem>
+					<tnt:NavigationListItem id="privateGames" text="{i18n>gameEditor.load.yourGames}" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
+						<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+					</tnt:NavigationListItem>
+				</tnt:NavigationList>
+			</Panel>
 		</content>
 	</Dialog>
 </core:FragmentDefinition>
