@@ -484,6 +484,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		//Set the game name
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
+
+		//Set the first undo/redo change
+		this.undoRedoChange();
 	},
 	
 	/**
