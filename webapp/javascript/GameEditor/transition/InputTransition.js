@@ -407,15 +407,18 @@ var InputTransition = class InputTransition extends Transition {
 					this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
 				}
 			} else if(activeTransitionsAcrossAll.length > 0 && !activeTransitionsAcrossAll.includes("")) {
-				//var activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
 				var activeTransition = null;
 				for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
 					if(this.modelJSON.iconTabs[n].scope === scope) {
-						activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+						if(activeScopes.includes(scope)) {
+							activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+						} else {
+							activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
+						}
 					}
 				}
 				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
-			}
+			} 
 		}
 	}
 	
