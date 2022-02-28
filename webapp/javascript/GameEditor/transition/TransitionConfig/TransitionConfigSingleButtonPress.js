@@ -181,12 +181,14 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 			for(var button = 0; button < 4; button++) {
 				for(var n = 0; n < scopeCollection.length; n++) {
 					var selected = false;
+					var label = "";
 					for(var j = 0; j < scopeCollection.length; j++) {
 						if(scopeCollection[n].model.scope == scopeCollection[j].model.scope) {
 							for(var k = 0; k < scopeCollection[j].model.navigationContainerPages.length; k++) {
 								if(scopeCollection[j].model.navigationContainerPages[k].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {									
 									if(scopeCollection[j].model.navigationContainerPages[k].singlePress[button].selected) {
 										selected = true;
+										label = scopeCollection[j].model.navigationContainerPages[k].singlePress[button].label;
 									}
 								}
 							}
@@ -195,6 +197,9 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 					var trans = this.getTab(transitionList[i], scopeCollection[n].model.scope);
 					if(trans != null) {
 						trans.singleButtonPress.singlePress[button].enabled = !selected;
+						if(label !== "") {
+							trans.singleButtonPress.singlePress[button].label = label;
+						}
 						this.setScopeData(transitionList[i], trans.iconTab);
 					}
 				}
