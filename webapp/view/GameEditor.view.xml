@@ -56,10 +56,11 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
+					<tnt:ToolHeaderUtilitySeparator/>
 					<ToolbarSpacer/>
 					<Button text="Home" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
-							<OverflowToolbarLayoutData priority="Low" />
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
 					</Button>
 				</tnt:ToolHeader>
