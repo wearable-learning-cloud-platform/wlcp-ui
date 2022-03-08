@@ -55,7 +55,7 @@ var Connection = class Connection {
 			if(GameEditor.getEditorController().transitionList[i].connection.connectionId == this.connectionId) {
 				
 				//Remove it
-				GameEditor.getEditorController().transitionList[i].removeTransition(sap.m.MessageBox.Action.OK);
+				GameEditor.getEditorController().transitionList[i].removeTransition(sap.m.MessageBox.Action.OK, true);
 				break;
 			}
 		}

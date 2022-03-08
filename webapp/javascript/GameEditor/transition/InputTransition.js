@@ -618,7 +618,7 @@ var InputTransition = class InputTransition extends Transition {
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.remove"), {onClose : $.proxy(this.removeTransition, this)});
 	}
 	
-	removeTransition(oAction) {
+	removeTransition(oAction, deletedFromOther = false) {
 		
 		//If they click OK, delete
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user confirms "OK"
@@ -660,7 +660,10 @@ var InputTransition = class InputTransition extends Transition {
 				)
 			);
 
-			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteTransition"));
+			if(!deletedFromOther) {
+				GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteTransition"));
+			}
+
 		}
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
 		else if(oAction == sap.m.MessageBox.Action.CANCEL) {
