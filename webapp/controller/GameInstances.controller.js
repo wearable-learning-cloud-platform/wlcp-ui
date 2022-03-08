@@ -66,9 +66,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	gameInstanceStarted : function(response) {
+		var gameInstances = this.getView().byId("gameInstanceTileContainer").getModel("odata").getProperty("/object");
+		gameInstances.push(response);
+		this.getView().byId("gameInstanceTileContainer").getModel("odata").setProperty("/object", gameInstances);
 		this.onCancel();
-		
-		this.getGameInstances();
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
 	},
 	
@@ -84,7 +85,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	gameInstanceStopped : function(response) {
-		this.getGameInstances();
+		var gameInstances = this.getView().byId("gameInstanceTileContainer").getModel("odata").getProperty("/object");
+		for(var i = 0; i < gameInstances.length; i++) {
+			if(gameInstances[i].gameInstanceId === response.gameInstanceId) {
+				gameInstances.splice(i, 1);
+			}
+		}
+		this.getView().byId("gameInstanceTileContainer").getModel("odata").setProperty("/object", gameInstances);
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
@@ -94,11 +101,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 
 	getGameInstancesSuccess : function(data) {
 		this.getView().setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
-		//sap.ui.getCore().byId("__xmlview3--gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel(data), "odata");
 		this.getView().byId("gameInstanceTileContainer").setModel(new sap.ui.model.json.JSONModel({object : data}), "odata");
 	},
 
 	onRouteMatched: function (oEvent) {
+		this.getView().byId("gameInstanceTileContainer").setEditable(false);
 		this.getGameInstances();
 	},
 
