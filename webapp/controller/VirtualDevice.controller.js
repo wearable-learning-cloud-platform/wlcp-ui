@@ -171,6 +171,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
 		}
 		this.model.setData(this.modelJSON);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 	},
 	
 	onTeamPlayerSelected : function(oEvent) {
@@ -361,9 +362,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	onClose : function() {
-		var that = this;
 		if(!this.debugMode) {
 			sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
+				this.resetVirtualDevice();
 				this.onHomeButtonPress();
 			}.bind(this)});
 		} else {
@@ -413,6 +414,20 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		case "TimerDuration":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration"));
 			break;
+		}
+	},
+
+	resetVirtualDevice : function () {
+		this.resetStateDisplayTypes();
+		this.switchToStateType("DisplayText");
+		this.switchToTransitionType("NoTransition");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel").setText("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayVideoTextLabel").setText("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayPhotoImage").setSrc("");
+		this.playSound = undefined;
+		if(document.getElementById("videoPlayer") !== null) {
+			document.getElementById("videoPlayer").src = "";
 		}
 	},
 	

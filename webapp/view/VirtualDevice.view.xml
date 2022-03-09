@@ -45,7 +45,7 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
-						<Select width="12em" items="{/teamPlayers}">
+						<Select id="teamPlayerSelect" width="12em" items="{/teamPlayers}">
 							<core:Item key="{key}" text="Team {team} Player {player}" />
 						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onTeamPlayerSelected"></Button>
