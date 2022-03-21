@@ -418,6 +418,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	resetVirtualDevice : function () {
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 		this.resetStateDisplayTypes();
 		this.switchToStateType("DisplayText");
 		this.switchToTransitionType("NoTransition");
@@ -429,6 +432,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		if(document.getElementById("videoPlayer") !== null) {
 			document.getElementById("videoPlayer").src = "";
 		}
+		this.clearButtonPressSequence();
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 	},
 	
 	resetStateDisplayTypes : function() {
@@ -502,6 +507,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		};
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteVirtualDeviceView").attachMatched(this.onRouteMatched, this);
+		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteModeSelectionView").attachMatched(this.onRouteMatchedBack, this);
 	},
 
 	onRouteMatched : function (oEvent) {
@@ -520,6 +526,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.tempPlayer = this.username === "*" ? true : false;
 		}
 		this.getView().setModel(this.model);
+	},
+
+	onRouteMatchedBack : function(oEvent) {
+		this.resetVirtualDevice();
 	},
 
 /**
