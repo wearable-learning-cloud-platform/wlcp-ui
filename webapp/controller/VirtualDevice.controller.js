@@ -57,10 +57,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({sequenceButtonPress : sequence})});
-		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
-		for(var i = 0; i < children.length; i++) {
-			children[i].remove();
-		}
+		this.clearButtonPressSequence();
 	},
 
 		
@@ -80,12 +77,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
-		document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.height = this.inputBoxHeight.toString() + "px";
+		document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = this.inputBoxWidth.toString() + "px";
 		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
 	},
 	
 	onAfterRenderingSequence : function() {
-		this.inputBoxHeight = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList2")).height.replace("px", ""));
+		this.inputBoxWidth = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList2Parent")).width.replace("px", ""));
 		$("#container-wlcp-ui---virtualDevice--colorListRed").click(function() {
 			$("#container-wlcp-ui---virtualDevice--colorListRed").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
 			this.up();
@@ -106,9 +103,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			disabled: true,
 			update: function(event, ui) {
 				var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
-				if(sequence.length % 4 == 0) {
-					var newHeight = document.getElementById("colorListSortable-listUl").clientHeight + this.inputBoxHeight;
-					document.getElementById("colorListSortable-listUl").style.height = newHeight.toString() + "px";
+				if(sequence.length >= 5) {
+					var newWidth = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientWidth + (this.inputBoxWidth / 4);
+					document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = newWidth.toString() + "px";
 				}
 			}.bind(this)
 		});
@@ -116,11 +113,32 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 
 	up() {
 		var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
-			if(sequence.length % 4 == 0) {
-				var newHeight = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientHeight + this.inputBoxHeight;
-				document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.height = newHeight.toString() + "px";
-			}
+		if(sequence.length >= 5) {
+			var newWidth = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientWidth + (this.inputBoxWidth / 4);
+			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = newWidth.toString() + "px";
+			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent").scrollTo(newWidth, 0);
+		}
 		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
+	},
+
+	scrollLeft() {
+		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
+		element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
+		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
+		// 	element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
+		// } else {
+		// 	element.scrollTo(element.scrollLeft - (element.scrollLeft % (this.inputBoxWidth / 4)), 0);
+		// }
+	},
+
+	scrollRight() {
+		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
+		element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
+		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
+		// 	element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
+		// } else {
+		// 	element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4) - (element.scrollLeft % (this.inputBoxWidth / 4)), 0);
+		// }
 	},
 
 	joinGameInstance : function() {

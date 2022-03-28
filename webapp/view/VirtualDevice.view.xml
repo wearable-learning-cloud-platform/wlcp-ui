@@ -145,10 +145,16 @@
 						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
-								<VBox>
-									<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
-									</html:div>
-								</VBox>
+								<HBox>
+									<Button icon="sap-icon://arrow-left" class="scrollButtons" press="scrollLeft"/>
+									<VBox>
+										<html:div id="colorListSortable-listUl-parent" class="sequencePressColorList2Parent">
+											<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
+											</html:div>
+										</html:div>
+									</VBox>
+									<Button icon="sap-icon://arrow-right" class="scrollButtons" press="scrollRight"/>
+								</HBox>
 							</items>
 						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">
