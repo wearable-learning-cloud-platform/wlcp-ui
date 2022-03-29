@@ -450,7 +450,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		if(document.getElementById("videoPlayer") !== null) {
 			document.getElementById("videoPlayer").src = "";
 		}
-		this.clearButtonPressSequence();
+		if(document.getElementById('#container-wlcp-ui---virtualDevice--colorListSortable-listUl') !== null) {
+			this.clearButtonPressSequence();
+		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 	},
 	
