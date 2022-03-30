@@ -167,8 +167,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 
 	changeToEnterGamePin : function(oEvent) {
 		this.username = oEvent.getSource().getParent().getItems()[1].getValue();
+		if(this.username === null || this.username === "") { 
+			sap.m.MessageBox.error("That player name is invalid!");
+			return;
+		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
-		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.gameInstanceIdError, this);
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.playerNameError, this);
 	},
 	
 	joinDebugGameInstance : function() {
@@ -178,6 +182,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	gameInstanceIdError : function() {
 		sap.m.MessageBox.error("Game PIN Does not Exist!");
+	},
+
+	playerNameError : function() {
+		sap.m.MessageBox.error("That player name is invalid!");
 	},
 	
 	handleGameTeamsAndPlayers : function(response) {
