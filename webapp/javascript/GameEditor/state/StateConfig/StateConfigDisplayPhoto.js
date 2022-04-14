@@ -49,34 +49,35 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 	}
 
 	handleUploadPress() {
+		var oFileUploader = null;
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.DISPLAY_PHOTO) {
-						this.displayPhotoPage = i;
+						oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[i].getContent()[0].getContentAreas()[1].getPages()[1].getContent()[2].getItems()[0];
 						break;
 					}
 				}
 			}
 		}
 
-		if(typeof this.oFileUploader === "undefined") {
-			this.oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[this.displayPhotoPage].getContent()[0].getContentAreas()[1].getPages()[1].getContent()[2].getItems()[0];
-			this.oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
-			this.oFileUploader.addHeaderParameter(new sap.ui.unified.FileUploaderParameter({
+		oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
+		if(oFileUploader.getHeaderParameters().length == 0) {
+			oFileUploader.addHeaderParameter(new sap.ui.unified.FileUploaderParameter({
 				name : "Authorization",
 				value : "Bearer " + SessionHelper.getCookie("wlcp.userSession")
 			}));
-			this.oFileUploader.setSendXHR(true);
 		}
-		var that = this;
-		this.oFileUploader.checkFileReadable().then(function() {
-			that.oFileUploader.upload();
-		}, function(error) {
+		oFileUploader.setSendXHR(true);
+
+		oFileUploader.checkFileReadable().then(function() {
+			this.busyDialog.open();
+			oFileUploader.upload();
+		}.bind(this), function(error) {
 			MessageToast.show("Error reading file!");
 		}).then(function() {
-			that.oFileUploader.clear();
+			oFileUploader.clear();
 		});
 	}
 
@@ -96,6 +97,7 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 				}
 			}
 		}
+		this.busyDialog.close();
 	}
 	
 	//put XML code here

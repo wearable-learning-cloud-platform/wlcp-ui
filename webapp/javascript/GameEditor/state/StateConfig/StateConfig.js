@@ -2,6 +2,7 @@ var StateConfig = class StateConfig {
 
 	constructor(state) {
 		this.state = state;
+		this.busyDialog = new sap.m.BusyDialog();
 	}
 	
 	onChange(oEvent) {
