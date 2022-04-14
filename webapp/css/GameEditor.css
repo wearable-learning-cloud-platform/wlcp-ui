@@ -1,3 +1,7 @@
+.sapTntNavLIItemSelected.sapTntNavLIItem.LoadNavItemSelected, .sapTntNavLIItemSelected.LoadNavItemSelected .sapTntNavLIGroup.LoadNavItemSelected, .sapTntNavLIItemSelected.sapTntNavLIGroupItem.LoadNavItemSelected {
+	background-color: #e8eff6 !important
+}
+
 .sapMTabStrip {
 	background : #3f5161;
 	box-shadow : inherit;

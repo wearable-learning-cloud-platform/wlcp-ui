@@ -181,4 +181,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		this.selectedDetail = null;
 		this.type = null;
 	},
+
+	onAfterRendering : function(oEvent) {
+		var listItems = document.getElementById(oEvent.srcControl.getId()).getElementsByTagName("li");
+		for(var i = 0; i < listItems.length; i++) {
+			if(listItems[i].id !== "publicGames" && listItems[i].id !== "privateGames") {
+				listItems[i].classList.add("LoadNavItemSelected");
+			}
+		}
+	}
 });

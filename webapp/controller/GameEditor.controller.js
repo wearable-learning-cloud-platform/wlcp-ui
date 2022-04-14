@@ -512,13 +512,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 					function(data) {
 						loadGameDialogModel.publicGames = data;
+
+						var controller = sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame");
 						
 						var fragment = sap.ui.xmlfragment(
 							"org.wlcp.wlcp-ui.fragment.GameEditor.LoadGame", 
-							sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame")
+							controller
 						);
 						
 						fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+						fragment.getContent()[0].getContent()[0].addEventDelegate({onAfterRendering : controller.onAfterRendering});
 						fragment.open();
 					}, 
 
