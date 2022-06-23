@@ -39,4 +39,21 @@ var StateConfig = class StateConfig {
 	getSaveData() {
 		return {};
 	}
+
+	acceptStateConfig(oEvent) {
+
+	}
+
+	closeStateConfig(oEvent) {
+
+	}
+
+	scopeSelected(oEvent) {
+
+	}
+
+	stateConfigSelected(oEvent) {
+
+	}
+
 }

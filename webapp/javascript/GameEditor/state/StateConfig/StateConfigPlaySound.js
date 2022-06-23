@@ -165,4 +165,27 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 			soundOutputs : outputStateData
 		};
 	}
+
+	stopSound() {
+		if(typeof this.sound !== "undefined") {
+			this.sound.pause();
+			this.sound = undefined;
+		}
+	}
+
+	acceptStateConfig(oEvent) {
+		this.stopSound();
+	}
+
+	closeStateConfig(oEvent) {
+		this.stopSound();
+	}
+
+	scopeSelected(oEvent) {
+		this.stopSound();
+	}
+
+	stateConfigSelected(oEvent) {
+		this.stopSound();
+	}
 }

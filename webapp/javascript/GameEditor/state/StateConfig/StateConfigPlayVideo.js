@@ -137,4 +137,27 @@ var StateConfigPlayVideo = class StateConfigPlayVideo extends StateConfig {
 			videoOutputs : outputStateData
 		};
 	}
+
+	stopVideo() {
+		var video = $('video');
+		for(var i = 0; i < video.length; i++) {
+			video[i].pause();
+		}
+	}
+
+	acceptStateConfig(oEvent) {
+		this.stopVideo();
+	}
+
+	closeStateConfig(oEvent) {
+		this.stopVideo();
+	}
+
+	scopeSelected(oEvent) {
+		this.stopVideo();
+	}
+
+	stateConfigSelected(oEvent) {
+		this.stopVideo();
+	}
 }

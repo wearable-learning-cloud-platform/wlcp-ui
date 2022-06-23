@@ -18,12 +18,12 @@
 			<Label text="{i18n>gameEditor.outputState.description}: " design="Bold" class="stateDescription"></Label>
 			<Input placeholder="{i18n>gameEditor.outputState.description.placeHolder}" value="{/description}" valueLiveUpdate="true" liveChange="descriptionChanged" maxLength="50" width="500px"></Input>
 		</HBox>
-		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
+		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false" select="scopeSelected">
 			<items>
 				<IconTabFilter icon="{icon}" text="{scopeText}" key="{scope}">
 					<content>
 						<l:Splitter>					
-							<tnt:NavigationList class="navList" items="{path : 'navigationListItems', templateShareable:false}">
+							<tnt:NavigationList class="navList" items="{path : 'navigationListItems', templateShareable:false}" itemSelect="stateConfigSelected">
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
 								<tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
 							</tnt:NavigationList>
