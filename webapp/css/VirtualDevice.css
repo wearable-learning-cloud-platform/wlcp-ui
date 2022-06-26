@@ -34,21 +34,27 @@
 	border: inherit;
 }
 
+.scrollButtons {
+	margin-top:10px;
+}
+
+.sequencePressColorList2Parent {
+	width:200px;
+	overflow:hidden;
+	margin:10px;
+	outline-style:solid;
+	outline-color:black;
+}
+
 .sequencePressColorList2 {
-	display:inline-block;
-	float:left;
 	height:50px;
 	width:200px;
-	margin-top:20px;
-	outline-style: solid;
-	outline-color: black;
 }
 
 .sequenceButton2 {
-	display : inline-block !important;
 	float: left;
     width: 25px;
-    margin: 5px;
+    margin: 7.5px;
     padding: 5px;
     height: 25px;
 }

@@ -1,0 +1,32 @@
+specVersion: '1.0'
+metadata:
+  name: wlcp-ui
+type: application
+server:
+  customMiddleware:
+    - name: eurekaClient
+      afterMiddleware: compression
+      configuration:
+        appName: "wlcp-ui"
+        ipAddress: "wlcp-ui"
+        port: 3000
+        eurekaHost: "wlcp-discovery-dev"
+        eurekaPort: 8761
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /rest/controllers
+      configuration:
+        baseUri: "http://localhost:8050/wlcp-api/"
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /gameserver
+      configuration:
+        baseUri: "http://localhost:8050/wlcp-gameserver"
+---
+specVersion: '1.0'
+kind: extension
+type: server-middleware
+metadata:
+  name: eurekaClient
+middleware:
+  path: lib/middleware/eurekaClient.js

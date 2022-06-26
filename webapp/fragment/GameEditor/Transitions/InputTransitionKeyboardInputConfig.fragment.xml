@@ -13,6 +13,7 @@
 	<FlexBox alignItems="Start" justifyContent="Center">
 		<items>
 			<Button text="{i18n>gameEditor.inputTransition.keyboardInput.addKeyboardField}" press="addKeyboardField"></Button>
+			<CheckBox text="{i18n>gameEditor.inputTransition.allOtherInputs}" select="selectAllOtherInputs"/>
 		</items>
 	</FlexBox>
 	<FlexBox alignItems="Start" justifyContent="Center">

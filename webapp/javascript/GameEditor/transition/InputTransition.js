@@ -55,6 +55,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.transitionConfigs.push(new TransitionConfigKeyboardInput(this));
 		this.transitionConfigs.push(new TransitionConfigTimer(this));
 		this.transitionConfigs.push(new TransitionConfigRandom(this));
+		this.transitionConfigs.push(new TransitionConfigGlobalVariable(this));
 	}
 	
 	setupValidationRules() {
@@ -266,7 +267,7 @@ var InputTransition = class InputTransition extends Transition {
 	doubleClick() {
 
 		if(this.scopeMask == 0){
-			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.emptyState"));
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.transition.filledScope"));
 			// , {title:"test"} // For title of error box
 			
 			// Log TRANSITION event: transition-edit-attempt-error
@@ -323,6 +324,8 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the on after rendering
 		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
+
+		this.dialog.attachAfterOpen($.proxy(this.onAfterOpen, this)); 
 			
 		//Open the dialog
 		this.dialog.open();
@@ -366,6 +369,12 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 
+	onAfterOpen() {
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			this.transitionConfigs[i].onAfterOpen();
+		}
+	}
+
 	setDefaultActiveTransitionType() {
 
 		var transitionList = [];
@@ -398,15 +407,18 @@ var InputTransition = class InputTransition extends Transition {
 					this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
 				}
 			} else if(activeTransitionsAcrossAll.length > 0 && !activeTransitionsAcrossAll.includes("")) {
-				//var activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
 				var activeTransition = null;
 				for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
 					if(this.modelJSON.iconTabs[n].scope === scope) {
-						activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+						if(activeScopes.includes(scope)) {
+							activeTransition = this.modelJSON.iconTabs[n].activeTransition;
+						} else {
+							activeTransition = TransitionConfigType.toString(activeTransitionsAcrossAll[0]);
+						}
 					}
 				}
 				this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition", activeTransition);
-			}
+			} 
 		}
 	}
 	
@@ -517,6 +529,8 @@ var InputTransition = class InputTransition extends Transition {
 				"transition-editor-accept-noconfirm"
 			)
 		);
+
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editTransition"));
     }
     
 	/**
@@ -547,6 +561,8 @@ var InputTransition = class InputTransition extends Transition {
 					"transition-editor-accept-confirm-ok"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editTransition"));
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -602,7 +618,7 @@ var InputTransition = class InputTransition extends Transition {
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.remove"), {onClose : $.proxy(this.removeTransition, this)});
 	}
 	
-	removeTransition(oAction) {
+	removeTransition(oAction, deletedFromOther = false) {
 		
 		//If they click OK, delete
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user confirms "OK"
@@ -643,6 +659,11 @@ var InputTransition = class InputTransition extends Transition {
 					"transition-remove-confirm"
 				)
 			);
+
+			if(!deletedFromOther) {
+				GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.deleteTransition"));
+			}
+
 		}
 		// CASE: User attempts to remove a transition -> confirmation box displayed -> user cancels "Cancel"
 		else if(oAction == sap.m.MessageBox.Action.CANCEL) {

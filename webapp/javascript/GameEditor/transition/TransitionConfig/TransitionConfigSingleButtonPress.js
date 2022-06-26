@@ -22,19 +22,23 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 			singlePress : [
 			{
 				selected : false,
-				enabled : true
+				enabled : true,
+				label : "Red Button"
 			},
 			{
 				selected : false,
-				enabled : true
+				enabled : true,
+				label : "Green Button"
 			},
 			{
 				selected : false,
-				enabled : true
+				enabled : true,
+				label : "Blue Button"
 			},
 			{
 				selected : false,
-				enabled : true
+				enabled : true,
+				label : "Black Button"
 			}]
 		}
 	}
@@ -99,9 +103,13 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 						if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {
 							iconTabs[i].navigationContainerPages[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
+							iconTabs[i].navigationContainerPages[n].singlePress[0].label = loadData.singleButtonPresses[key].button1Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
+							iconTabs[i].navigationContainerPages[n].singlePress[1].label = loadData.singleButtonPresses[key].button2Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
+							iconTabs[i].navigationContainerPages[n].singlePress[2].label = loadData.singleButtonPresses[key].button3Label;
 							iconTabs[i].navigationContainerPages[n].singlePress[3].selected = loadData.singleButtonPresses[key].button4;
+							iconTabs[i].navigationContainerPages[n].singlePress[3].label = loadData.singleButtonPresses[key].button4Label;
 						}
 					}
 				}
@@ -119,9 +127,13 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 					 ||iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
 						singleButtonPresses[iconTabs[i].scope] = {
 							button1 : iconTabs[i].navigationContainerPages[n].singlePress[0].selected,
+							button1Label : iconTabs[i].navigationContainerPages[n].singlePress[0].label,
 							button2 : iconTabs[i].navigationContainerPages[n].singlePress[1].selected,
+							button2Label : iconTabs[i].navigationContainerPages[n].singlePress[1].label,
 							button3 : iconTabs[i].navigationContainerPages[n].singlePress[2].selected,
-							button4 : iconTabs[i].navigationContainerPages[n].singlePress[3].selected
+							button3Label : iconTabs[i].navigationContainerPages[n].singlePress[2].label,
+							button4 : iconTabs[i].navigationContainerPages[n].singlePress[3].selected,
+							button4Label : iconTabs[i].navigationContainerPages[n].singlePress[3].label
 						}
 					}
 				}
@@ -130,6 +142,13 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		return {
 			singleButtonPresses : singleButtonPresses
 		};
+	}
+
+	onChange(oEvent) {
+		if(!oEvent.getSource().getSelected()) {
+			oEvent.getSource().getParent().getItems()[1].setValue(oEvent.getSource().getParent().getItems()[1].data("label"));
+		}
+		super.onChange(oEvent);
 	}
 	
 }
@@ -162,12 +181,14 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 			for(var button = 0; button < 4; button++) {
 				for(var n = 0; n < scopeCollection.length; n++) {
 					var selected = false;
+					var label = "";
 					for(var j = 0; j < scopeCollection.length; j++) {
 						if(scopeCollection[n].model.scope == scopeCollection[j].model.scope) {
 							for(var k = 0; k < scopeCollection[j].model.navigationContainerPages.length; k++) {
 								if(scopeCollection[j].model.navigationContainerPages[k].type == TransitionConfigType.SINGLE_BUTTON_PRESS) {									
 									if(scopeCollection[j].model.navigationContainerPages[k].singlePress[button].selected) {
 										selected = true;
+										label = scopeCollection[j].model.navigationContainerPages[k].singlePress[button].label;
 									}
 								}
 							}
@@ -176,6 +197,9 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 					var trans = this.getTab(transitionList[i], scopeCollection[n].model.scope);
 					if(trans != null) {
 						trans.singleButtonPress.singlePress[button].enabled = !selected;
+						if(label !== "") {
+							trans.singleButtonPress.singlePress[button].label = label;
+						}
 						this.setScopeData(transitionList[i], trans.iconTab);
 					}
 				}

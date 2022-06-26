@@ -2,6 +2,7 @@ var StateConfig = class StateConfig {
 
 	constructor(state) {
 		this.state = state;
+		this.busyDialog = new sap.m.BusyDialog();
 	}
 	
 	onChange(oEvent) {
@@ -38,4 +39,21 @@ var StateConfig = class StateConfig {
 	getSaveData() {
 		return {};
 	}
+
+	acceptStateConfig(oEvent) {
+
+	}
+
+	closeStateConfig(oEvent) {
+
+	}
+
+	scopeSelected(oEvent) {
+
+	}
+
+	stateConfigSelected(oEvent) {
+
+	}
+
 }

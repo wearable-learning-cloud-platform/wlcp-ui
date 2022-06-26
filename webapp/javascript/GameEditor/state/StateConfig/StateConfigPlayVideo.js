@@ -28,30 +28,32 @@ var StateConfigPlayVideo = class StateConfigPlayVideo extends StateConfig {
     }
     
     handleUploadPress() {
+		var oFileUploader = null;
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 					if(iconTabs[i].navigationContainerPages[n].type == StateConfigType.PLAY_VIDEO) {
-						this.playVideoPage = i;
+						oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[i].getContent()[0].getContentAreas()[1].getPages()[3].getContent()[2].getItems()[0];
 						break;
 					}
 				}
 			}
 		}
 
-		if(typeof this.oFileUploader === "undefined") {
-			var oFileUploader = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems()[this.playVideoPage].getContent()[0].getContentAreas()[1].getPages()[3].getContent()[2].getItems()[0];
-		    oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
+		oFileUploader.setUploadUrl(ServerConfig.getServerAddress() + "/objectStoreController/uploadFile");
+		if(oFileUploader.getHeaderParameters().length == 0) {
 			oFileUploader.addHeaderParameter(new sap.ui.unified.FileUploaderParameter({
 				name : "Authorization",
 				value : "Bearer " + SessionHelper.getCookie("wlcp.userSession")
 			}));
-			oFileUploader.setSendXHR(true);
 		}
+		oFileUploader.setSendXHR(true);
+
 		oFileUploader.checkFileReadable().then(function() {
+			this.busyDialog.open();
 			oFileUploader.upload();
-		}, function(error) {
+		}.bind(this), function(error) {
 			MessageToast.show("Error reading file!");
 		}).then(function() {
 			oFileUploader.clear();
@@ -74,6 +76,7 @@ var StateConfigPlayVideo = class StateConfigPlayVideo extends StateConfig {
 				}
 			}
 		}
+		this.busyDialog.close();
     }
 	
 	//put XML code here
@@ -133,5 +136,28 @@ var StateConfigPlayVideo = class StateConfigPlayVideo extends StateConfig {
 		return {
 			videoOutputs : outputStateData
 		};
+	}
+
+	stopVideo() {
+		var video = $('video');
+		for(var i = 0; i < video.length; i++) {
+			video[i].pause();
+		}
+	}
+
+	acceptStateConfig(oEvent) {
+		this.stopVideo();
+	}
+
+	closeStateConfig(oEvent) {
+		this.stopVideo();
+	}
+
+	scopeSelected(oEvent) {
+		this.stopVideo();
+	}
+
+	stateConfigSelected(oEvent) {
+		this.stopVideo();
 	}
 }

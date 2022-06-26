@@ -3,29 +3,36 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"
 	xmlns:mvc="sap.ui.core.mvc">
-	<!-- <App id="mainApp">
-		<pages> -->
-			<Page title="Title" showHeader="false" class="page">
-				<content>
-					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
-						<items>
-							<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
-							<Input width="12em" id="uid" placeholder="{i18n>login.username}" value="{/username}" autocomplete="off"></Input>
-							<Input width="12em" id="pasw" placeholder="{i18n>login.password}" value="{/password}" type="Password" autocomplete="off"></Input>
-							<!-- <ComboBox width="12em" placeholder="{i18n>login.mode}" items="{/items}" value="{/mode}">
-								<core:Item text="{text}" />
-							</ComboBox> -->
-							<Button width="12em" text="{i18n>login.loginButton}" type="Emphasized" press="validateLogin"></Button>
-							<HBox>
-								<items>
-									<Link text="{i18n>login.forgotPassword}" class="sapUiSmallMarginTop sapUiTinyMarginEnd"/>
-									<Link text="{i18n>login.register}" class="sapUiSmallMarginTop" press="registerNewUser"/>
-								</items>
-							</HBox>
-						</items>
-					</VBox>
-				</content>
-			</Page>
-		<!-- </pages>
-	</App> -->
+	<NavContainer id="loginNavContainer">
+		<Page id="mainMenu" title="{i18n>login.loginButton}" showHeader="false" class="page">
+			<content>
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
+						<Button width="12em" text="{i18n>login.loginButton}!" type="Emphasized" press="changeToLogin"/>
+						<Button width="12em" text="{i18n>login.play}!" type="Emphasized" press="changeToPlayAGame"/>
+					</items>
+				</VBox>
+			</content>
+		</Page>
+		<Page id="mainLogin" title="{i18n>login.loginButton}" showHeader="false" class="page">
+			<content>
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
+						<Input width="12em" id="uid" placeholder="{i18n>login.username}" value="{/username}" autocomplete="off"></Input>
+						<Input width="12em" id="pasw" placeholder="{i18n>login.password}" value="{/password}" type="Password" autocomplete="off"></Input>
+						<Button width="12em" text="{i18n>login.loginButton}" type="Emphasized" press="validateLogin"></Button>
+						<HBox>
+							<items>
+								<Link text="{i18n>login.forgotPassword}" class="sapUiSmallMarginTop sapUiTinyMarginEnd"/>
+								<Link text="{i18n>login.register}" class="sapUiSmallMarginTop" press="registerNewUser"/>
+							</items>
+						</HBox>
+						<Link text="{i18n>login.back}" press="changeToMainPage"/>
+					</items>
+				</VBox>
+			</content>
+		</Page>
+	</NavContainer>
 </mvc:View>

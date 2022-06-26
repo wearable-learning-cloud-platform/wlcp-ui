@@ -45,7 +45,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	},
 	
 	error : function(error) {
-		//sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
+		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
 	},
 	
 	registerNewUser : function() {
@@ -86,12 +86,32 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
-		this.resetDataModel();
+		this.model.setProperty("/newUser/usernameId", "");
+		this.model.setProperty("/newUser/password", "");
+		this.model.setProperty("/newUser/firstName", "");
+		this.model.setProperty("/newUser/lastName", "");
 	},
 
 	resetDataModel() {
 		this.createModelData();
 		this.getView().setModel(this.model);
+	},
+
+	changeToLogin() {
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainLogin");
+	},
+
+	changeToPlayAGame() {
+		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteVirtualDeviceView", {
+			username : "*",
+            gameInstanceId : 0,
+            debugMode : false
+        });
+	},
+
+	changeToMainPage() {
+		this.resetDataModel();
+		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainMenu");
 	},
 
 /**

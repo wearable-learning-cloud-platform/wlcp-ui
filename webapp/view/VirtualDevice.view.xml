@@ -20,6 +20,22 @@
 					</items>
 				</VBox>
 			</Page>
+			<Page id="enterTempName" showHeader="false" class="virtualDeviceBackground">
+				<content>
+					<tnt:ToolHeader>
+						<ToolbarSpacer />
+						<ToolbarSpacer />
+						<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+					</tnt:ToolHeader>
+					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+						<items>
+							<Text text="Enter a player name:" class="sapUiSmallMarginBottom"/>
+							<Input id="tempNameInput" width="12em" placeholder="Player name"/>
+							<Button width="12em" text="Continue" type="Emphasized" press="changeToEnterGamePin"></Button>
+						</items>
+					</VBox>
+				</content>
+			</Page>
 			<Page id="selectTeamPlayer" showHeader="false">
 				<tnt:ToolHeader>
 					<ToolbarSpacer />
@@ -29,14 +45,14 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
-						<Select width="12em" items="{/teamPlayers}">
+						<Select id="teamPlayerSelect" width="12em" items="{/teamPlayers}">
 							<core:Item key="{key}" text="Team {team} Player {player}" />
 						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onTeamPlayerSelected"></Button>
 					</items>
 				</VBox>
 			</Page>
-			<Page id="virtualDevicePage" showHeader="false">
+			<Page id="virtualDevicePage" showHeader="false" enableScrolling="false">
 			<tnt:ToolHeader>
 				<Text id="userTeamPlayer"/>
 				<ToolbarSpacer />
@@ -102,14 +118,12 @@
 								<Text id="timerTextSingle" class="noStateNoTransition" visible="false" />
 							</items>
 						</FlexBox>
-						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
-							<items>
-								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed"></Button>
-								<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed"></Button>
-								<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" ></Button>
-								<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed"></Button>
-							</items>
-						</FlexBox>
+						<VBox alignItems="Center">
+							<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed" width="200px"></Button>
+							<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed" width="200px"></Button>
+							<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" width="200px"></Button>
+							<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed" width="200px"></Button>
+						</VBox>
 					</Page>
 					<Page id="sequenceButtonPress" showHeader="false" enableScrolling="false">
 						<FlexBox alignItems="Center" justifyContent="Center">
@@ -131,10 +145,16 @@
 						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
-								<VBox>
-									<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
-									</html:div>
-								</VBox>
+								<HBox>
+									<Button icon="sap-icon://arrow-left" class="scrollButtons" press="scrollLeft"/>
+									<VBox>
+										<html:div id="colorListSortable-listUl-parent" class="sequencePressColorList2Parent">
+											<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
+											</html:div>
+										</html:div>
+									</VBox>
+									<Button icon="sap-icon://arrow-right" class="scrollButtons" press="scrollRight"/>
+								</HBox>
 							</items>
 						</FlexBox>
 						<FlexBox alignItems="Start" justifyContent="Center">

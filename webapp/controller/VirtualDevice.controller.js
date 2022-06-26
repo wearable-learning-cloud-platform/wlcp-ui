@@ -57,10 +57,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({sequenceButtonPress : sequence})});
-		var children = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children();
-		for(var i = 0; i < children.length; i++) {
-			children[i].remove();
-		}
+		this.clearButtonPressSequence();
 	},
 
 		
@@ -80,17 +77,84 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		for(var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
+		document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = this.inputBoxWidth.toString() + "px";
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
 	},
 	
 	onAfterRenderingSequence : function() {
-		$("#container-wlcp-ui---virtualDevice--colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#container-wlcp-ui---virtualDevice--colorListSortable-listUl"});
-		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable();
+		this.inputBoxWidth = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList2Parent")).width.replace("px", ""));
+		$("#container-wlcp-ui---virtualDevice--colorListRed").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListRed").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListGreen").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListGreen").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListBlue").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListBlue").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListBlack").click(function() {
+			$("#container-wlcp-ui---virtualDevice--colorListBlack").clone().appendTo($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl"));
+			this.up();
+		}.bind(this));
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable({
+			disabled: true,
+			update: function(event, ui) {
+				var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+				if(sequence.length >= 5) {
+					var newWidth = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientWidth + (this.inputBoxWidth / 4);
+					document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = newWidth.toString() + "px";
+				}
+			}.bind(this)
+		});
+	},
+
+	up() {
+		var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+		if(sequence.length >= 5) {
+			var newWidth = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientWidth + (this.inputBoxWidth / 4);
+			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = newWidth.toString() + "px";
+			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent").scrollTo(newWidth, 0);
+		}
+		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
+	},
+
+	scrollLeft() {
+		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
+		element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
+		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
+		// 	element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
+		// } else {
+		// 	element.scrollTo(element.scrollLeft - (element.scrollLeft % (this.inputBoxWidth / 4)), 0);
+		// }
+	},
+
+	scrollRight() {
+		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
+		element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
+		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
+		// 	element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
+		// } else {
+		// 	element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4) - (element.scrollLeft % (this.inputBoxWidth / 4)), 0);
+		// }
 	},
 
 	joinGameInstance : function() {
+		if(this.username === "*") { 
+			var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
+			if(gameInstanceId != "") {
+				this.gameInstanceId = parseInt(gameInstanceId);
+				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function() {
+					sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
+				}, this.gameInstanceIdError, this);
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+			} else {
+				sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
+			}
+			return; 
+		}
 		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
@@ -100,6 +164,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
 	},
+
+	changeToEnterGamePin : function(oEvent) {
+		this.username = oEvent.getSource().getParent().getItems()[1].getValue();
+		if(this.username === null || this.username === "") { 
+			sap.m.MessageBox.error("That player name is invalid!");
+			return;
+		}
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.playerNameError, this);
+	},
 	
 	joinDebugGameInstance : function() {
 		this.gameInstanceId = this.debugGameInstanceId;
@@ -108,6 +182,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	gameInstanceIdError : function() {
 		sap.m.MessageBox.error("Game PIN Does not Exist!");
+	},
+
+	playerNameError : function() {
+		sap.m.MessageBox.error("That player name is invalid!");
 	},
 	
 	handleGameTeamsAndPlayers : function(response) {
@@ -119,6 +197,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
 		}
 		this.model.setData(this.modelJSON);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 	},
 	
 	onTeamPlayerSelected : function(oEvent) {
@@ -239,6 +318,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.switchToTransitionType("NoTransition");
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/singleButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
+			that.setSingleButtonPressLabels(response);
 			that.switchToTransitionType("SingleButtonPress");
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/sequenceButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
@@ -308,11 +388,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	onClose : function() {
-		var that = this;
 		if(!this.debugMode) {
 			sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
-				that.onHomeButtonPress();
-			}});
+				this.resetVirtualDevice();
+				this.onHomeButtonPress();
+			}.bind(this)});
 		} else {
 			window.close();
 		}
@@ -362,6 +442,27 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			break;
 		}
 	},
+
+	resetVirtualDevice : function () {
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
+		this.resetStateDisplayTypes();
+		this.switchToStateType("DisplayText");
+		this.switchToTransitionType("NoTransition");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextLabel").setText("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayVideoTextLabel").setText("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayPhotoImage").setSrc("");
+		this.playSound = undefined;
+		if(document.getElementById("videoPlayer") !== null) {
+			document.getElementById("videoPlayer").src = "";
+		}
+		if(document.getElementById('#container-wlcp-ui---virtualDevice--colorListSortable-listUl') !== null) {
+			this.clearButtonPressSequence();
+		}
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
+	},
 	
 	resetStateDisplayTypes : function() {
 		this.recievedDisplayText = false;
@@ -370,7 +471,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	onHomeButtonPress : function() {
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
+		if(this.tempPlayer) {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
+		} else {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteModeSelectionView");
+		}
 	},
 
 	waitForElementToDisplay : function(selector, callback, checkFrequencyInMs, timeoutInMs) {
@@ -404,6 +511,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.busyDialog.close();
 		clearTimeout(this.fallback);
 	},
+
+	setSingleButtonPressLabels : function(response) {
+		var parsedJson = JSON.parse(response.body);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--redButton").setText(parsedJson.label1);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--greenButton").setText(parsedJson.label2);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--blueButton").setText(parsedJson.label3);
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--blackButton").setText(parsedJson.label4);
+	},
 	  
 
 /**
@@ -420,12 +535,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		};
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteVirtualDeviceView").attachMatched(this.onRouteMatched, this);
+		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteModeSelectionView").attachMatched(this.onRouteMatchedBack, this);
 	},
 
 	onRouteMatched : function (oEvent) {
 		if(oEvent.getParameter("arguments").debugMode == "true") {
 			this.username = oEvent.getParameter("arguments").username;
 			this.debugGameInstanceId = oEvent.getParameter("arguments").gameInstanceId;
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer").getContent()[0].getContent()[2].setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDevicePage").getContent()[0].getContent()[4].setVisible(false);
 			this.debugMode = true;
 			this.joinDebugGameInstance();
 		} else {
@@ -433,8 +551,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.debugMode = false;
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
+			this.tempPlayer = this.username === "*" ? true : false;
 		}
 		this.getView().setModel(this.model);
+	},
+
+	onRouteMatchedBack : function(oEvent) {
+		this.resetVirtualDevice();
 	},
 
 /**

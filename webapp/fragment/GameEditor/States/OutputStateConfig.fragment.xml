@@ -9,7 +9,7 @@
 	xmlns:u="sap.ui.unified"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	
-	<Dialog id="outputStateDialog" title="{i18n>gameEditor.outputState.title}" contentWidth="50%" contentHeight="50%">
+	<Dialog id="outputStateDialog" title="{i18n>gameEditor.outputState.title}">
 		<buttons>
 			<Button text="{i18n>button.accept}" type="Accept" press="acceptDialog"/>
 			<Button text="{i18n>button.cancel}" type="Reject" press="closeDialog"/>
@@ -18,17 +18,17 @@
 			<Label text="{i18n>gameEditor.outputState.description}: " design="Bold" class="stateDescription"></Label>
 			<Input placeholder="{i18n>gameEditor.outputState.description.placeHolder}" value="{/description}" valueLiveUpdate="true" liveChange="descriptionChanged" maxLength="50" width="500px"></Input>
 		</HBox>
-		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
+		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false" select="scopeSelected">
 			<items>
 				<IconTabFilter icon="{icon}" text="{scopeText}" key="{scope}">
 					<content>
 						<l:Splitter>					
-							<tnt:NavigationList class="navList" items="{path : 'navigationListItems', templateShareable:false}">
+							<tnt:NavigationList class="navList" items="{path : 'navigationListItems', templateShareable:false}" itemSelect="stateConfigSelected">
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
 								<tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
 							</tnt:NavigationList>
-							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
-								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
+							<NavContainer height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
+								<layoutData><l:SplitterLayoutData minSize="750" resizable="false"/></layoutData>
 								<Page/>
 							</NavContainer>
 						</l:Splitter>

@@ -23,7 +23,7 @@
 				<items>
 					<IconTabFilter text="{i18n>gameEditor.load.yourGames}">
 						<FlexBox alignItems="Center" justifyContent="Center">
-							<Label textAlign="Center" text="{i18n>gameEditor.load.selectYourGame}:" />
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectDropDown}:" />
 						</FlexBox>
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<ComboBox id="userLoadGameComboBox"
@@ -35,7 +35,7 @@
 					</IconTabFilter>
 					<IconTabFilter text="{i18n>gameEditor.load.publicGames}">
 						<FlexBox alignItems="Center" justifyContent="Center">
-							<Label textAlign="Center" text="{i18n>gameEditor.load.selectPublicGame}:" />
+							<Label textAlign="Center" text="{i18n>gameEditor.load.selectDropDown}:" />
 						</FlexBox>
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<ComboBox id="publicLoadGameComboBox"

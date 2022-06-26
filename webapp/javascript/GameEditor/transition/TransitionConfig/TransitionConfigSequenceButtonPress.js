@@ -102,6 +102,28 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 	onAfterRenderingDialog() {
 		this.sequenceRefresh();
 	}
+
+	onAfterOpen(oEvent) {
+		var iconTabs = this.transition.dialog.getContent()[0].getItems();
+		for(var i = 0; i < iconTabs.length; i++) {
+			for(var n = 0; n < iconTabs[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+				if(this.transition.model.getProperty(iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getBindingContext().getPath()).type == TransitionConfigType.SEQUENCE_BUTTON_PRESS) {
+					var sequencePress = this.transition.model.getProperty(iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getBindingContext().getPath()).sequencePress;
+					if(sequencePress.length == 1) {
+						if(sequencePress[0].buttons.length === 0) {
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[0].getItems()[0].setVisible(false);
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[0].getItems()[1].setSelected(true);
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[1].setVisible(false);
+						} else {
+							iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[0].getItems()[1].setVisible(false);
+						}
+					} else if(sequencePress.length != 0) {
+						iconTabs[i].getContent()[0].getContentAreas()[1].getPages()[n].getContent()[0].getItems()[1].setVisible(false);
+					}
+				}
+			}
+		}
+	}
 	
 	closeDialog() {
 		this.dialog.close();
@@ -127,6 +149,8 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 
 		//Store the original height of the input box
 		this.inputBoxHeight = parseInt(getComputedStyle(document.querySelector(".sequencePressColorList")).height.replace("px", ""));
+
+		this.selectAllOther = oEvent.getSource().getParent().getItems()[1];
 	}
 	
 	acceptSequence() {
@@ -155,11 +179,13 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			this.transition.model.setProperty(this.navigationContainerPagePath + "/sequencePress", data);
 			this.onChange();
 			this.sequenceRefresh();
+			this.selectAllOther.setVisible(false);
 		}
 		this.closeDialog();
 	}
 	
 	deleteSequence(oEvent) {
+		this.selectAllOther = oEvent.getSource().getParent().getParent().getParent().getParent().getContent()[0].getItems()[1];
 		this.deletePath = oEvent.getSource().getBindingContext().getPath();
 		this.deleteSequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
 		sap.m.MessageBox.confirm(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.remove"), {onClose : $.proxy(this.deleteOnClose, this)});
@@ -180,6 +206,7 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 			this.transition.model.setProperty(this.deleteSequencePath, sequenceArray);
 			this.onChange();
 			this.sequenceRefresh();
+			if(sequenceArray.length == 0) { this.selectAllOther.setVisible(true); }
 		} 
 	}
 	
@@ -258,7 +285,28 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 				}
 			}
 		}
-	}	
+	}
+
+	selectAllOtherInputs(oEvent) {
+		var data = this.transition.model.getProperty(oEvent.getSource().getBindingContext().getPath() + "/sequencePress");
+		if(oEvent.getSource().getSelected()) {
+			var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
+			if(!sequenceValidation.validate(this.transition, {buttons : []}, this.transition.model.getProperty(oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath()).scope)) {
+				sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.sequenceButtonPress.alreadyExists"));
+				oEvent.getSource().getParent().getItems()[1].setSelected(false);
+			} else {
+				oEvent.getSource().getParent().getItems()[0].setVisible(false);
+				oEvent.getSource().getParent().getParent().getContent()[1].getItems()[0].setVisible(false);
+				data.push({buttons : []});
+				this.transition.model.setProperty(oEvent.getSource().getBindingContext().getPath() + "/sequencePress", data);
+			}
+		} else {
+			oEvent.getSource().getParent().getItems()[0].setVisible(true);
+			oEvent.getSource().getParent().getParent().getContent()[1].getItems()[0].setVisible(true);
+			this.transition.model.setProperty(oEvent.getSource().getBindingContext().getPath() + "/sequencePress", []);
+		}
+		this.onChange();
+	}
 }
 
 var TransitionSequenceButtonPressValidationRule = class TransitionSequenceButtonPressValidationRule extends ValidationRule {

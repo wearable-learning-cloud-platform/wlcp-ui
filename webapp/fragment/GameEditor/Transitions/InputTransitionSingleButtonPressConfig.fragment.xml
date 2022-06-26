@@ -7,10 +7,38 @@
     <FlexBox alignItems="Start" justifyContent="Center">
 		<items>
 			<VBox>
-				<CheckBox text="{i18n>gameEditor.color.red}" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"/>
-				<CheckBox text="{i18n>gameEditor.color.green}" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"/>
-				<CheckBox text="{i18n>gameEditor.color.blue}" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"/>
-				<CheckBox text="{i18n>gameEditor.color.black}" selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"/>
+				<HBox>
+					<CheckBox selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"/>
+					<Input value="{singlePress/0/label}" maxLength="20" enabled="{singlePress/0/selected}">
+						<customData>
+							<core:CustomData key="label" value="Red Button"/>
+						</customData>
+					</Input>
+				</HBox>
+				<HBox>
+					<CheckBox selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"/>
+					<Input value="{singlePress/1/label}" maxLength="20" enabled="{singlePress/1/selected}">
+						<customData>
+							<core:CustomData key="label" value="Green Button"/>
+						</customData>
+					</Input>
+				</HBox>
+				<HBox>
+					<CheckBox selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"/>
+					<Input value="{singlePress/2/label}" maxLength="20" enabled="{singlePress/2/selected}">
+						<customData>
+							<core:CustomData key="label" value="Blue Button"/>
+						</customData>
+					</Input>
+				</HBox>
+				<HBox>
+					<CheckBox selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"/>
+					<Input value="{singlePress/3/label}" maxLength="20" enabled="{singlePress/3/selected}">
+						<customData>
+							<core:CustomData key="label" value="Black Button"/>
+						</customData>
+					</Input>
+				</HBox>
 			</VBox>
 		</items>
 	</FlexBox>

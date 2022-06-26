@@ -1,3 +1,7 @@
+.sapTntNavLIItemSelected.sapTntNavLIItem.LoadNavItemSelected, .sapTntNavLIItemSelected.LoadNavItemSelected .sapTntNavLIGroup.LoadNavItemSelected, .sapTntNavLIItemSelected.sapTntNavLIGroupItem.LoadNavItemSelected {
+	background-color: #e8eff6 !important
+}
+
 .sapMTabStrip {
 	background : #3f5161;
 	box-shadow : inherit;
@@ -28,6 +32,10 @@
 	background : #3f5161; 
 }
 
+.sapMMenuBtn.sapMMenuBtnRegular .sapMBtnInner {
+	text-align: center !important;
+}
+
 html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	display : none;
 }
@@ -53,10 +61,54 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 		  -ms-user-select: none; /* Internet Explorer/Edge */
 			  user-select: none; /* Non-prefixed version, currently
 									supported by Chrome, Opera and Firefox */
+	cursor: default;
+}
+
+#container-wlcp-ui---gameEditor--padPage-title {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	 -khtml-user-select: none; /* Konqueror HTML */
+	   -moz-user-select: none; /* Old versions of Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+			user-select: none; /* Non-prefixed version, currently
+								  supported by Chrome, Opera and Firefox */
+	cursor: default;
+}
+
+#container-wlcp-ui---gameEditor--padPage-title-inner {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	 -khtml-user-select: none; /* Konqueror HTML */
+	   -moz-user-select: none; /* Old versions of Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+			user-select: none; /* Non-prefixed version, currently
+								  supported by Chrome, Opera and Firefox */
+	cursor: default;
 }
 
 .titleText {
 	max-width: 240px;
+}
+
+.toolBoxButton {
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+	position: relative;
+	max-width: 200px;
+}
+
+.clickableToolBoxButton {
+	top : 288px;
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+	position: relative;
+	max-width: 200px;
+}
+
+.toolBoxText {
+	color: white;
 }
 
 .stateDescriptionHBox {
@@ -66,6 +118,11 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	margin-left : 5px;
 	margin-right : 5px;
 }
+
+#outputStateDialog-scroll {
+	width: auto !important;
+}
+
 
 #outputStateDialog-scrollCont {
 	padding:0rem;

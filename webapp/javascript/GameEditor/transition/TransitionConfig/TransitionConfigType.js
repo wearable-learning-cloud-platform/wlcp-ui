@@ -4,6 +4,7 @@ var TransitionConfigType = {
     KEYBOARD_INPUT : 2,
     TIMER : 3,
     RANDOM : 4,
+    GLOBAL_VARIABLE : 5,
 
     toString : function(transitionConfigType) {
         switch(transitionConfigType) {
@@ -17,6 +18,8 @@ var TransitionConfigType = {
                 return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.timer");
             case this.RANDOM:
                 return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random");
+            case this.GLOBAL_VARIABLE:
+                return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.globalVariable");
             default:
                 break;
         }

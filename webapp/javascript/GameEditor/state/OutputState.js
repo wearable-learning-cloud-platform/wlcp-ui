@@ -61,6 +61,10 @@ var OutputState = class OutputState extends State {
 			drag: function(event) { 
 				GameEditor.getEditorController().scroller.leftMouseDown = true;
 				GameEditor.getEditorController().scroller.handleMousemove(event.e);
+			},
+			drop: function(event) {
+				GameEditor.getEditorController().scroller.leftMouseDown = false;
+				GameEditor.getEditorController().scroller.handleMousemove(event.e);
 			}}}, this.outputEndPoint);
 		
 		//Setup double click
@@ -72,6 +76,7 @@ var OutputState = class OutputState extends State {
 		this.stateConfigs.push(new StateConfigDisplayPhoto(this));
 		this.stateConfigs.push(new StateConfigPlaySound(this));
 		this.stateConfigs.push(new StateConfigPlayVideo(this));
+		this.stateConfigs.push(new StateConfigGlobalVariable(this));
 	}
 	
 	setupValidationRules() {
@@ -337,6 +342,9 @@ var OutputState = class OutputState extends State {
     
     acceptDialog() {
 
+		//State config callback
+		this.acceptStateConfig();
+
 		// CASE: State editor dialog is open, user edits state properties, then presses the Accept button
     	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
     		sap.m.MessageBox.confirm(
@@ -398,6 +406,8 @@ var OutputState = class OutputState extends State {
 		this.dialog.destroy();
 		
 		this.changeText();
+
+		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editState"));
     }
     
 	/**
@@ -428,6 +438,8 @@ var OutputState = class OutputState extends State {
 					"state-editor-accept-withchanges-confirm"
 				)
 			);
+
+			GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editState"));
     	}
 		// CASE: User cancels by clicking "Cancel" on the "Accept" dialog
 		else if (oEvent == sap.m.MessageBox.Action.CANCEL) {
@@ -509,6 +521,9 @@ var OutputState = class OutputState extends State {
 	 * Called when the state editor dialog Cancel button is clicked
 	 */
 	closeDialog() {
+
+		//State config callback
+		this.closeStateConfig();
 
 		// modelJSON is always current state
 		// oldModelJSON is the initial data state before editing
@@ -638,6 +653,35 @@ var OutputState = class OutputState extends State {
 			}
 		}
 		return activeScopes;
+	}
+
+	/**
+	 * Call the appropriate state config callback based upon one of the following cases
+	 * @param {C} oEvent 
+	 */
+
+	acceptStateConfig(oEvent) {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].acceptStateConfig(oEvent);
+		}
+	}
+
+	closeStateConfig(oEvent) {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].closeStateConfig(oEvent);
+		}
+	}
+
+	scopeSelected(oEvent) {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].scopeSelected(oEvent);
+		}
+	}
+
+	stateConfigSelected(oEvent) {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].stateConfigSelected(oEvent);
+		}
 	}
 	
 }

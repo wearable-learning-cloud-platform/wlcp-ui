@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc">
+
+    <Button text="{i18n>gameEditor.outputState.globalVariable.modifyGlobalVariable}" press="addGlobalVariable"/>
+	<Table items="{path:'items', events : { change: '.setGlobalVariables'}}">
+		<columns>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.name}" />
+			</Column>
+            <Column width="16em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.operator}" />
+			</Column>
+            <Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.value}" />
+			</Column>
+			<Column width="12em" hAlign="Center">
+				<Text text="{i18n>gameEditor.outputState.globalVariable.table.delete}" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+                    <ComboBox selectedKey="{variableName}" items="{path:'globalVariables', templateShareable:true}">
+                        <items>
+							<core:Item text="{name}" key="{name}"/>
+                        </items>
+                    </ComboBox>
+                    <ComboBox selectedKey="{operator}" editable="{= ${variableName} !== 'expression'}">
+                        <items>
+							<core:Item text="= (Set equal to)" key="="/>
+							<core:Item text="+= (Increase by)" key="+="/>
+							<core:Item text="-= (Dercrease by)" key="-="/>
+                            <core:Item text="*= (Multiply by)" key="*/"/>
+                            <core:Item text="/= (Divide by)" key="/="/>
+							<core:Item text="%= (Modulus)" key="%="/>
+							<core:Item text="**= (Exponent)" key="**="/>
+						</items>
+                    </ComboBox>
+					<Input value="{value}"/>
+					<Button icon="sap-icon://delete" press="deleteGlobalVariable"/>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+
+</core:FragmentDefinition>

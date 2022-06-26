@@ -21,32 +21,44 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" enabled="false">
+					<Button id="saveButton" text="{i18n>gameEditor.save}" type="Transparent" icon="sap-icon://save" press="saveGame" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
+					<Button id="runButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" visible="false" press="runGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
-					<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" type="Transparent" icon="sap-icon://crm-service-manager" enabled="false">
+					<Button id="undoButton" text="Undo" type="Transparent" icon="sap-icon://undo" press="undo" enabled="false" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
-						<menu>
-							<Menu>
-								<MenuItem text="{i18n>gameEditor.gameOptions.copyGame}" icon="sap-icon://copy" press="copyGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.renameGame}" icon="sap-icon://bold-text" press="renameGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.deleteGame}" icon="sap-icon://delete" press="deleteGame"/>
-								<MenuItem text="{i18n>gameEditor.gameOptions.gameProperties}" icon="sap-icon://detail-view" press="gameProperties"/>
-							</Menu>
-						</menu>
-					</MenuButton>
+					</Button>
+					<Button id="redoButton" text="Redo" type="Transparent" icon="sap-icon://redo" press="redo" enabled="false" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="backButton" text="{i18n>gameEditor.backButton}" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="runAndDebugArchivedGameButton" text="{i18n>gameEditor.runAndDebug}" type="Transparent" icon="sap-icon://begin" visible="false" press="runGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="copyArchivedGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<tnt:ToolHeaderUtilitySeparator/>
 					<ToolbarSpacer/>
-					<Button icon = "sap-icon://sys-help" type="Transparent" press="quickStartHelp"/>
-					<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
+					<Button text="Home" icon="sap-icon://home" type="Transparent" press="onHomeButtonPress">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="NeverOverflow" />
 						</layoutData>
@@ -57,7 +69,7 @@
 						<layoutData>
 							<l:SplitterLayoutData size="240px" resizable="false"/>
 						</layoutData>
-						<html:div id="toolboxTitle" class="noselect" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
+						<html:div id="toolboxTitle" class="noselect" style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Draggable Toolbox</html:div>
 						<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow" style="top:50px;">
 							<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText noselect">Output State</html:div></html:div>
 							<html:div class="toolboxOutputStateBottomColor"></html:div>
@@ -65,10 +77,64 @@
 						<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
 							<html:div class="centerTransitionText noselect"><html:div>Transition</html:div></html:div>
 						</html:div>
+						<html:div id="toolboxTitle2" class="noselect" style="background:#3f5161;position:relative;top:270px;text-align:center;color:white;">Clickable Toolbox</html:div>
+						<VBox id="clickableToolbox" visible="false">
+							<Button id="historyButton" icon="sap-icon://history" press="openGameHistory" text="{i18n>gameEditor.history.buttonTitle}" class="toolBoxButton">
+								<customData>
+									<BadgeCustomData
+										key="badge"
+										value="0"
+										visible="true"/>
+								</customData>
+								<layoutData>
+									<FlexItemData
+										styleClass="clickableToolBoxButton"/>
+								</layoutData>
+							</Button>
+							<MenuButton id="optionsButton" text="{i18n>gameEditor.gameOptions}" icon="sap-icon://crm-service-manager" class="toolBoxButton">
+								<layoutData>
+									<FlexItemData
+										styleClass="clickableToolBoxButton"/>
+								</layoutData>
+								<menu>
+									<Menu>
+										<MenuItem text="{i18n>gameEditor.gameOptions.copyGame}" icon="sap-icon://copy" press="copyGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.renameGame}" icon="sap-icon://bold-text" press="renameGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.deleteGame}" icon="sap-icon://delete" press="deleteGame"/>
+										<MenuItem text="{i18n>gameEditor.gameOptions.gameProperties}" icon="sap-icon://detail-view" press="gameProperties"/>
+									</Menu>
+								</menu>
+							</MenuButton>
+							<Button id="gettingStartedButton" icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton">
+								<layoutData>
+									<FlexItemData
+										styleClass="clickableToolBoxButton"/>
+								</layoutData>
+							</Button>
+						</VBox>
+						<VBox id="gettingStarted" visible="true">
+							<FlexBox alignItems="Center" justifyContent="Center">
+								<FormattedText width="150px" textAlign="Center" class="toolBoxText noselect" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
+							</FlexBox>
+							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton"/>
+						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">
+						<html:div id="readOnlyBanner" style="height:30px;background-color:#C14646;"><html:div style="text-align: center;vertical-align: middle;line-height: 30px;">Game Opened In Read Only Mode. Changes will not appear in Run and Debug or Copy to New Game.</html:div></html:div>
+					<l:Splitter id="debuggerSplitter">
 						<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true">
+							<layoutData>
+								<l:SplitterLayoutData size="100%" resizable="false"/>
+							</layoutData>
 						</ScrollContainer>
+						<NavContainer pages="{path : 'debuggerModel>/debuggers', templateShareable:false}" >
+							<Page title="{debuggerModel>text}" enableScrolling="false" showNavButton="true" navButtonPress="openDebuggerListPopover">
+								<ScrollContainer height="100%" width="100%" horizontal="true" vertical="true">
+									<core:HTML content="{debuggerModel>src}" />
+								</ScrollContainer>
+							</Page>
+						</NavContainer>
+					</l:Splitter>
 					</Page>
 				</l:Splitter>
 			</l:Splitter>

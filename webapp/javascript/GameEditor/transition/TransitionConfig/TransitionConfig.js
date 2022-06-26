@@ -50,6 +50,10 @@ var TransitionConfig = class TransitionConfig {
 		
 	}
 	
+	onAfterOpen() {
+		
+	}
+	
 }
 
 var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidationRule extends ValidationRule {
@@ -188,6 +192,10 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.RANDOM) {
 						if(iconTabs[i].navigationContainerPages[n].randomEnabled == true) {
 							return TransitionConfigType.RANDOM;
+						}
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
+						if(iconTabs[i].navigationContainerPages[n].items.length > 0) {
+							return TransitionConfigType.GLOBAL_VARIABLE;
 						}
 					}
 				}
