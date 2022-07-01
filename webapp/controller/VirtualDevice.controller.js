@@ -216,7 +216,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.stompClient.onConnect = function (frame) {
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gamePlayer.connecting"));
 				that.connectToGameInstance(that.gameInstanceId, team, player);
-				that.closeBusyDialog();
 			};
 			this.stompClient.onStompError = function (frame) {
 				Logger.error("error connecting");
@@ -234,6 +233,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 				navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
 				sap.m.MessageBox.error("That team and player are taken! Someone else may have taken it before you.");
+				that.closeBusyDialog();
 				return;
 	    	}
 	    	that.team = jsonResponse.team;
@@ -242,6 +242,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDevicePage"));
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + (that.team + 1) + "P" + (that.player + 1));
+			that.closeBusyDialog();
 	    });
     	this.subscribeToChannels(gameInstanceId, team, player);
 		this.stompClient.publish({destination : "/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, body : {}});
