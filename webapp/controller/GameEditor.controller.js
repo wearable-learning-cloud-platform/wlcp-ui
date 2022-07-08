@@ -10,7 +10,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		transitionIdCount : 0,
 		connectionIdCount : 0,
 		username : {
-			usernameId : sap.ui.getCore().getModel("user").oData.username
+			usernameId : ""
 		},
 		visibility : true,
 		dataLog : false
@@ -455,6 +455,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	 */
 	newGame : function(oEvent) {
 		var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameEditor.CreateGame", sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame"));
+		this.newGameModel.username.usernameId = sap.ui.getCore().getModel("user").oData.username;
 		fragment.setModel(new sap.ui.model.json.JSONModel(this.newGameModel));
 		fragment.open();
 		
