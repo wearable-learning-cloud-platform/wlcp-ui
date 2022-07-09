@@ -7,7 +7,7 @@ sap.ui.define([
 return Controller.extend("org.wlcp.wlcp-ui.controller.ModeSelection", {
 
     onInit : function () {
-
+        this.getView().setModel(sap.ui.getCore().getModel("user"), "user");
     },
 
     navigateToGameManager : function() {

@@ -1584,6 +1584,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
+
+		this.getView().setModel(sap.ui.getCore().getModel("user"), "user");
 	},
 
 	onRouteMatched : function (oEvent) {
