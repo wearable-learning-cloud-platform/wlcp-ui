@@ -49,7 +49,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	autoSaveEnabled : true,
 	archivedGame : false,
 
-	firstRouteMatched : true,
+	setupOnceFinished : true,
 
 	undoRedoEnabled : true,
 	undoHistory : [],
@@ -1600,7 +1600,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 
 	setupOnce : function() {
-		if(this.firstRouteMatched) {
+		if(this.setupOnceFinished) {
 
 			//Setup scrolling via mouse
 			this.setupScrolling();
@@ -1613,7 +1613,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				this.quickStartHelp();
 			}
 
-			this.firstRouteMatched = false;
+			this.setupOnceFinished = false;
 		}
 	},
 
