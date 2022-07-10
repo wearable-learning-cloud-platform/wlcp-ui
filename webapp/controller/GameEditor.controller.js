@@ -1584,11 +1584,22 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		//No Game Loaded
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 
+		//Call setupOnce after we are done rendering.
+		this.getView().addEventDelegate({
+			onAfterRendering: function(){
+				this.setupOnce();
+			}
+		}, this);
+
+		//Call the onRouteMatched handler
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
 	},
 
 	onRouteMatched : function (oEvent) {
 
+	},
+
+	setupOnce : function() {
 		if(this.firstRouteMatched) {
 
 			//Setup scrolling via mouse
