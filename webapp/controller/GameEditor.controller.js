@@ -49,6 +49,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	autoSaveEnabled : true,
 	archivedGame : false,
 
+	setupOnceOnRouteMatched : true,
 	setupOnceFinished : true,
 
 	undoRedoEnabled : true,
@@ -1597,6 +1598,15 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	onRouteMatched : function (oEvent) {
 
+		if(this.setupOnceOnRouteMatched) {
+
+			//Load the quickstart help
+			if(!document.URL.includes("localhost")) {
+				this.quickStartHelp();
+			}
+
+			this.setupOnceOnRouteMatched = false;
+		}
 	},
 
 	setupOnce : function() {
@@ -1607,11 +1617,6 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 			//Load the toolbox text
 			this.initToolboxText();
-
-			//Load the quickstart help
-			if(!document.URL.includes("localhost")) {
-				this.quickStartHelp();
-			}
 
 			this.setupOnceFinished = false;
 		}
