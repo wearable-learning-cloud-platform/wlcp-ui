@@ -5,7 +5,7 @@
 	xmlns="sap.m">
 	<Page
 		showHeader="true"
-        title="Welcome to the Wearable Learning Cloud Platform!"
+        title="Welcome to the Wearable Learning Cloud Platform, {user>/username}!"
 		enableScrolling="false" >
 		<TileContainer
 			id="container"
@@ -17,8 +17,9 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-					<Button text="Logout" press="logout"/>
                     <Button icon="sap-icon://sys-help" press="help"/>
+					<Text text="Logged in as : {user>/username}"/>
+					<Button text="Logout" press="logout" icon="sap-icon://log"/>
 				<ToolbarSpacer/>
 			</Toolbar>
 		</footer>

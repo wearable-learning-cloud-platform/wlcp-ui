@@ -1594,6 +1594,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		//Call the onRouteMatched handler
 		sap.ui.core.UIComponent.getRouterFor(this).getRoute("RouteGameEditorView").attachMatched(this.onRouteMatched, this);
+
+		this.getView().setModel(sap.ui.getCore().getModel("user"), "user");
 	},
 
 	onRouteMatched : function (oEvent) {
