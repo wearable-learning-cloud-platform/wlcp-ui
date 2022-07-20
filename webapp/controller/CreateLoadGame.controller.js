@@ -93,7 +93,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 		GameEditor.getEditorController().newGameModel.gameId = "";
 		GameEditor.getEditorController().newGameModel.teamCount = 3;
 		GameEditor.getEditorController().newGameModel.playersPerTeam = 3;
-		GameEditor.getEditorController().newGameModel.visibility = true;
+		GameEditor.getEditorController().newGameModel.visibility = false;
 	},
 	
 	cancelLoadGame : function() {
@@ -120,7 +120,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			GameEditor.getEditorController().newGameModel.gameId = "";
 			GameEditor.getEditorController().newGameModel.teamCount = 3;
 			GameEditor.getEditorController().newGameModel.playersPerTeam = 3;
-			GameEditor.getEditorController().newGameModel.visibility = true;
+			GameEditor.getEditorController().newGameModel.visibility = false;
 			GameEditor.getEditorController().newGameModel.stateIdCount = 0;
 			GameEditor.getEditorController().newGameModel.transitionIdCount = 0;
 			GameEditor.getEditorController().newGameModel.connectionIdCount = 0;

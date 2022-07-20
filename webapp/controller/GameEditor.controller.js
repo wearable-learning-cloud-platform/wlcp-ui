@@ -12,7 +12,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		username : {
 			usernameId : ""
 		},
-		visibility : true,
+		visibility : false,
 		dataLog : false
 	},
 	
@@ -26,7 +26,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		username : {
 			usernameId : ""
 		},
-		visibility : true,
+		visibility : false,
 		dataLog : false
 	},
 	
