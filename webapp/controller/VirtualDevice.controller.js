@@ -79,6 +79,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = this.inputBoxWidth.toString() + "px";
 		$("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable('refresh');
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressLeft").setEnabled(false); 
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressRight").setEnabled(false); 
 	},
 	
 	onAfterRenderingSequence : function() {
@@ -114,6 +116,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	up() {
 		var sequence = $("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").sortable("toArray", { attribute: "class" });
 		if(sequence.length >= 5) {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressLeft").setEnabled(true);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressRight").setEnabled(false);
 			var newWidth = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").clientWidth + (this.inputBoxWidth / 4);
 			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl").style.width = newWidth.toString() + "px";
 			document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent").scrollTo(newWidth, 0);
@@ -124,6 +128,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	scrollLeft() {
 		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
 		element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
+		if(element.scrollLeft === 0) {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressLeft").setEnabled(false);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressRight").setEnabled(true);
+		} else {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressRight").setEnabled(true);
+		}
 		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
 		// 	element.scrollTo(element.scrollLeft - (this.inputBoxWidth / 4), 0);
 		// } else {
@@ -134,6 +144,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	scrollRight() {
 		var element = document.getElementById("container-wlcp-ui---virtualDevice--colorListSortable-listUl-parent");
 		element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
+		if(element.scrollLeft === ((this.inputBoxWidth / 4) * ($("#container-wlcp-ui---virtualDevice--colorListSortable-listUl").children().length - 4))) {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressRight").setEnabled(false);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressLeft").setEnabled(true);
+		} else {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--scrollSequenceButtonPressLeft").setEnabled(true);
+		}
 		// if(element.scrollLeft % (this.inputBoxWidth / 4) === 0) {
 		// 	element.scrollTo(element.scrollLeft + (this.inputBoxWidth / 4), 0);
 		// } else {
