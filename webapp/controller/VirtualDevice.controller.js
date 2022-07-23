@@ -182,6 +182,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	changeToEnterGamePin : function(oEvent) {
+		this.guestPlayer = true;
 		this.username = oEvent.getSource().getParent().getItems()[1].getValue();
 		if(this.username === null || this.username === "") { 
 			sap.m.MessageBox.error("That player name is invalid!");
@@ -257,7 +258,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	    	that.connectionResultSubscription.unsubscribe();
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDevicePage"));
-			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + (that.team + 1) + "P" + (that.player + 1));
+			if(that.guestPlayer) {
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "(guest)-T" + (that.team + 1) + "P" + (that.player + 1));
+			} else {
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + (that.team + 1) + "P" + (that.player + 1));
+			}
 			that.closeBusyDialog();
 	    });
     	this.subscribeToChannels(gameInstanceId, team, player);
@@ -479,6 +484,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.clearButtonPressSequence();
 		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
+		this.guestPlayer = undefined;
 	},
 	
 	resetStateDisplayTypes : function() {
