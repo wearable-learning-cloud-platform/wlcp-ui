@@ -13,16 +13,17 @@ var SessionHelper = {
             sap.m.MessageBox.information("Your session has expired. Press ok to go back to the login!", {
               title: "Session Expired!",
               onClose: function(oEvent) {
-                if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"] !== "undefined") {
-                  sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"].undefined.getController().resetDataModel();
-                }
-                if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"] !== "undefined") {
-                  sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"].undefined.getController().resetGameManager();
-                }
-                if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"] !== "undefined") {
-                  sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"].undefined.getController().resetEditor();
-                }
-                sap.ui.core.UIComponent.getRouterFor(context).navTo("RouteLoginView");
+                // if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"] !== "undefined") {
+                //   sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.Login"].undefined.getController().resetDataModel();
+                // }
+                // if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"] !== "undefined") {
+                //   sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.MainToolpage"].undefined.getController().resetGameManager();
+                // }
+                // if(typeof sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"] !== "undefined") {
+                //   sap.ui.core.UIComponent.getRouterFor(context)._oViews._oCache.view["org.wlcp.wlcp-ui.view.GameEditor"].undefined.getController().resetEditor();
+                // }
+                window.onbeforeunload = function() {};
+                location.reload();
               },
               actions: sap.m.MessageBox.Action.OK,
             });
