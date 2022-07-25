@@ -487,6 +487,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		//Set the game name
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle(this.gameModel.gameId);
 
+		//Returning from having a read only public game loaded
+		if(this.readOnlyPublic) {
+			this.goBackSetVisible();
+			this.readOnlyPublic = undefined;
+		}
+
 		//Set the first undo/redo change
 		this.undoRedoChange();
 	},
@@ -677,6 +683,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			this.stateList[i].onChange();
 		}
 
+		this.checkSaveOwner();
+
 		this.undoRedoChange();
 
 		this.busy.close();
@@ -685,6 +693,39 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	loadError : function() {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.messages.loadingError"));
 		this.busy.close();
+	},
+
+	checkSaveOwner : function() {
+		
+		//Returning from having a read only public game loaded
+		if(this.readOnlyPublic) {
+			this.goBackSetVisible();
+			this.readOnlyPublic = undefined;
+		}
+
+		//Check to make sure the owner is saving
+		if(this.gameModel.username.usernameId != sap.ui.getCore().getModel("user").oData.username) {
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStarted").setVisible(false);
+			$("#container-wlcp-ui---gameEditor--toolboxTitle").hide();
+			$("#container-wlcp-ui---gameEditor--toolboxOutputState").hide();
+			$("#container-wlcp-ui---gameEditor--toolboxTransition").hide();
+			$("#container-wlcp-ui---gameEditor--toolboxTitle2").hide();
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--newButton").setVisible(true);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--loadButton").setVisible(true);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--saveButton").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runAndDebugArchivedGameButton").setVisible(true);
+			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyReadOnlyGameButton").setVisible(true);
+			$("#container-wlcp-ui---gameEditor--readOnlyBanner").show();
+			this.autoSaveEnabled = false;
+			this.resetUndoRedo();
+			this.undoRedoEnabled = false;
+			this.readOnlyPublic = true;
+		}
 	},
 	
 	reloadGame : function(gameId) {
@@ -1566,6 +1607,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runAndDebugArchivedGameButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyArchivedGameButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--copyReadOnlyGameButton").setVisible(false);
 		$("#container-wlcp-ui---gameEditor--readOnlyBanner").hide();
 		this.autoSaveEnabled = true;
 		this.archivedGame = false;

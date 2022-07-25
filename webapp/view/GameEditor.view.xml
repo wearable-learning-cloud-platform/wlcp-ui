@@ -51,6 +51,11 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
+					<Button id="copyReadOnlyGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
 					<Button id="copyArchivedGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
