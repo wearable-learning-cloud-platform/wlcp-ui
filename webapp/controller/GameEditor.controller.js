@@ -899,7 +899,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 	},
 	
 	runGame : function() {
-		if(!this.archivedGame) {
+		if(!this.archivedGame && !this.readOnlyPublic) {
 			this.saveRun = true;
 			this.save(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSaveMessage") + " - " + sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.runAndDebugMessage"), 3);
 		} else {
