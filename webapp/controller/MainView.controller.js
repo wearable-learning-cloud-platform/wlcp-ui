@@ -7,6 +7,7 @@ sap.ui.define([
   return Controller.extend("org.wlcp.wlcp-ui.controller.MainView", {
 
     onInit : function() {
+      sap.m.Dialog.prototype.onsapescape = function() {} //Disable esc key on sap.m.Dialog
       if(SessionHelper.sessionCookieValid()) {
         SessionHelper.setupNewSession(this);
         if(HashChanger.getInstance().getHash() == "") {
