@@ -1043,7 +1043,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			
 			content : [new sap.m.Input({
 				placeholder : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.placeholder")
-			}), new sap.m.CheckBox({text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.new.public"), selected : true})],
+			}), new sap.m.CheckBox({text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.new.public"), selected : false})],
 			
 			beginButton : new sap.m.Button({
 				text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.copy.title"),
