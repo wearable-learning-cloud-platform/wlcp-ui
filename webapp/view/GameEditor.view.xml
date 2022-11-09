@@ -51,6 +51,11 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
+					<Button id="copyReadOnlyGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
 					<Button id="copyArchivedGameButton" text="{i18n>gameEditor.copyToNewGame}" type="Transparent" icon="sap-icon://copy" visible="false" press="copyGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
@@ -111,12 +116,21 @@
 										styleClass="clickableToolBoxButton"/>
 								</layoutData>
 							</Button>
+							<FormattedText textAlign="Center" class="toolBoxText noselect centerUsername" htmlText="&lt;br&gt; Logged in as : &lt;br&gt; {user>/username}">
+								<layoutData>
+									<FlexItemData
+										styleClass="clickableToolBoxButton"/>
+								</layoutData>
+							</FormattedText>
 						</VBox>
 						<VBox id="gettingStarted" visible="true">
 							<FlexBox alignItems="Center" justifyContent="Center">
 								<FormattedText width="150px" textAlign="Center" class="toolBoxText noselect" htmlText="&lt;br&gt; Click New to create a game! &lt;br&gt; &lt;br&gt; Click Load to edit an existing game! &lt;br&gt; &lt;br&gt;"/>
 							</FlexBox>
 							<Button icon = "sap-icon://sys-help" text="{i18n>gameEditor.quickStart}" press="quickStartHelp" class="toolBoxButton"/>
+							<FlexBox alignItems="Center" justifyContent="Center">
+								<FormattedText textAlign="Center" class="toolBoxText noselect centerUsername" htmlText="&lt;br&gt; Logged in as : &lt;br&gt; {user>/username}"/>
+							</FlexBox>
 						</VBox>
 					</ScrollContainer>
 					<Page id="padPage">

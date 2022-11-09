@@ -146,14 +146,14 @@
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
 								<HBox>
-									<Button icon="sap-icon://arrow-left" class="scrollButtons" press="scrollLeft"/>
+									<Button id="scrollSequenceButtonPressLeft" icon="sap-icon://arrow-left" class="scrollButtons" press="scrollLeft" enabled="false"/>
 									<VBox>
 										<html:div id="colorListSortable-listUl-parent" class="sequencePressColorList2Parent">
 											<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
 											</html:div>
 										</html:div>
 									</VBox>
-									<Button icon="sap-icon://arrow-right" class="scrollButtons" press="scrollRight"/>
+									<Button id="scrollSequenceButtonPressRight" icon="sap-icon://arrow-right" class="scrollButtons" press="scrollRight" enabled="false"/>
 								</HBox>
 							</items>
 						</FlexBox>

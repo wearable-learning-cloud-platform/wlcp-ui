@@ -12,7 +12,7 @@
 		</buttons>
 
 		<content>
-			<List items="{/list}">
+			<List items="{/list}" noData="No one is playing this game yet">
 				<StandardListItem title="{key}"/>
 			</List>
 		</content>	

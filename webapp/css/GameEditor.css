@@ -217,6 +217,12 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
  	font-weight: bold;
 }
 
+.centerUsername {
+	overflow-wrap: anywhere;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+}
+
 /* State */
 .stateBorderShadow:hover {
     box-shadow: 0px 0px 50px #427CAC;
