@@ -22,6 +22,10 @@ server:
       mountPath: /gameserver
       configuration:
         baseUri: "http://localhost:8050/wlcp-gameserver"
+    - name: ui5-middleware-index
+      afterMiddleware: compression
+      configuration:
+        index: "index.html"
 ---
 specVersion: '1.0'
 kind: extension
