@@ -21,7 +21,8 @@
                 "eureka-js-client": "^4.5.0",
                 "http-proxy-middleware": "^0.20.0",
                 "shx": "^0.3.2",
-                "ui5-middleware-simpleproxy": "^0.1.4"
+                "ui5-middleware-simpleproxy": "^0.1.4",
+                "ui5-middleware-index": "^0.3.0"
         },
         "devDependencies": {
                 "@ui5/cli": "^2.14.0",
