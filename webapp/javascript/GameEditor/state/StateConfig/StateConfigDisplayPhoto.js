@@ -71,13 +71,10 @@ var StateConfigDisplayPhoto = class StateConfigDisplayPhoto extends StateConfig 
 		}
 		oFileUploader.setSendXHR(true);
 
-		oFileUploader.checkFileReadable().then(function() {
-			this.busyDialog.open();
-			oFileUploader.upload();
+		oFileUploader.checkFileReadable().then(function(oEvent) {
+			this.testForNewOrOverwrite(oFileUploader, oEvent);
 		}.bind(this), function(error) {
 			MessageToast.show("Error reading file!");
-		}).then(function() {
-			oFileUploader.clear();
 		});
 	}
 
