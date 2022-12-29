@@ -28,9 +28,22 @@
 	</FlexBox>
 	<FlexBox alignItems="Start" justifyContent="Center">
 		<items>
+			<Text text="{i18n>gameEditor.outputState.maxUploadSize}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Button
+				text="{i18n>gameEditor.outputState.displayPhoto.clear}"
+				press="handleClear"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
 			<Text text="{i18n>gameEditor.outputState.displayPhoto.help2}"/>
 		</items>
 	</FlexBox>
+	
 	<Slider liveChange="updateScalingString" value="{scale}" enableTickmarks="true" min="0" max="100" step="1" width="100%"/>
 	<FlexBox alignItems="Start" justifyContent="Center">
 		<items>

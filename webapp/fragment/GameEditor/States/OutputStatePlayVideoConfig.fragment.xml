@@ -26,6 +26,18 @@
 				uploadComplete="handleUploadComplete"/>
 		</items>
 	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.maxUploadSize}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Button
+				text="{i18n>gameEditor.outputState.playVideo.clear}"
+				press="handleClear"/>
+		</items>
+	</FlexBox>
     <FlexBox alignItems="Start" justifyContent="Center">
         <items>
             <core:HTML content="&lt;video width=320 height=240 class=video-js controls preload=auto data-setup={}&gt;&lt;source src={url}&gt;&lt;/source&gt;&lt;/video&gt;"></core:HTML>
