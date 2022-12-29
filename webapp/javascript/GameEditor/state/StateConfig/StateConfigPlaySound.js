@@ -51,6 +51,10 @@ var StateConfigPlaySound = class StateConfigPlaySound extends StateConfig {
 		oFileUploader.setSendXHR(true);
 
 		oFileUploader.checkFileReadable().then(function(oEvent) {
+			if(typeof this.sound !== "undefined") {
+				this.stop();
+				this.sound = undefined;
+			}
 			this.testForNewOrOverwrite(oFileUploader, oEvent);
 		}.bind(this), function(error) {
 			MessageToast.show("Error reading file!");

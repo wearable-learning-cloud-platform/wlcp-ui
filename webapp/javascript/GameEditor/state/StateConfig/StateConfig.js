@@ -58,7 +58,7 @@ var StateConfig = class StateConfig {
 
 	testForNewOrOverwrite(oFileUploader, oEvent) {
 		if(!this.urlExists()) {
-			this.handleClear(oEvent);
+			this.handleClear(oEvent, false);
 			this.busyDialog.open();
 			oFileUploader.upload();
 			oFileUploader.clear();
@@ -90,7 +90,7 @@ var StateConfig = class StateConfig {
 			onClose: function (sAction) {
 				this.busyDialog.open();
 				if(sAction === sap.m.MessageBox.Action.OK) {
-					this.handleClear(oEvent);
+					this.handleClear(oEvent, false);
 					oFileUploader.upload();
 					oFileUploader.clear();
 				} else if(sAction == sap.m.MessageBox.Action.CANCEL) {
@@ -101,12 +101,16 @@ var StateConfig = class StateConfig {
 		});
 	}
 
-	handleClear(oEvent) {
+	handleClear(oEvent, runOnChange=true) {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			if(iconTabs[i].scope == sap.ui.getCore().byId("outputStateDialogIconTabBar").getSelectedKey()) {
 				for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 					if(iconTabs[i].navigationContainerPages[n].type == this.getNavigationListItem().type) {
+						if(typeof this.sound !== "undefined") {
+							this.stop();
+							this.sound = undefined;
+						}
 						iconTabs[i].navigationContainerPages[n] = this.getNavigationContainerPage();
 						break;
 					}
@@ -114,7 +118,9 @@ var StateConfig = class StateConfig {
 			}
 		}
 		this.state.model.setData(this.state.modelJSON);
-		this.onChange(oEvent);
+		if(runOnChange) {
+			this.onChange(oEvent);
+		}
 	}
 
 }
