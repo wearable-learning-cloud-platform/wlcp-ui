@@ -5,7 +5,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	modelJSON : {
 			games : [],
 			teams : [],
-			teamPlayers : []
+			teamPlayers : [],
+			nameSuggestions : []
 	},
 	model : new sap.ui.model.json.JSONModel(this.modelJSON),
 	gameInstanceId : 0,
@@ -208,13 +209,66 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	handleGameTeamsAndPlayers : function(response) {
 		this.modelJSON.teamPlayers = [];
 		this.model.setData(this.modelJSON);
-		var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
-		navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
-		for(var i = 0; i < response.length; i++) {
-			this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+		if(response.length === 1 && response[0].type === "USERNAME_EXISTS") {
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--nameTaken"));
+			var nameSuggestions = [];
+			for(var i = 0; i < 5; i++) {
+				nameSuggestions.push({text : this.username + Math.floor(Math.random() * 100)});
+			}
+			this.modelJSON.nameSuggestions = {
+				newUsername : "",
+				team : response[0].team + 1,
+				player : response[0].player + 1,
+				suggestions : nameSuggestions,
+				usernameId : this.username
+			};
+			for(var i = 0; i < response.length; i++) {
+				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+			}
+			this.model.setData(this.modelJSON);
+		} else {
+			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
+			for(var i = 0; i < response.length; i++) {
+				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+			}
+			this.model.setData(this.modelJSON);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 		}
-		this.model.setData(this.modelJSON);
-		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
+	},
+
+	rename : function() {
+		var event = {
+			getSource : function() {
+				return {
+					getParent : function() {
+						return {
+							getItems : function() {
+								var items = [];
+								items.push({});
+								items.push({
+									getValue : function() {
+										if(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--newName").getValue() !== "") {
+											return sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--newName").getValue();
+										} else {
+											return sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--newNameSuggestion").getSelectedKey();
+										}
+									}
+								})
+								return items;
+							}
+						}
+					}
+				}
+			}
+		}
+		this.changeToEnterGamePin(event);
+	},
+
+	reconnect : function() {
+		this.requestBusyDialog();
+		var selectedTeamPlayer = this.modelJSON.teamPlayers[0];
+		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
 	
 	onTeamPlayerSelected : function(oEvent) {
@@ -264,7 +318,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--userTeamPlayer").setText(that.username + "-T" + (that.team + 1) + "P" + (that.player + 1));
 			}
 			that.closeBusyDialog();
-	    });
+		});
     	this.subscribeToChannels(gameInstanceId, team, player);
 		this.stompClient.publish({destination : "/app/gameInstance/" + gameInstanceId + "/connectToGameInstance/" + this.username + "/" + team + "/" + player, body : {}});
 	},

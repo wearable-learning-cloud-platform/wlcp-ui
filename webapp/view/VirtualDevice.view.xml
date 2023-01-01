@@ -36,6 +36,29 @@
 					</VBox>
 				</content>
 			</Page>
+			<Page id="nameTaken" showHeader="false" class="virtualDeviceBackground">
+				<content>
+					<tnt:ToolHeader>
+						<ToolbarSpacer />
+						<ToolbarSpacer />
+						<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+					</tnt:ToolHeader>
+					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+						<items>
+							<Text text="The name you selected is taken."/>
+							<Text text="Enter a new name: "/>
+							<Input id="newName" placeholder="New Name..." width="16em" value="{/nameSuggestions/newUsername}"/>
+							<Text text="OR pick a suggested name below:"/>
+							<Select id="newNameSuggestion" width="16em" items="{/nameSuggestions/suggestions}">
+								<core:Item key="{text}" text="{text}" />
+							</Select>
+							<Text text="OR:"/>
+							<Link text="Reconnect as {/nameSuggestions/usernameId} (Team {/nameSuggestions/team} Player {/nameSuggestions/player})" press="reconnect"/>
+							<Button width="12em" text="Submit" type="Emphasized" press="rename"/>
+						</items>
+					</VBox>
+				</content>
+			</Page>
 			<Page id="selectTeamPlayer" showHeader="false">
 				<tnt:ToolHeader>
 					<ToolbarSpacer />
