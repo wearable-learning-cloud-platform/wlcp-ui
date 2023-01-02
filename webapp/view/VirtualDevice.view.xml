@@ -85,7 +85,8 @@
 					</layoutData>
 				</Text>
 				<ToolbarSpacer />
-				<Button text="Disconnect" icon="sap-icon://disconnected" press="disconnectPressed"></Button>
+				<!-- <Button text="Disconnect" icon="sap-icon://disconnected" press="disconnectPressed"></Button> -->
+				<Button text="Exit" icon="sap-icon://disconnected" press="exitPressed"></Button>
 			</tnt:ToolHeader>
 			<l:Splitter id="mainSplitter" orientation="Vertical" height="100%" width="100%">
 				<NavContainer id="outputContainer">
