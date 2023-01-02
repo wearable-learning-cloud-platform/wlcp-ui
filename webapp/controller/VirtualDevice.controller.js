@@ -462,6 +462,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	    });
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/disconnectFromGameInstance/" + this.username + "/" + this.team + "/" + this.player, body : {}});
 	},
+
+	exitPressed : function() {
+		this.stompClient.deactivate();
+		this.onClose();
+	},
 	
 	onClose : function() {
 		if(!this.debugMode) {
