@@ -207,6 +207,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	handleGameTeamsAndPlayers : function(response) {
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setEnabled(true);
 		this.modelJSON.teamPlayers = [];
 		this.model.setData(this.modelJSON);
 		if(response.length === 1 && response[0].type === "USERNAME_EXISTS") {
@@ -229,11 +230,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		} else {
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
-			for(var i = 0; i < response.length; i++) {
-				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+			if(response.length !== 0) {
+				for(var i = 0; i < response.length; i++) {
+					this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+				}
+				this.model.setData(this.modelJSON);
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
+			} else {
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setEnabled(false);
+				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").addItem(new sap.ui.core.Item({text: "Game is Full"}));
 			}
-			this.model.setData(this.modelJSON);
-			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 		}
 	},
 
