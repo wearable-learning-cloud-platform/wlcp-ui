@@ -163,8 +163,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 			if(gameInstanceId != "") {
 				this.gameInstanceId = parseInt(gameInstanceId);
-				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function() {
-					sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
+				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function(response) {
+					if(response.length == 0) {
+						sap.m.MessageBox.error("Game Instance " + gameInstanceId +  " is full!");
+					} else {
+						sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
+					}
 				}, this.gameInstanceIdError, this);
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
 			} else {
@@ -207,10 +211,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 	
 	handleGameTeamsAndPlayers : function(response) {
-		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setEnabled(true);
 		this.modelJSON.teamPlayers = [];
 		this.model.setData(this.modelJSON);
-		if(response.length === 1 && response[0].type === "USERNAME_EXISTS") {
+		if(response.length == 0) {
+			sap.m.MessageBox.error("Game Instance " + this.gameInstanceId +  " is full!");
+		} else if(response.length === 1 && response[0].type === "USERNAME_EXISTS") {
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--nameTaken"));
 			var nameSuggestions = [];
 			for(var i = 0; i < 5; i++) {
@@ -230,16 +235,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		} else {
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
-			if(response.length !== 0) {
-				for(var i = 0; i < response.length; i++) {
-					this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
-				}
-				this.model.setData(this.modelJSON);
-				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
-			} else {
-				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setEnabled(false);
-				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").addItem(new sap.ui.core.Item({text: "Game is Full"}));
+			for(var i = 0; i < response.length; i++) {
+				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
 			}
+			this.model.setData(this.modelJSON);
+			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
 		}
 	},
 
