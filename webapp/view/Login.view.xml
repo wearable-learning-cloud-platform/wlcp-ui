@@ -8,7 +8,7 @@
 			<content>
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
-						<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
+						<Text text="Hello World!" class="sapUiSmallMarginBottom"/>
 						<Button width="12em" text="{i18n>login.loginButton}!" type="Emphasized" press="changeToLogin"/>
 						<Button width="12em" text="{i18n>login.play}!" type="Emphasized" press="changeToPlayAGame"/>
 					</items>
