@@ -764,14 +764,34 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 						this.save(oAction.oSource.getParent().mAggregations.content[0].getValue(), 1);
 						this.busy.close();
 						dialog.close();
+						// Log BUTTON_PRESS event: button-label-and-save-accept
+						Logger.info("Button Press Label and Save Accept");
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createButtonPayload(
+								MetricsHelper.LogEventType.BUTTON_PRESS, 
+								MetricsHelper.LogContext.GAME_EDITOR, 
+								this.gameModel.gameId, 
+								"button-label-and-save-accept"
+							)
+						);
 					}, this)
 				}),
 				endButton : new sap.m.Button({
 					text : sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel"),
 					type : sap.m.ButtonType.Reject,
-					press : function() {
+					press : $.proxy(function() {
 						dialog.close();
-					}
+						// Log BUTTON_PRESS event: button-label-and-save-cancel
+						Logger.info("Button Press Label and Save Cancel");
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createButtonPayload(
+								MetricsHelper.LogEventType.BUTTON_PRESS, 
+								MetricsHelper.LogContext.GAME_EDITOR, 
+								this.gameModel.gameId, 
+								"button-label-and-save-cancel"
+							)
+						);
+					}, this)
 				}),
 				afterClose : function() {
 					dialog.destroy();
@@ -779,6 +799,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			});
 			dialog.addStyleClass("sapUiPopupWithPadding");
 			dialog.open();
+
+			// Log BUTTON_PRESS event: button-label-and-save
+			Logger.info("Button Press Label and Save");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createButtonPayload(
+					MetricsHelper.LogEventType.BUTTON_PRESS, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					this.gameModel.gameId, 
+					"button-label-and-save"
+				)
+			);
 		}
 	},
 	
@@ -937,10 +968,41 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.newInstance")) {
 			this.restart = true;
 			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : true, archivedGame : this.archivedGame}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
+			// Log BUTTON_PRESS event: button-run-and-debug-new-instance
+			Logger.info("Button Press Run and Debug New Instance");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createButtonPayload(
+					MetricsHelper.LogEventType.BUTTON_PRESS, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					this.gameModel.gameId, 
+					"button-run-and-debug-new-instance"
+				)
+			);
 		} else if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.debugger.existingInstance")) {
 			this.restart = false;
 			RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startDebugGameInstance", {gameId : this.gameModel.gameId, usernameId : sap.ui.getCore().getModel("user").oData.username, restart : false, archivedGame : this.archivedGame}, true, this.openDebuggerWindow, this.checkForRunningDebugInstanceError, this);
-		} 
+			// Log BUTTON_PRESS event: button-run-and-debug-existing-instance
+			Logger.info("Button Press Run and Debug Existing Instance");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createButtonPayload(
+					MetricsHelper.LogEventType.BUTTON_PRESS, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					this.gameModel.gameId, 
+					"button-run-and-debug-existing-instance"
+				)
+			);
+		} else if(oAction == sap.ui.getCore().getModel("i18n").getResourceBundle().getText("button.cancel")) {
+			// Log BUTTON_PRESS event: button-run-and-debug-cancel
+			Logger.info("Button Press Run and Debug Cancel");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createButtonPayload(
+					MetricsHelper.LogEventType.BUTTON_PRESS, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					this.gameModel.gameId, 
+					"button-run-and-debug-cancel"
+				)
+			);
+		}
 	},
 
 	openDebuggerWindow : function(debugGameInstanceId) {
@@ -987,6 +1049,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.debuggerListPopover.openBy(currentPage._navBtn);
 		var pages = sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[1].getPages();
 		sap.ui.getCore().byId("debuggerListPopover").getContent()[0].setSelectedKey(pages.indexOf(currentPage));
+
+		// Log BUTTON_PRESS event: button-open-debugger-list
+		Logger.info("Button Press Open Debugger List");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-open-debugger-list"
+			)
+		);
 	},
 
 	debuggerPressed : function(oEvent) {
@@ -1013,6 +1086,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.debuggerModel = new sap.ui.model.json.JSONModel(this.debuggerData);
 		this.getView().setModel(this.debuggerModel, "debuggerModel");
 		this.debuggerListPopover.close();
+
+		// Log BUTTON_PRESS event: button-close-current-debugger
+		Logger.info("Button Press Close Current Debugger");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-close-current-debugger"
+			)
+		);
 	},
 
 	resetDebugger : function(oEvent) {
@@ -1024,6 +1108,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("resizable", false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").getContentAreas()[0].getLayoutData().setProperty("size", "100%");
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--debuggerSplitter").triggerResize(true);
+
+		// Log BUTTON_PRESS event: button-close-all-debuggers
+		Logger.info("Button Press Close All Debuggers");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-close-all-debuggers"
+			)
+		);
 	},
 	
 	/**
@@ -1500,6 +1595,32 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 				//Allow default error handling
 			}, this, false
 		);
+
+		// Log BUTTON_PRESS event: button-game-save-history-open
+		Logger.info("Button Press Game Save History Button Pressed");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-game-save-history-open"
+			)
+		);
+	},
+
+	selectGameSave : function(oEvent) {
+
+		// Log BUTTON_PRESS event: button-game-save-selected
+		Logger.info("Button Press Game Save Selected");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-game-save-selected"
+			)
+		);
+
 	},
 	
 	loadSelectedArchivedGame : function(oEvent) {
@@ -1551,11 +1672,32 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.resetUndoRedo();
 		this.undoRedoEnabled = false;
 
+		// Log BUTTON_PRESS event: button-load-selected-archived-game-readonly
+		Logger.info("Button Press Load Selected Archived Game In Read Only Mode");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-load-selected-archived-game-readonly"
+			)
+		);
+
 		//sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteGameEditorView2", {archivedGame : true, masterGameId: data.masterGameId, referenceGameId: data.referenceGameId});
 	},
 
 	revertToSelectedArchivedGame : function(oEvent) {
 		var data = oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getModel().getProperty(oEvent.getSource().getParent().getParent().getContent()[0].getSelectedContexts()[0].getPath());
+		// Log BUTTON_PRESS event: button-open-revert-to-archived-game-dialog
+		Logger.info("Button Press Revert To Archived Game Open Dialog");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-open-revert-to-archived-game-dialog"
+			)
+		);
 		sap.m.MessageBox.confirm(
 			sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.history.revertTo.overwriteMessage"),
 			{
@@ -1577,6 +1719,27 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 							}, this
 						);
+						// Log BUTTON_PRESS event: button-revert-to-archived-game
+						Logger.info("Button Press Revert To Archived Game");
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createButtonPayload(
+								MetricsHelper.LogEventType.BUTTON_PRESS, 
+								MetricsHelper.LogContext.GAME_EDITOR, 
+								this.gameModel.gameId, 
+								"button-revert-to-archived-game"
+							)
+						);
+					} else if(oEvent2 == sap.m.MessageBox.Action.CANCEL) {
+						// Log BUTTON_PRESS event: button-revert-to-archived-game-cancel
+						Logger.info("Button Press Cancel Revert To Archived Game");
+						MetricsHelper.saveLogEvent(
+							MetricsHelper.createButtonPayload(
+								MetricsHelper.LogEventType.BUTTON_PRESS, 
+								MetricsHelper.LogContext.GAME_EDITOR, 
+								this.gameModel.gameId, 
+								"button-revert-to-archived-game-cancel"
+							)
+						);
 					} 
 				}.bind(this)
 			}
@@ -1588,6 +1751,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.resetEditor();
 		this.goBackSetVisible();
 		this.load();
+
+		// Log BUTTON_PRESS event: button-archived-game-go-back
+		Logger.info("Button Press Archived Game Go Back");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-archived-game-go-back"
+			)
+		);
 	},
 
 	goBackSetVisible : function() {
@@ -1711,6 +1885,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.loadUndoRedoGame(game);
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 0;
+		// Log BUTTON_PRESS event: button-game-editor-undo
+		Logger.info("Button Press Game Editor Undo");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-game-editor-undo"
+			)
+		);
 	},
 
 	redo : function() {
@@ -1724,6 +1908,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.loadUndoRedoGame(game);
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 1;
+		// Log BUTTON_PRESS event: button-game-editor-redo
+		Logger.info("Button Press Game Editor Redo");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				this.gameModel.gameId, 
+				"button-game-editor-redo"
+			)
+		);
 	},
 
 	loadUndoRedoGame : function(game) {

@@ -60,6 +60,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 			GameEditor.getEditorController().gameModel.gameId = this.selectedGame;
 			GameEditor.getEditorController().resetEditor();
 			GameEditor.getEditorController().load();
+
+			// Log BUTTON_PRESS event: button-load-selected-game
+			Logger.info("Load Selected Game Button Pressed");
+			MetricsHelper.saveLogEvent(
+				MetricsHelper.createButtonPayload(
+					MetricsHelper.LogEventType.BUTTON_PRESS, 
+					MetricsHelper.LogContext.GAME_EDITOR, 
+					GameEditor.getEditorController().gameModel.gameId, 
+					"button-load-selected-game"
+				)
+			);
 		}
 		this.cancelLoadGame();
 	},
@@ -99,6 +110,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.CreateLoadGame", {
 	cancelLoadGame : function() {
 		sap.ui.getCore().byId("loadGame").close();
 		sap.ui.getCore().byId("loadGame").destroy();
+		// Log BUTTON_PRESS event: button-load-game-cancel
+		Logger.info("Load Game Cancel");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createButtonPayload(
+				MetricsHelper.LogEventType.BUTTON_PRESS, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				null, 
+				"button-load-game-cancel"
+			)
+		);
 	},
 	
 	/**
