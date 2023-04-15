@@ -65,13 +65,16 @@ var MetricsHelper = {
 		BUTTON_PRESS : "BUTTON_PRESS",
 		STATE : "STATE",
 		CONNECTION : "CONNECTION",
-		TRANSITION : "TRANSITION"
+		TRANSITION : "TRANSITION",
+		START_STATE : "START_STATE"
 	},
 	
 	LogContext : {
 		GAME_MANAGER : "GAME_MANAGER",
 		GAME_EDITOR : "GAME_EDITOR",
-		GAME_PLAYER : "GAME_PLAYER"
+		GAME_PLAYER : "GAME_PLAYER",
+		LOGIN : "LOGIN",
+		MODE_SELECTION : "MODE_SELECTION"
 	},
 		
 	saveLogEvent : function(saveJSON, logSuccess = this.logSuccess, logError = this.logError) {
