@@ -14,25 +14,25 @@
                 "build:ui": "rimraf dist && ui5 build --dest dist/webapp"
         },
         "dependencies": {
-                "@openui5/sap.m": "^1.73.1",
-                "@openui5/sap.ui.core": "^1.73.1",
-                "@openui5/sap.ui.layout": "^1.73.1",
-                "@openui5/themelib_sap_belize": "^1.73.1",
-                "eureka-js-client": "^4.5.0",
-                "http-proxy-middleware": "^0.20.0",
-                "shx": "^0.3.2",
-                "ui5-middleware-simpleproxy": "^0.1.4",
-                "ui5-middleware-index": "^0.3.0"
+                "@openui5/sap.m": "1.111.1",
+                "@openui5/sap.ui.core": "1.111.1",
+                "@openui5/sap.ui.layout": "1.111.1",
+                "@openui5/themelib_sap_belize": "1.111.1",
+                "eureka-js-client": "4.5.0",
+                "http-proxy-middleware": "0.20.0",
+                "shx": "0.3.4",
+                "ui5-middleware-simpleproxy": "0.1.5",
+                "ui5-middleware-index": "0.3.0"
         },
         "devDependencies": {
-                "@ui5/cli": "^2.14.0",
-                "cross-var": "^1.1.0",
-                "eslint": "^8.1.0",
-                "karma": "^6.3.7",
-                "karma-chrome-launcher": "^3.1.0",
-                "karma-coverage": "^2.0.1",
-                "karma-ui5": "^2.3.4",
+                "@ui5/cli": "2.14.17",
+                "cross-var": "1.1.0",
+                "eslint": "8.1.0",
+                "karma": "6.3.7",
+                "karma-chrome-launcher": "3.1.0",
+                "karma-coverage": "2.0.1",
+                "karma-ui5": "2.3.4",
                 "mbt": "1.0.4",
-                "rimraf": "^3.0.0"
+                "rimraf": "3.0.0"
         }
 }
