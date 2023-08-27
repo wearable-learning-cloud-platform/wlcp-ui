@@ -25,6 +25,18 @@
 				uploadComplete="handleUploadComplete"/>
 		</items>
 	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.outputState.maxUploadSize}"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Button
+				text="{i18n>gameEditor.outputState.playSound.clear}"
+				press="handleClear"/>
+		</items>
+	</FlexBox>
     <FlexBox alignItems="Start" justifyContent="Center">
         <items>
             <Button icon="sap-icon://media-play" press="play"/>

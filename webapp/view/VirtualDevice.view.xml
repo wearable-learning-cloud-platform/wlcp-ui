@@ -36,6 +36,27 @@
 					</VBox>
 				</content>
 			</Page>
+			<Page id="nameTaken" showHeader="false" class="virtualDeviceBackground">
+				<content>
+					<tnt:ToolHeader>
+						<ToolbarSpacer />
+						<ToolbarSpacer />
+						<Button icon="sap-icon://home" type="Transparent" press="onHomeButtonPress"/>
+					</tnt:ToolHeader>
+					<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+						<items>
+							<Link text="Click here to reconnect as {/nameSuggestions/usernameId} (Team {/nameSuggestions/team} Player {/nameSuggestions/player})" press="reconnect"/>
+							<Text text="Or connect using a new name: "/>
+							<Input id="newName" placeholder="New Name..." width="16em" value="{/nameSuggestions/newUsername}"/>
+							<Text text="Or connect using a suggested name below:"/>
+							<Select id="newNameSuggestion" width="16em" items="{/nameSuggestions/suggestions}">
+								<core:Item key="{text}" text="{text}" />
+							</Select>
+							<Button width="12em" text="Connect" type="Emphasized" press="rename"/>
+						</items>
+					</VBox>
+				</content>
+			</Page>
 			<Page id="selectTeamPlayer" showHeader="false">
 				<tnt:ToolHeader>
 					<ToolbarSpacer />
@@ -62,7 +83,8 @@
 					</layoutData>
 				</Text>
 				<ToolbarSpacer />
-				<Button text="Disconnect" icon="sap-icon://disconnected" press="disconnectPressed"></Button>
+				<!-- <Button text="Disconnect" icon="sap-icon://disconnected" press="disconnectPressed"></Button> -->
+				<Button text="Exit" icon="sap-icon://disconnected" press="exitPressed"></Button>
 			</tnt:ToolHeader>
 			<l:Splitter id="mainSplitter" orientation="Vertical" height="100%" width="100%">
 				<NavContainer id="outputContainer">

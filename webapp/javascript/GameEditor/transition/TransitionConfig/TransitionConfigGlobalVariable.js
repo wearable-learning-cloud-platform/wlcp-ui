@@ -151,16 +151,18 @@ var TransitionConfigGlobalVariable = class TransitionConfigGlobalVariable extend
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
 				if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.GLOBAL_VARIABLE) {
-                    var globalVariableInputModifiers = [];
-                    for(var k = 0; k < iconTabs[i].navigationContainerPages[n].items.length; k++) {
-                        globalVariableInputModifiers.push({variableName : iconTabs[i].navigationContainerPages[n].items[k].variableName, operator : iconTabs[i].navigationContainerPages[n].items[k].operator, value : iconTabs[i].navigationContainerPages[n].items[k].value, logicalOperator : iconTabs[i].navigationContainerPages[n].items[k].logicalOperator});
-                    }
-                    globalVariables[iconTabs[i].scope] = {
-                        globalVariableId : this.transition.overlayId + "_" + iconTabs[i].scope.toLowerCase().replace(" ", "_"),
-                        transition : this.transition.overlayId,
-                        scope : iconTabs[i].scope,
-                        globalVariableInputModifiers : globalVariableInputModifiers
-                    }
+					if(iconTabs[i].navigationContainerPages[n].items.length > 0) {
+						var globalVariableInputModifiers = [];
+						for(var k = 0; k < iconTabs[i].navigationContainerPages[n].items.length; k++) {
+							globalVariableInputModifiers.push({variableName : iconTabs[i].navigationContainerPages[n].items[k].variableName, operator : iconTabs[i].navigationContainerPages[n].items[k].operator, value : iconTabs[i].navigationContainerPages[n].items[k].value, logicalOperator : iconTabs[i].navigationContainerPages[n].items[k].logicalOperator});
+						}
+						globalVariables[iconTabs[i].scope] = {
+							globalVariableId : this.transition.overlayId + "_" + iconTabs[i].scope.toLowerCase().replace(" ", "_"),
+							transition : this.transition.overlayId,
+							scope : iconTabs[i].scope,
+							globalVariableInputModifiers : globalVariableInputModifiers
+						}
+					}
 				}
 			}
 		}
