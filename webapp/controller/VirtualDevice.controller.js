@@ -25,25 +25,25 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	redButtonPressed : function() {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 1})});
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 1})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 1})));
 	},
 
 	greenButtonPressed : function() {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 2})});
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 2})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 2})));
 	},
 
 	blueButtonPressed : function() {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 3})});
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 3})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 3})));
 	},
 
 	blackButtonPressed : function() {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/singleButtonPress/" + this.username + "/" + this.team + "/" + this.player, body: JSON.stringify({ buttonPress : 4})});
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 4})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, JSON.stringify({ buttonPress : 4})));
 	},
 	
 	submitButtonPressSequence : function() {
@@ -63,7 +63,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/sequenceButtonPress/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({sequenceButtonPress : sequence})});
 		this.clearButtonPressSequence();
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SEQUENCE_BUTTON_PRESS, JSON.stringify({sequenceButtonPress : sequence})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.SEQUENCE_BUTTON_PRESS, JSON.stringify({sequenceButtonPress : sequence})));
 	},
 
 		
@@ -72,12 +72,12 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.resetStateDisplayTypes();
 		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({keyboardInput : keyboardInput})});
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, JSON.stringify({keyboardInput : keyboardInput})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, JSON.stringify({keyboardInput : keyboardInput})));
 	},
 
 	submitRandomInput : function() {
 		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/randomInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({})});
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(this.gameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.RANDOM, JSON.stringify({})));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.RANDOM, JSON.stringify({})));
 	},
 
 	clearButtonPressSequence : function() {
@@ -173,7 +173,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function(response) {
 					if(response.length == 0) {
 						sap.m.MessageBox.error("Game Instance " + gameInstanceId +  " is full!");
-						MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
+						MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
 					} else {
 						sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
 					}
@@ -184,19 +184,24 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			}
 			// Log BUTTON_PRESS event: button-game-player-join-game-pin
 			Logger.info("Button Press Join Game Instance");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_PIN_GUEST_USER, "Joining gameInstanceId " + gameInstanceId + " as unregistered player: " + this.username));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_PIN_GUEST_USER, "Joining gameInstanceId " + gameInstanceId + " as unregistered player: " + this.username));
 			return; 
 		}
 		var gameInstanceId = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
+			MetricsHelper.getStartLoggingGameInstance(this.gameInstanceId, function success(data) {
+				MetricsHelper.logEventGameInstanceId = data.id;
+				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_PIN_KNOWN_USER, "Joining gameInstanceId " + gameInstanceId + " as registered player: " + this.username));
+			}, function error() {
+
+			});
 			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.gameInstanceIdError, this);
 		} else {
 			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
 		}
 		// Log BUTTON_PRESS event: button-game-player-join-game-pin
 		Logger.info("Button Press Join Game Instance");
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_PIN_KNOWN_USER, "Joining gameInstanceId " + gameInstanceId + " as registered player: " + this.username));
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
 	},
 
@@ -209,7 +214,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--tempNameInput").setValue("");
 		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, this.handleGameTeamsAndPlayers, this.playerNameError, this);
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.ENTER_NAME, "Joining gameInstanceId " + this.gameInstanceId + " as unregistered player: " + this.username));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.ENTER_NAME, "Joining gameInstanceId " + this.gameInstanceId + " as unregistered player: " + this.username));
 	},
 	
 	joinDebugGameInstance : function() {
@@ -230,7 +235,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.model.setData(this.modelJSON);
 		if(response.length == 0) {
 			sap.m.MessageBox.error("Game Instance " + this.gameInstanceId +  " is full!");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
 		} else if(response.length === 1 && response[0].type === "USERNAME_EXISTS") {
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--nameTaken"));
 			var nameSuggestions = [];
@@ -248,7 +253,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
 			}
 			this.model.setData(this.modelJSON);
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN, "The name " + this.username + " is already taken!"));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN, "The name " + this.username + " is already taken!"));
 		} else {
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
@@ -286,21 +291,21 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			}
 		}
 		this.changeToEnterGamePin(event);
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN_NEW_NAME, "Changing name to " + event.getSource().getParent().getItems()[1].getValue()));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN_NEW_NAME, "Changing name to " + event.getSource().getParent().getItems()[1].getValue()));
 	},
 
 	reconnect : function() {
 		this.requestBusyDialog();
 		var selectedTeamPlayer = this.modelJSON.teamPlayers[0];
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN_RECONNECT, "Reconnecting as Team " + selectedTeamPlayer.team + " and Player " + selectedTeamPlayer.player + " as user " + this.username));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.NAME_TAKEN_RECONNECT, "Reconnecting as Team " + selectedTeamPlayer.team + " and Player " + selectedTeamPlayer.player + " as user " + this.username));
 	},
 	
 	onTeamPlayerSelected : function(oEvent) {
 		this.requestBusyDialog();
 		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, selectedTeamPlayer.team, selectedTeamPlayer.player, MetricsHelper.LogEventGamePlayerClientMessage.CHOOSE_TEAM_AND_PLAYER, "Selecting  Team " + selectedTeamPlayer.team + " and Player " + selectedTeamPlayer.player + " as user " + this.username));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, selectedTeamPlayer.team, selectedTeamPlayer.player, MetricsHelper.LogEventGamePlayerClientMessage.CHOOSE_TEAM_AND_PLAYER, "Selecting  Team " + selectedTeamPlayer.team + " and Player " + selectedTeamPlayer.player + " as user " + this.username));
 	},
 	
 	setupSocketConnection : function(team, player) {
@@ -313,7 +318,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.stompClient.onConnect = function (frame) {
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--displayTextArea").setValue(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gamePlayer.connecting"));
 				that.connectToGameInstance(that.gameInstanceId, team, player);
-				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(that.gameInstanceId, team, player, MetricsHelper.LogEventGamePlayerClientMessage.CONNECTED, "Socket connection success!"));
+				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, team, player, MetricsHelper.LogEventGamePlayerClientMessage.CONNECTED, "Socket connection success!"));
 			};
 			this.stompClient.onStompError = function ( frame) {
 				Logger.error("error connecting");
@@ -332,7 +337,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectGameInstance"));
 				sap.m.MessageBox.error("That team and player are taken! Someone else may have taken it before you.");
 				that.closeBusyDialog();
-				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(that.gameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.CHOOSE_TEAM_AND_PLAYER_GAME_FULL, "Game Instance " + that.gameInstanceId +  " is full!"));
+				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.CHOOSE_TEAM_AND_PLAYER_GAME_FULL, "Game Instance " + that.gameInstanceId +  " is full!"));
 				return;
 	    	}
 	    	that.team = jsonResponse.team;
@@ -356,7 +361,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noState/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToStateType("NoState");
 			that.stopAudio();
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.NONE, "No State"));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.NONE, "No State"));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/displayText/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
@@ -374,7 +379,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				that.switchToStateType("DisplayText");
 			}
 			that.stopAudio();
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.DISPLAY_TEXT, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.DISPLAY_TEXT, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
 			//that.switchToStateType("DisplayPhoto");
 			//displayTextBox.setValue(parsedJson.displayText);
 		});
@@ -399,13 +404,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			img.src = parsedJson.url;
 			that.switchToStateType("DisplayTextPhoto");
 			that.stopAudio();
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.DISPLAY_PHOTO, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.DISPLAY_PHOTO, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/playSound/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
 			that.playSound = new Audio(parsedJson.url);
 			that.playSound.play();
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.PLAY_SOUND, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.PLAY_SOUND, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/playVideo/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
@@ -421,28 +426,28 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			}, 100, 9000);
 			that.switchToStateType("DisplayTextVideo");
 			that.stopAudio();
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.PLAY_VIDEO, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.PLAY_VIDEO, MetricsHelper.Input.NONE, JSON.stringify(parsedJson)));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/noTransition/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("NoTransition");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.NONE, "No Transition"));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.NONE, "No Transition"));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/singleButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.setSingleButtonPressLabels(response);
 			that.switchToTransitionType("SingleButtonPress");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, response.body));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.SINGLE_BUTTON_PRESS, response.body));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/sequenceButtonPressRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("SequenceButtonPress");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.SEQUENCE_BUTTON_PRESS, response.body));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.SEQUENCE_BUTTON_PRESS, response.body));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/keyboardInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("KeyboardInput");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, response.body));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, response.body));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/randomInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("RandomInput");
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.RANDOM, response.body));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.RANDOM, response.body));
 		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/timerDurationRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			var parsedJson = JSON.parse(response.body);
@@ -457,7 +462,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 					sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerDuration").getContent()[0].getItems()[0].setText("Timer Duration: " + timeleft);
 					timeleft -= 1;
 				}, 1000);
-				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.TIMER, JSON.stringify(parsedJson)));
+				MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.TIMER, JSON.stringify(parsedJson)));
 			} else {
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerTextSingle").setVisible(true);
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--timerTextSequence").setVisible(true);
@@ -479,7 +484,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 					timeleft -= 1;
 				}, 1000);
 			}
-			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(that.gameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.TIMER, JSON.stringify(parsedJson)));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.TIMER, JSON.stringify(parsedJson)));
 		});
 	},
 
@@ -503,7 +508,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	},
 
 	exitPressed : function() {
-		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(this.gameInstanceId, this.team, this.player, MetricsHelper.LogEventGamePlayerClientMessage.EXIT, "Exit Pressed"));
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.LogEventGamePlayerClientMessage.EXIT, "Exit Pressed"));
 		this.stompClient.deactivate();
 		this.onClose();
 	},

@@ -59,7 +59,8 @@
 
 var MetricsHelper = {
 		
-    loggingEnabled : true,
+	loggingEnabled : true,
+	logEventGameInstanceId : 0,
     
     LogEventType : {
 		BUTTON_PRESS : "BUTTON_PRESS",
@@ -130,6 +131,10 @@ var MetricsHelper = {
 			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventGameInstanceController/logEventGamePlayer", saveJSON, true, logSuccess, logError, this, false);
 
 		}
+	},
+
+	getStartLoggingGameInstance : function(gameInstanceId, logSuccess = this.logSuccess, logError = this.logError) {
+		RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/getStartLoggingGameInstanceDto/" + gameInstanceId, true, logSuccess, logError, this, false);
 	},
 
 	logSuccess : function(data) {
