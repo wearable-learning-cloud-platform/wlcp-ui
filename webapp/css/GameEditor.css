@@ -386,3 +386,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     padding: 5px;
 }
 
+.sapUiDnDIndicator2 {
+	z-index: 100000 !important;
+  }
+
