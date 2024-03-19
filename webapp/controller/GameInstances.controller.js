@@ -33,6 +33,8 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", this);
 				fragment.setModel(new sap.ui.model.json.JSONModel(this.loadGameDialogModel));
 				fragment.open();
+				this.switched = false;
+				this.selectedTab = "private";
 				this.dialog = fragment;
 				this.attachDragAndDrop();
 			}, 
