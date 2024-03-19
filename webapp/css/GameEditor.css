@@ -390,3 +390,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	z-index: 100000 !important;
   }
 
+  .scroll2 {
+	  overflow: auto;
+  }
+

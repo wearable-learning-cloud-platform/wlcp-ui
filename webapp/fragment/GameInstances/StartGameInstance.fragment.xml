@@ -7,7 +7,7 @@
 	xmlns:card="sap.f.cards"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<Dialog id="startGameInstance" title = "Assign Names to Players" class="noselect" verticalScrolling="false">
+	<Dialog id="startGameInstance" title = "Assign Names to Players" class="noselect">
 	
 		<buttons>
 			<Button id="wizardBackButton" text="Previous Step" visible="false" press="handleWizardBackButton" />
@@ -16,7 +16,7 @@
 			<Button id="wizardCancelButton" text="Cancel" type="Transparent" visible="true" press="handleWizardCancel"/>
 		</buttons>
 
-		<Wizard id="gameInstanceWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" showNextButton="false" navigationChange="handleNavigationChange" renderMode="Page">
+		<Wizard id="gameInstanceWizard" showNextButton="false" navigationChange="handleNavigationChange" renderMode="Page">
 			<WizardStep id="selectStep" title="Select Game to Play">
 				<IconTabBar select="selectGame">
 					<items>
@@ -49,11 +49,11 @@
 					<Switch customTextOn="Yes" customTextOff="No" change="switch"/>
 				</VBox>
 				<HBox id="assignSection" visible="false">
-					<VBox>
+					<VBox class="sapUiSmallMargin">
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<Title level="H3" text="Names" textAlign="Center" class="noselect"/>
 						</FlexBox>
-						<List id="assignPlayerList" class="sapUiSmallMargin" width="400px" items="{/playerNames}" mode="Delete" delete="deleteName" noData="Add Names">
+						<List id="assignPlayerList" items="{/playerNames}" mode="Delete" delete="deleteName" noData="Add Names">
 							<StandardListItem title="{title}" class="noselect"/>
 						</List>
 						<FlexBox alignItems="Center" justifyContent="Center">
@@ -71,11 +71,11 @@
 							</FlexBox>
 						</VBox>
 					</VBox>
-					<VBox>
+					<VBox class="sapUiSmallMargin scroll2">
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<Title level="H3" text="Players" textAlign="Center" class="noselect"/>
 						</FlexBox>
-						<f:GridContainer id="playersToSelectFrom" class="sapUiSmallMargin" snapToRow="true" items="{/teamPlayers}">
+						<f:GridContainer id="playersToSelectFrom" snapToRow="true" items="{/teamPlayers}">
 							<f:layout>
 								<f:GridContainerSettings columns="{= ${/playerCount} * 2}"/>
 							</f:layout>
