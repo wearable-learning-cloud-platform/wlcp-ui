@@ -19,7 +19,8 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		teamPlayers : [],
 		teamCount : 0,
 		playerCount : 0,
-		gameToLoad : ""
+		gameToLoad : "",
+		gameToLoadDTO : null
 	},
 	
 	onStartGameInstance : function() {
@@ -30,18 +31,6 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 			function(data) {
 				this.loadGameDialogModel.publicGames = data;
 				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", this);
-				this.loadGameDialogModel.teamCount = 3;
-				this.loadGameDialogModel.playerCount = 3;
-				this.loadGameDialogModel.teamPlayers = [];
-				for(var teams = 0; teams < this.loadGameDialogModel.teamCount; teams++) {
-					for(var players = 0; players < this.loadGameDialogModel.playerCount; players++) {
-						this.loadGameDialogModel.teamPlayers.push({team : teams + 1, player : players + 1, text : "No Name", icon : "sap-icon://error", state : "Error", removeVisible : false});
-					}
-				}
-				this.loadGameDialogModel.playerNames = [];
-				for(var i = 0; i < this.loadGameDialogModel.teamCount * this.loadGameDialogModel.playerCount; i++) {
-					this.loadGameDialogModel.playerNames.push({title:"Player " + (i + 1)});
-				}
 				fragment.setModel(new sap.ui.model.json.JSONModel(this.loadGameDialogModel));
 				fragment.open();
 				this.dialog = fragment;
@@ -144,9 +133,29 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 				if(!this.checkForGameIdSelectionErrors()) {
 					return;
 				}
+				this.loadGameDialogModel.teamCount = this.dialog.getModel().getProperty("/gameToLoadDTO/teamCount");
+				this.loadGameDialogModel.playerCount = this.dialog.getModel().getProperty("/gameToLoadDTO/playerCount");
+				this.loadGameDialogModel.teamPlayers = [];
+				for(var teams = 0; teams < this.loadGameDialogModel.teamCount; teams++) {
+					for(var players = 0; players < this.loadGameDialogModel.playerCount; players++) {
+						this.loadGameDialogModel.teamPlayers.push({team : teams + 1, player : players + 1, text : "No Name", icon : "sap-icon://error", state : "Error", removeVisible : false});
+					}
+				}
+				this.loadGameDialogModel.playerNames = [];
+				for(var i = 0; i < this.loadGameDialogModel.teamCount * this.loadGameDialogModel.playerCount; i++) {
+					this.loadGameDialogModel.playerNames.push({title:"Player " + (i + 1)});
+				}
+				this.dialog.setModel(new sap.ui.model.json.JSONModel(this.loadGameDialogModel));
 				sap.ui.getCore().byId("wizardBackButton").setVisible(true);
 				break;
 			case 2:
+				var teamPlayers = this.dialog.getModel().getProperty("/teamPlayers");
+				for(var i = 0; i < teamPlayers.length; i++) {
+					if(teamPlayers[i].state !== "Success" && this.switched) {
+						sap.m.MessageBox.error("Assign Names to all Teams / Players!");
+						return;
+					}
+				}
 				sap.ui.getCore().byId("wizardStartGameButton").setVisible(true);
 				sap.ui.getCore().byId("wizardBackButton").setVisible(true);
 				sap.ui.getCore().byId("wizardNextButton").setVisible(false);
@@ -161,10 +170,10 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	handleWizardBackButton : function(oEvent) {
 		var currentStep = sap.ui.getCore().byId("gameInstanceWizard").mAggregations._progressNavigator.getCurrentStep();
 		switch(currentStep) {
-			case 1:
+			case 2:
 					sap.ui.getCore().byId("wizardBackButton").setVisible(false);
 				break;
-			case 2:
+			case 3:
 				sap.ui.getCore().byId("wizardStartGameButton").setVisible(false);
 				sap.ui.getCore().byId("wizardNextButton").setVisible(true);
 				break;
@@ -187,6 +196,14 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 					return false;
 				} else {
 					this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey());
+					for(var i = 0; i < this.loadGameDialogModel.privateGames.length; i++) {
+						if(this.loadGameDialogModel.privateGames[i].gameId === sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey()) {
+							this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey());
+							this.loadGameDialogModel.gameToLoadDTO = this.loadGameDialogModel.privateGames[i];
+							this.dialog.getModel().setProperty("/gameToLoadDTO", this.loadGameDialogModel.gameToLoadDTO);
+							return true;
+						}
+					}
 					return true;
 				}
 			case "public":
@@ -194,8 +211,14 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 					sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
 					return false;
 				} else {
-					this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey());
-					return true;
+					for(var i = 0; i < this.loadGameDialogModel.publicGames.length; i++) {
+						if(this.loadGameDialogModel.publicGames[i].gameId === sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey()) {
+							this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey());
+							this.loadGameDialogModel.gameToLoadDTO = this.loadGameDialogModel.publicGames[i];
+							this.dialog.getModel().setProperty("/gameToLoadDTO", this.loadGameDialogModel.gameToLoadDTO);
+							return true;
+						}
+					}
 				}
 		}
 	},
@@ -279,6 +302,11 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 			fragment.open();
 			this.dialog = fragment;
 		}.bind(this), function(error){});
+	},
+
+	onCancelTilePress : function(oEvent) {
+		this.dialog.close();
+		this.dialog.destroy();
 	},
 	
 /**
