@@ -26,7 +26,8 @@
         <List
 			id="gameSaves"
 			items="{path: '/saves', sorter: {path: 'gameSaveId', descending: true}}"
-			mode="SingleSelectMaster">
+			mode="SingleSelectMaster"
+			selectionChange="selectGameSave">
 			<StandardListItem
 				title="{timeStamp} {type}"
 				description="{description}"/>

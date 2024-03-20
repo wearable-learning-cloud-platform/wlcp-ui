@@ -59,27 +59,86 @@
 
 var MetricsHelper = {
 		
-    loggingEnabled : true,
+	loggingEnabled : true,
+	playerLoggingEnabled : true,
+	logEventGameInstanceId : 0,
     
     LogEventType : {
 		BUTTON_PRESS : "BUTTON_PRESS",
 		STATE : "STATE",
 		CONNECTION : "CONNECTION",
-		TRANSITION : "TRANSITION"
+		TRANSITION : "TRANSITION",
+		START_STATE : "START_STATE"
 	},
 	
 	LogContext : {
 		GAME_MANAGER : "GAME_MANAGER",
 		GAME_EDITOR : "GAME_EDITOR",
-		GAME_PLAYER : "GAME_PLAYER"
+		GAME_PLAYER : "GAME_PLAYER",
+		LOGIN : "LOGIN",
+		MODE_SELECTION : "MODE_SELECTION"
 	},
-		
+
+	DataDirection : {
+		CLIENT_RECEIVE : "CLIENT_RECEIVE",
+		CLIENT_SEND : "CLIENT_SEND",
+		SERVER_RECEIVE : "SERVER_RECEIVE",
+		SERVER_SEND : "SERVER_SEND"
+	},
+
+	Output : {
+		NONE : "NONE",
+		DISPLAY_TEXT : "DISPLAY_TEXT",
+		DISPLAY_PHOTO : "DISPLAY_PHOTO",
+		PLAY_SOUND : "PLAY_SOUND",
+		PLAY_VIDEO : "PLAY_VIDEO"
+	},
+
+	Input : {
+		NONE : "NONE",
+		SINGLE_BUTTON_PRESS : "SINGLE_BUTTON_PRESS",
+		SEQUENCE_BUTTON_PRESS : "SEQUENCE_BUTTON_PRESS",
+	    KEYBOARD_INPUT : "KEYBOARD_INPUT",
+	    TIMER : "TIMER",
+	    RANDOM : "RANDOM"
+	},
+
+	LogEventGamePlayerClientMessage : {
+		GAME_PIN_KNOWN_USER : "GAME_PIN_KNOWN_USER",
+		GAME_PIN_GUEST_USER : "GAME_PIN_GUEST_USER",
+		GAME_FULL : "GAME_FULL",
+		ENTER_NAME : "ENTER_NAME",
+		NAME_TAKEN : "NAME_TAKEN",
+		NAME_TAKEN_RECONNECT : "NAME_TAKEN_RECONNECT",
+		NAME_TAKEN_NEW_NAME : "NAME_TAKEN_NEW_NAME",
+		CHOOSE_TEAM_AND_PLAYER : "CHOOSE_TEAM_AND_PLAYER",
+		CHOOSE_TEAM_AND_PLAYER_GAME_FULL : "CHOOSE_TEAM_AND_PLAYER_GAME_FULL",
+		CONNECTED : "CONNECTED",
+		EXIT :"EXIT"
+	},
+	
 	saveLogEvent : function(saveJSON, logSuccess = this.logSuccess, logError = this.logError) {
 		
 		if(this.loggingEnabled) {
 			
 			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventController/saveLogEvent", saveJSON, true, logSuccess, logError, this, false);
 
+		}
+	},
+
+	saveLogEventGamePlayer : function(saveJSON, logSuccess = this.logSuccess, logError = this.logError) {
+		if(this.playerLoggingEnabled) {
+			
+			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventGameInstanceController/logEventGamePlayer", saveJSON, true, logSuccess, logError, this, false);
+
+		}
+	},
+
+	getStartLoggingGameInstance : function(gameInstanceId, logSuccess = this.logSuccess, logError = this.logError) {
+		if(this.playerLoggingEnabled) {
+			
+			RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/getStartLoggingGameInstanceDto/" + gameInstanceId, true, logSuccess, logError, this, false);
+		
 		}
 	},
 
@@ -299,6 +358,36 @@ var MetricsHelper = {
 			"timeStamp" : Date.now(),
 			"buttonPressed" : buttonPressed
 		};
+		return payload;
+	},
+
+	logEventGamePlayerClientMessage : function(logEventGameInstanceId, team, player, logEventGamePlayerClientType, message) {
+		var payload = {
+			logEventGamePlayerType : "CLIENT_MESSAGE",
+			logEventGameInstance : {
+				id : logEventGameInstanceId
+			},
+			"team" : team,
+			"player" : player,
+			"logEventGamePlayerClientType" : logEventGamePlayerClientType,
+			"message" : message
+		}
+		return payload;
+	},
+
+	logEventGamePlayerCommunication : function (logEventGameInstanceId, team, player, dataDirection, output, input, data) {
+		var payload = {
+			logEventGamePlayerType : "COMMUNICATION",
+			logEventGameInstance : {
+				id : logEventGameInstanceId
+			},
+			"team" : team,
+			"player" : player,
+			"dataDirection" : dataDirection,
+			"output" : output,
+			"input" : input,
+			"data" : data
+		}
 		return payload;
 	}
 
