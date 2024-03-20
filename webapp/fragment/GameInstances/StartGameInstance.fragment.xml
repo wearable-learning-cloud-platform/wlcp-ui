@@ -4,6 +4,7 @@
 	xmlns:core="sap.ui.core"
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.f"
+	xmlns:tnt="sap.tnt"
 	xmlns:card="sap.f.cards"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
@@ -18,30 +19,27 @@
 
 		<Wizard id="gameInstanceWizard" showNextButton="false" navigationChange="handleNavigationChange" renderMode="Page">
 			<WizardStep id="selectStep" title="Select Game to Play">
-				<IconTabBar select="selectGame">
-					<items>
-						<IconTabFilter text="{i18n>gameEditor.load.yourGames}" key="private">
-							<FlexBox alignItems="Center" justifyContent="Center">
-								<Label textAlign="Center" text="{i18n>gameEditor.load.selectDropDown}:" />
-							</FlexBox>
-							<FlexBox alignItems="Center" justifyContent="Center">
-								<ComboBox id="userLoadGameComboBox" items="{/privateGames}" placeholder="{i18n>gameEditor.load.selectGame}">
-									<core:Item key="{gameId}" text="{gameId}" />
-								</ComboBox>
-							</FlexBox>
-						</IconTabFilter>
-						<IconTabFilter text="{i18n>gameEditor.load.publicGames}" key="public">
-							<FlexBox alignItems="Center" justifyContent="Center">
-								<Label textAlign="Center" text="{i18n>gameEditor.load.selectDropDown}:" />
-							</FlexBox>
-							<FlexBox alignItems="Center" justifyContent="Center">
-								<ComboBox id="publicLoadGameComboBox" items="{/publicGames}" placeholder="{i18n>gameEditor.load.selectGame}">
-									<core:Item key="{gameId}" text="{gameId}" />
-								</ComboBox>
-							</FlexBox>
-						</IconTabFilter>
-					</items>
-				</IconTabBar>
+				<Panel>
+					<headerToolbar>
+						<OverflowToolbar >
+							<Title level="H3" text="{i18n>gameEditor.load.select}" />
+							<ToolbarSpacer/>
+							<SearchField placeholder="{i18n>gameEditor.load.search}" liveChange="onSearch">
+								<layoutData>
+									<OverflowToolbarLayoutData maxWidth="300px" shrinkable="true" priority="NeverOverflow"/>
+								</layoutData>
+							</SearchField>
+						</OverflowToolbar>
+					</headerToolbar>
+					<tnt:NavigationList>
+						<tnt:NavigationListItem id="publicGames" text="{i18n>gameEditor.load.publicGames}" icon="sap-icon://globe" items="{/publicGames}" select="setExpansionGame" expanded="false">
+							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+						</tnt:NavigationListItem>
+						<tnt:NavigationListItem id="privateGames" text="{i18n>gameEditor.load.yourGames}" icon="sap-icon://person-placeholder" items="{/privateGames}" select="setExpansionGame" expanded="false">
+							<tnt:NavigationListItem text="{gameId}" select="selectGame" />
+						</tnt:NavigationListItem>
+					</tnt:NavigationList>
+				</Panel>
 			</WizardStep>
 			<WizardStep id="assignStep" title="Assign Names to Players">
 				<VBox id="switchSection">

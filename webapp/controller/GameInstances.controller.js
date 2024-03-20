@@ -9,7 +9,7 @@ sap.ui.define([
 return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 
 	switched : false,
-	selectedTab : "private",
+	selectedGame : "",
 
 	loadGameDialogModel : {
 		privateGames : null,
@@ -34,7 +34,7 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 				fragment.setModel(new sap.ui.model.json.JSONModel(this.loadGameDialogModel));
 				fragment.open();
 				this.switched = false;
-				this.selectedTab = "private";
+				this.selectedGame = "";
 				this.dialog = fragment;
 				this.attachDragAndDrop();
 			}, 
@@ -45,35 +45,6 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		function(error) {
 			//Allow default error handling
 		}, this);
-	},
-
-	selectGame : function(oEvent) {
-		this.selectedTab = oEvent.getParameters().selectedItem.getKey();
-	},
-
-	assignName : function(oAction) {
-		for(var i = 0; i < this.dialog.getModel().getData().playerNames.length; i++) {
-			if(this.dialog.getModel().getData().playerNames[i].title === oAction.getSource().getParent().getItems()[0].getValue()) {
-				oAction.getSource().getParent().getItems()[0].setValue("");
-				sap.m.MessageBox.error("Name already exists");
-				return;
-			}
-		}
-		this.dialog.getModel().getData().playerNames.push({title:oAction.getSource().getParent().getItems()[0].getValue() });
-		this.dialog.getModel().setData(this.dialog.getModel().getData());
-		this.dialog.setModel(this.dialog.getModel());
-		oAction.getSource().getParent().getItems()[0].setValue("");
-	},
-
-	deleteName : function(oAction) {
-		for(var i = 0; i < this.dialog.getModel().getData().playerNames.length; i++) {
-			if(oAction.getParameters().listItem.getTitle() === this.dialog.getModel().getData().playerNames[i].title) {
-				this.dialog.getModel().getData().playerNames.splice(i, 1);
-				this.dialog.getModel().setData(this.dialog.getModel().getData());
-				this.dialog.setModel(this.dialog.getModel());
-				return;
-			}
-		}
 	},
 
 	attachDragAndDrop: function () {
@@ -106,15 +77,40 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 		this.dialog.getModel().setData(this.dialog.getModel().getData());
 	},
 
+	onDropIndicatorSize: function (oDraggedControl) {
+
+	},
+
+	assignName : function(oAction) {
+		for(var i = 0; i < this.dialog.getModel().getData().playerNames.length; i++) {
+			if(this.dialog.getModel().getData().playerNames[i].title === oAction.getSource().getParent().getItems()[0].getValue()) {
+				oAction.getSource().getParent().getItems()[0].setValue("");
+				sap.m.MessageBox.error("Name already exists");
+				return;
+			}
+		}
+		this.dialog.getModel().getData().playerNames.push({title:oAction.getSource().getParent().getItems()[0].getValue() });
+		this.dialog.getModel().setData(this.dialog.getModel().getData());
+		this.dialog.setModel(this.dialog.getModel());
+		oAction.getSource().getParent().getItems()[0].setValue("");
+	},
+
+	deleteName : function(oAction) {
+		for(var i = 0; i < this.dialog.getModel().getData().playerNames.length; i++) {
+			if(oAction.getParameters().listItem.getTitle() === this.dialog.getModel().getData().playerNames[i].title) {
+				this.dialog.getModel().getData().playerNames.splice(i, 1);
+				this.dialog.getModel().setData(this.dialog.getModel().getData());
+				this.dialog.setModel(this.dialog.getModel());
+				return;
+			}
+		}
+	},
+
 	deletePlayerNameAssignment : function(oAction) {
 		oAction.getSource().getParent().getItems()[0].setState("Error")
 		oAction.getSource().getParent().getItems()[0].setText("No Name");
 		oAction.getSource().getParent().getItems()[0].setIcon("sap-icon://error");
 		oAction.getSource().getParent().getItems()[1].setVisible(false);
-	},
-
-	onDropIndicatorSize: function (oDraggedControl) {
-
 	},
 	
 	onAfterRenderingStartGameInstance : function () {
@@ -191,37 +187,18 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 
 	checkForGameIdSelectionErrors : function() {
-		switch(this.selectedTab) {
-			case "private":
-				if(sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey() === "") {
-					sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
-					return false;
-				} else {
-					this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey());
-					for(var i = 0; i < this.loadGameDialogModel.privateGames.length; i++) {
-						if(this.loadGameDialogModel.privateGames[i].gameId === sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey()) {
-							this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("userLoadGameComboBox").getSelectedKey());
-							this.loadGameDialogModel.gameToLoadDTO = this.loadGameDialogModel.privateGames[i];
-							this.dialog.getModel().setProperty("/gameToLoadDTO", this.loadGameDialogModel.gameToLoadDTO);
-							return true;
-						}
-					}
+		if(this.selectedGame !== "") {
+			for(var i = 0; i < this.loadGameDialogModel.publicGames.length; i++) {
+				if(this.loadGameDialogModel.publicGames[i].gameId === this.selectedGame) {
+					this.dialog.getModel().setProperty("/gameToLoad", this.selectedGame);
+					this.loadGameDialogModel.gameToLoadDTO = this.loadGameDialogModel.publicGames[i];
+					this.dialog.getModel().setProperty("/gameToLoadDTO", this.loadGameDialogModel.gameToLoadDTO);
 					return true;
 				}
-			case "public":
-				if(sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey() === "") {
-					sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
-					return false;
-				} else {
-					for(var i = 0; i < this.loadGameDialogModel.publicGames.length; i++) {
-						if(this.loadGameDialogModel.publicGames[i].gameId === sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey()) {
-							this.dialog.getModel().setProperty("/gameToLoad", sap.ui.getCore().byId("publicLoadGameComboBox").getSelectedKey());
-							this.loadGameDialogModel.gameToLoadDTO = this.loadGameDialogModel.publicGames[i];
-							this.dialog.getModel().setProperty("/gameToLoadDTO", this.loadGameDialogModel.gameToLoadDTO);
-							return true;
-						}
-					}
-				}
+			}
+		} else {
+			sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.load.selectNoneError"));
+			return false;
 		}
 	},
 
@@ -309,6 +286,20 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	onCancelTilePress : function(oEvent) {
 		this.dialog.close();
 		this.dialog.destroy();
+	},
+
+	onSearch : function(oFilter) {
+		sap.ui.getCore().byId("publicGames").getBinding("items").filter(new sap.ui.model.Filter("gameId", sap.ui.model.FilterOperator.StartsWith, oFilter.getParameters().newValue))
+		sap.ui.getCore().byId("privateGames").getBinding("items").filter(new sap.ui.model.Filter("gameId", sap.ui.model.FilterOperator.StartsWith, oFilter.getParameters().newValue))
+	},
+
+	setExpansionGame : function(oEvent) {
+		oEvent.getSource().setExpanded(!oEvent.getSource().getExpanded());
+		this.selectedGame = "";
+	},
+
+	selectGame : function (oEvent) {
+		this.selectedGame = oEvent.getParameters().item.getText();
 	},
 	
 /**
