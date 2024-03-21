@@ -146,7 +146,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 
 [class*='close-'] {
   color: #777;
-  font: 14px/100% arial, sans-serif;
+  font: 1rem/100% arial, sans-serif;
   position: absolute;
   right: 8px;
   text-decoration: none;
@@ -165,7 +165,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 
 [class*='close2-'] {
   color: #777;
-  font: 14px/100% arial, sans-serif;
+  font: 1rem/100% arial, sans-serif;
   position: absolute;
   right: 4px;
   text-decoration: none;
@@ -300,7 +300,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	height: 90px;
 	width: 90px;
 	background-color: #ABE2AB; /*#D3D7D9;*/
-	border-radius: 50px 50px 50px 50px;
+	border-radius: 50000px 50000px 50000px 50000px;
 }
 
 .startStateBottomColor {

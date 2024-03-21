@@ -46,7 +46,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 	scroller : new GameEditorScroller(),
 	
-	autoSaveEnabled : true,
+	autoSaveEnabled : false,
 	archivedGame : false,
 
 	setupOnceOnRouteMatched : true,
@@ -149,6 +149,17 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		outputState.setPositionY(
 			State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset()
 		);
+
+		//If zoom is not 100% need to add specially
+		if(GameEditor.getEditorController.zoomLevel != 0) {
+			for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
+				GameEditorZoomHelpers.scaleState(outputState, GameEditorZoomHelpers.startStateAsOrigin(), 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
+			}
+
+			outputState.setPositionX(
+				State.absoluteToRelativeX(ui.position.left, document.getElementById(outputState.htmlId).getBoundingClientRect().width) + GameEditor.getScrollLeftOffset()
+			); 
+		}
 		
 		outputState.addPadSpace();
 		outputState.draw();
@@ -212,6 +223,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.connectionTo.htmlId) {
 					this.stateList[i].onChange();
+				}
+			}
+
+			//If zoom is not 100% need to add specially
+			if(GameEditor.getEditorController.zoomLevel != 0) {
+				for(var i = 0; i < Math.abs(GameEditor.getEditorController().zoomLevel); i++) {
+					GameEditorZoomHelpers.scaleTransition(inputTransition, 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, false);
 				}
 			}
 
@@ -1469,6 +1487,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 
 		$("#container-wlcp-ui---gameEditor--toolboxTitle").show();
@@ -1482,6 +1502,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
 		GameEditor.resetScroll();
+		
+		this.resetZoom();
 
 		this.resetDebugger();
 
@@ -1660,6 +1682,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(false);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--clickableToolbox").setVisible(false);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--backButton").setVisible(true);
@@ -1775,6 +1799,8 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--runButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--undoButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomOutButton").setVisible(true);
+		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--zoomInButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--optionsButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--historyButton").setVisible(true);
 		sap.ui.getCore().byId("container-wlcp-ui---gameEditor--gettingStartedButton").setVisible(true);
@@ -1882,7 +1908,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.redoHistory.push(game);
 		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
 		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
+		var zoomLevel = this.zoomLevel;
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel++ : this.zoomLevel--
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		this.loadUndoRedoGame(game);
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel-- : this.zoomLevel++
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 0;
 		// Log BUTTON_PRESS event: button-game-editor-undo
@@ -1905,7 +1942,18 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		this.undoHistory.push(game);
 		var scrollLeft = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollLeft;
 		var scrollTop = document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTop;
+		var zoomLevel = this.zoomLevel;
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel++ : this.zoomLevel--
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		this.loadUndoRedoGame(game);
+		for(var i = 0; i < Math.abs(zoomLevel); i++) {
+			zoomLevel < 0 ? this.zoomLevel-- : this.zoomLevel++
+			this.scaleEditorPad();
+			this.oldZoomLevel = this.zoomLevel;
+		}
 		document.getElementById("container-wlcp-ui---gameEditor--pad").scrollTo(scrollLeft, scrollTop);
 		this.historyIndex = 1;
 		// Log BUTTON_PRESS event: button-game-editor-redo
@@ -1936,7 +1984,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 
 		// sap.ui.getCore().byId("container-wlcp-ui---gameEditor--padPage").setTitle("No Game Loaded!");
 		
-		GameEditor.resetScroll();
+		//GameEditor.resetScroll();
 
 		loadedData = game
 
@@ -2056,6 +2104,53 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 		}else {
 			sap.ui.getCore().byId("container-wlcp-ui---gameEditor--redoButton").setEnabled(false);
 		}
+	},
+	
+	zoomOut : function() {
+		if(this.zoomLevel == -5) { return; }
+		this.zoomLevel--;
+		this.scaleEditorPad();
+		this.oldZoomLevel = this.zoomLevel;
+	},
+
+	zoomIn : function() {
+		if(this.zoomLevel == 5) { return; }
+		this.zoomLevel++;
+		this.scaleEditorPad();
+		this.oldZoomLevel = this.zoomLevel;
+	},
+
+	resetZoom : function() {
+		this.zoomLevel = 0;
+		this.oldZoomLevel = 0;
+	},
+	
+	zoomLevel : 0,
+	oldZoomLevel : 0,
+
+	scaleEditorPad : function() {
+		
+		//Set the origin to the start state
+		var origin = GameEditorZoomHelpers.startStateAsOrigin();
+
+		//Loop through each state on the screen
+		this.stateList.forEach(function(state) { 
+			GameEditorZoomHelpers.scaleState(state, origin, 0.25, this.zoomLevel, this.oldZoomLevel);
+		}.bind(this));
+
+		//Loop through each transition on the screen
+		this.transitionList.forEach(function(transition) {
+			GameEditorZoomHelpers.scaleTransition(transition, 0.25, this.zoomLevel, this.oldZoomLevel);
+		}.bind(this));
+
+		GameEditor.getEditorController().jsPlumbInstance.repaintEverything()
+	},
+
+	moveAllStatesByDelta : function (dx, dy) {
+		this.stateList.forEach(function(state) {
+			document.getElementById(state.htmlId).style.top = parseInt(document.getElementById(state.htmlId).style.top.replace("px", "")) + dy + "px";
+			document.getElementById(state.htmlId).style.left = parseInt(document.getElementById(state.htmlId).style.left.replace("px", "")) + dx + 'px';
+		});
 	},
 	
 	// setupScrolling : function() {

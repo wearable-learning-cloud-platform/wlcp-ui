@@ -624,8 +624,8 @@ var OutputState = class OutputState extends State {
 		var saveData = {
 			stateId : this.htmlId,
 			game : GameEditor.getEditorController().gameModel.gameId,
-			positionX : this.positionX,
-			positionY : this.positionY,
+			positionX : this.positionX - this.dx,
+			positionY : this.positionY - this.dy,
 			stateType : "OUTPUT_STATE",
 			description : this.text,
 			inputConnections : tempInputConnections,
