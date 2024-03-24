@@ -82,6 +82,10 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 
 	assignName : function(oAction) {
+		if(oAction.getSource().getParent().getItems()[0].getValue() === "") {
+			sap.m.MessageBox.error("Name cannot be blank");
+			return;
+		}
 		for(var i = 0; i < this.dialog.getModel().getData().playerNames.length; i++) {
 			if(this.dialog.getModel().getData().playerNames[i].title === oAction.getSource().getParent().getItems()[0].getValue()) {
 				oAction.getSource().getParent().getItems()[0].setValue("");
