@@ -183,7 +183,16 @@ return sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 	},
 	
 	handleWizardSubmit : function(oEvent) {
-		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : this.dialog.getModel().getProperty("/gameToLoad"), usernameId : sap.ui.getCore().getModel("user").oData.username}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
+		var playerNames = null;
+		if(this.switched) {
+			playerNames = {};
+			for(var i = 0; i < this.dialog.getModel().getProperty("/teamPlayers").length; i++) {
+				
+				var path = "Team " + this.dialog.getModel().getProperty("/teamPlayers")[i].team + " Player " + this.dialog.getModel().getProperty("/teamPlayers")[i].player;
+				playerNames[path] = this.dialog.getModel().getProperty("/teamPlayers")[i].text;
+			}
+		}
+		RestAPIHelper.postAbsolute("/wlcp-gameserver/gameInstanceController/startGameInstance", {gameId : this.dialog.getModel().getProperty("/gameToLoad"), usernameId : sap.ui.getCore().getModel("user").oData.username, playerNames}, true, this.gameInstanceStarted, this.gameInstanceStartError, this);
 	},
 
 	checkForGameIdSelectionErrors : function() {

@@ -67,7 +67,7 @@
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
 						<Select id="teamPlayerSelect" width="12em" items="{/teamPlayers}">
-							<core:Item key="{key}" text="Team {team} Player {player}" />
+							<core:Item key="{key}" text="{= ${playerName} !== null ? ${playerName} : 'Team ' + ${team} + ' Player ' + ${player} }" />
 						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onTeamPlayerSelected"></Button>
 					</items>

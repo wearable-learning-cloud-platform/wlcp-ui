@@ -229,14 +229,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 				usernameId : this.username
 			};
 			for(var i = 0; i < response.length; i++) {
-				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1, playerName : response[i].playerName});
 			}
 			this.model.setData(this.modelJSON);
 		} else {
 			var navContainer = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer");
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--selectTeamPlayer"));
 			for(var i = 0; i < response.length; i++) {
-				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1});
+				this.modelJSON.teamPlayers.push({team : response[i].team + 1, player : response[i].player + 1, playerName : response[i].playerName});
 			}
 			this.model.setData(this.modelJSON);
 			sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--teamPlayerSelect").setSelectedItem(null);
