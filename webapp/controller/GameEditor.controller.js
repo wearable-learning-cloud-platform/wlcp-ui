@@ -528,7 +528,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameEditor", {
 							controller
 						);
 						
-						fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+						var dataModel = new sap.ui.model.json.JSONModel(loadGameDialogModel);
+						dataModel.setSizeLimit(10000);
+						fragment.setModel(dataModel);
 						fragment.getContent()[0].getContent()[0].addEventDelegate({onAfterRendering : controller.onAfterRendering});
 						fragment.open();
 					}, 
