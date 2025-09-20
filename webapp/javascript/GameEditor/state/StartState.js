@@ -56,6 +56,20 @@ var StartState = class StartState extends State {
 
 		//Open the dialog
 		this.dialog.open();
+
+		// Log STATE event: start-state-editor-dialog-open-success
+		// User attempts to open the Start State editor dialog by double-clicking and is successful
+		Logger.info("Start State editor: dialog opened");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayloadFull(
+				MetricsHelper.LogEventType.START_STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.model.getData()),
+				"start-state-editor-dialog-open-success"
+			)
+		);
 	}
 
 	setupStateConfigs() {
@@ -141,6 +155,19 @@ var StartState = class StartState extends State {
 		GameEditor.getEditorController().autoSave(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.autoSave.editStartState"));
 		this.dialog.close();
 		this.dialog.destroy();
+		// Log STATE event: start-state-editor-accept-withchanges
+		// User attempts to accept the Start State editor dialog
+		Logger.info("Start State editor: dialog accept");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayloadFull(
+				MetricsHelper.LogEventType.START_STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.model.getData()),
+				"start-state-editor-accept-withchanges"
+			)
+		);
     }
 
 	closeDialog() {
@@ -148,5 +175,18 @@ var StartState = class StartState extends State {
 		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
+		// Log STATE event: start-state-editor-cancel
+		// User attempts to cancel the Start State editor dialog
+		Logger.info("Start State editor: dialog cancel");
+		MetricsHelper.saveLogEvent(
+			MetricsHelper.createStatePayloadFull(
+				MetricsHelper.LogEventType.START_STATE, 
+				MetricsHelper.LogContext.GAME_EDITOR, 
+				GameEditor.getEditorController().gameModel.gameId, 
+				this.htmlId, 
+				JSON.stringify(this.model.getData()),
+				"start-state-editor-cancel"
+			)
+		);
 	}
 }

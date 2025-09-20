@@ -41,11 +41,33 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		} else {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("RouteLoginView");
 		}
+		// Log BUTTON_PRESS event: button-login-success
+		Logger.info("Button Press Login Success");
+		MetricsHelper.saveLogEvent({
+			"logEventType" : MetricsHelper.LogEventType.BUTTON_PRESS,
+			"logContext" : MetricsHelper.LogContext.LOGIN,
+			"usernameId" : this.model.getProperty("/username"),
+			"gameId" : null,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(),
+			"buttonPressed" : "button-login-success"
+		});
 		this.resetDataModel();
 	},
 	
 	error : function(error) {
 		sap.m.MessageBox.error(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("login.message.validationError"));
+		// Log BUTTON_PRESS event: button-login-error
+		Logger.info("Button Press Login Error");
+		MetricsHelper.saveLogEvent({
+			"logEventType" : MetricsHelper.LogEventType.BUTTON_PRESS,
+			"logContext" : MetricsHelper.LogContext.LOGIN,
+			"usernameId" : this.model.getProperty("/username"),
+			"gameId" : null,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(),
+			"buttonPressed" : "button-login-error"
+		});
 	},
 	
 	registerNewUser : function() {
@@ -76,16 +98,50 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
 		
 		//If we get here we can register them
 		RestAPIHelper.post("/usernameController/registerUser", userRegistrationDto, true, function(data) {
+			// Log BUTTON_PRESS event: button-register-new-user-success
+			Logger.info("Button Press Register User Success");
+			MetricsHelper.saveLogEvent({
+				"logEventType" : MetricsHelper.LogEventType.BUTTON_PRESS,
+				"logContext" : MetricsHelper.LogContext.LOGIN,
+				"usernameId" : this.model.getProperty("/newUser/usernameId"),
+				"gameId" : null,
+				"gameInstanceId" : null,
+				"timeStamp" : Date.now(),
+				"buttonPressed" : "button-register-new-user-success"
+			});
 			this.cancelRegisterNewUser();
 			sap.m.MessageBox.success(sap.ui.getCore().getModel("i18n").getResourceBundle().getText("register.message.success"));
 		}, function(error) {
 			//Let the default handler handle the error
+			// Log BUTTON_PRESS event: button-register-new-user-error
+			Logger.info("Button Press Register User Error");
+			MetricsHelper.saveLogEvent({
+				"logEventType" : MetricsHelper.LogEventType.BUTTON_PRESS,
+				"logContext" : MetricsHelper.LogContext.LOGIN,
+				"usernameId" : this.model.getProperty("/newUser/usernameId"),
+				"gameId" : null,
+				"gameInstanceId" : null,
+				"timeStamp" : Date.now(),
+				"buttonPressed" : "button-register-new-user-error"
+			});
 		}, this);
+
 	},
 	
 	cancelRegisterNewUser : function() {
 		this.registerNewUserDialog.close();
 		this.registerNewUserDialog.destroy();
+		// Log BUTTON_PRESS event: button-cancel-registration
+		Logger.info("Button Press Cancel Registration");
+		MetricsHelper.saveLogEvent({
+			"logEventType" : MetricsHelper.LogEventType.BUTTON_PRESS,
+			"logContext" : MetricsHelper.LogContext.LOGIN,
+			"usernameId" : this.model.getProperty("/newUser/usernameId"),
+			"gameId" : null,
+			"gameInstanceId" : null,
+			"timeStamp" : Date.now(),
+			"buttonPressed" : "button-cancel-registration"
+		});
 		this.model.setProperty("/newUser/usernameId", "");
 		this.model.setProperty("/newUser/password", "");
 		this.model.setProperty("/newUser/firstName", "");
