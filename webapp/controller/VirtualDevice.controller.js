@@ -171,12 +171,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			if(gameInstanceId != "") {
 				this.gameInstanceId = parseInt(gameInstanceId);
 				RestAPIHelper.getAbsolute("/wlcp-gameserver/gameInstanceController/playersAvaliable/" + this.gameInstanceId + "/" + this.username, true, function(response) {
-					if(response.length == 0) {
-						sap.m.MessageBox.error("Game Instance " + gameInstanceId +  " is full!");
-						MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
-					} else {
+					//We don't need a 'full game' check anymore so that users can log back in
+					//if(response.length == 0) {
+					//	sap.m.MessageBox.error("Game Instance " + gameInstanceId +  " is full!");
+					//	MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, 0, 0, MetricsHelper.LogEventGamePlayerClientMessage.GAME_FULL, "Game Instance " + this.gameInstanceId +  " is full!"));
+					//} else {
 						sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--virtualDeviceNavContainer").to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--enterTempName"));
-					}
+					//}
 				}, this.gameInstanceIdError, this);
 				sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--gamePinInput").setValue("");
 			} else {
