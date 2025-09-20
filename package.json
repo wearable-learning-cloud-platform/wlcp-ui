@@ -5,16 +5,18 @@
                 "node": ">=16.19.1"
         },
         "scripts": {
-                "start": "ui5 serve --port 3000",
+                "start": "ui5 serve --port 3000 --accept-remote-connections",
                 "serve": "ui5 serve --port 3000",
                 "test": "npm run lint && npm run karma",
                 "karma-ci": "karma start karma-ci.conf.js",
                 "karma": "rimraf coverage && npm run karma-ci",
                 "lint": "eslint webapp",
-                "build:ui": "rimraf dist && ui5 build --dest dist/webapp"
+                "build:ui": "rimraf dist && ui5 build self-contained --all --dest dist/webapp"
         },
         "dependencies": {
                 "@openui5/sap.m": "1.111.1",
+                "@openui5/sap.f": "1.111.1",
+                "@openui5/sap.tnt": "1.111.1",
                 "@openui5/sap.ui.core": "1.111.1",
                 "@openui5/sap.ui.layout": "1.111.1",
                 "@openui5/themelib_sap_belize": "1.111.1",
