@@ -12,6 +12,8 @@ var State = class State {
 		this.newDescriptionText = null;
 		this.positionX = 0;
 		this.positionY = 0;
+		this.dx = 0;
+		this.dy = 0;
 		this.width = 0;
 		this.height = 0;
 		this.jsPlumbInstance = jsPlumbInstance;
@@ -208,11 +210,30 @@ var State = class State {
 	 */
 	moved(event) {
 		
-		//Update the position
-		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
-		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
-		
-		this.addPadSpace();
+		if(GameEditor.getEditorController().zoomLevel != 0) {
+			var origin = GameEditorZoomHelpers.startStateAsOrigin();
+
+			var pos = {
+				x : parseInt(document.getElementById(this.htmlId).style.left.replace("px", "")),
+				y : parseInt(document.getElementById(this.htmlId).style.top.replace("px", "")),
+				dx : this.dx,
+				dy : this.dy
+			}
+
+			var unroll = GameEditorZoomHelpers.calculateDiff(pos, origin, 0.25,  GameEditor.getEditorController().zoomLevel < 0 ? 1 : -1,  0, Math.abs(GameEditor.getEditorController().zoomLevel));
+	
+			var reroll = GameEditorZoomHelpers.calculateDiff({x : unroll.posX, y : unroll.posY}, origin, 0.25, GameEditor.getEditorController().zoomLevel < 0 ? -1 : 1, 0, Math.abs(GameEditor.getEditorController().zoomLevel));
+			this.dx = reroll.totalDx;
+			this.dy = reroll.totalDy;
+			
+			//Update the position
+			this.positionX = reroll.posX;
+			this.positionY = reroll.posY;
+		} else {
+			this.positionX = parseInt(document.getElementById(this.htmlId).style.left.replace("px", ""));
+			this.positionY = parseInt(document.getElementById(this.htmlId).style.top.replace("px", ""));
+			this.addPadSpace();
+		}
 
 		GameEditor.getEditorController().scroller.handleMousemove(this, event.e);
 	}

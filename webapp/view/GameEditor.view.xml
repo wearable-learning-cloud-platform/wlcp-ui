@@ -41,6 +41,16 @@
 							<OverflowToolbarLayoutData priority="High" />
 						</layoutData>
 					</Button>
+					<Button id="zoomOutButton" text="Zoom Out" type="Transparent" icon="sap-icon://zoom-out" press="zoomOut" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
+					<Button id="zoomInButton" text="Zoom In" type="Transparent" icon="sap-icon://zoom-in" press="zoomIn" visible="false">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High" />
+						</layoutData>
+					</Button>
 					<Button id="backButton" text="{i18n>gameEditor.backButton}" type="Transparent" icon="sap-icon://nav-back" press="goBack" visible="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="High" />
