@@ -7,28 +7,28 @@
 }
 
 #container-wlcp-ui---virtualDevice--redButton-inner {
-	background-color: #BB0000 !important;
+	background-color: #ff6442 !important;
 	color: white !important;
 	text-shadow : inherit;
 	border: inherit;
 }
 
 #container-wlcp-ui---virtualDevice--greenButton-inner {
-	background-color: #2B7D2B !important;
+	background-color: #20bf55 !important;
 	color: white !important;
 	text-shadow : inherit;
 	border: inherit;
 }
 
 #container-wlcp-ui---virtualDevice--blueButton-inner {
-	background-color: #427CAC !important;
+	background-color: #0496ff !important;
 	color: white !important;
 	text-shadow : inherit;
 	border: inherit;
 }
 
 #container-wlcp-ui---virtualDevice--blackButton-inner {
-	background-color: black !important;
+	background-color: #333333 !important;
 	color: white !important;
 	text-shadow : inherit;
 	border: inherit;
@@ -43,7 +43,7 @@
 	overflow:hidden;
 	margin:10px;
 	outline-style:solid;
-	outline-color:black;
+	outline-color:#333333;
 }
 
 .sequencePressColorList2 {
@@ -60,19 +60,19 @@
 }
 
 .sequenceButton2Red {
-	background: red;
+	background: #ff6442;
 }
 
 .sequenceButton2Green {
-	background: green;
+	background: #20bf55;
 }
 
 .sequenceButton2Blue {
-	background: blue;
+	background: #0496ff;
 }
 
 .sequenceButton2Black {
-	background: black;
+	background: #333333;
 }
 
 .sapMInputBase.displayTextBackground {

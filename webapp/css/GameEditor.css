@@ -1,35 +1,54 @@
-.sapTntNavLIItemSelected.sapTntNavLIItem.LoadNavItemSelected, .sapTntNavLIItemSelected.LoadNavItemSelected .sapTntNavLIGroup.LoadNavItemSelected, .sapTntNavLIItemSelected.sapTntNavLIGroupItem.LoadNavItemSelected {
-	background-color: #e8eff6 !important
+.sapTntNavLIItemSelected.sapTntNavLIItem.LoadNavItemSelected,
+.sapTntNavLIItemSelected.LoadNavItemSelected 
+.sapTntNavLIGroup.LoadNavItemSelected, 
+.sapTntNavLIItemSelected.sapTntNavLIGroupItem.LoadNavItemSelected {
+	background-color: white !important
 }
 
 .sapMTabStrip {
-	background : #3f5161;
+	background : #785cbc;
 	box-shadow : inherit;
 	margin-bottom : 25px;
 }
+.sapMBarPH, .sapMBarContainer {
+  background-color: #efe2fc !important;
+}
+
+.sapUiInvisibleText {
+    color: #785cbc !important;
+}
+
+
 
 .scroll {
-	background : #3f5161;
+	background : #785cbc;
 }
+
+.sapTntSideNavigationFlexibleContent {
+	background-color: #d8b7f8 !important;
+}
+
 
 #container-wlcp-ui---gameEditor--mainSplitter-content-1.sapUiLoSplitterContent {
 	overflow : unset !important;
 }
 
-.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTSItemCloseBtnCnt {
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem 
+.sapMTSItemCloseBtnCnt {
 	display : inherit;
 }
 
-.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTabStripItemLabel {
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem 
+.sapMTabStripItemLabel {
 	color : white;
 }
 
 .sapMTabStrip .sapMTSRightOverflowButtons .sapMBtn.sapMBtnBase {
-	background : #3f5161; 
+	background : #785cbc; 
 }
 
 .sapMTabStrip .sapMTSLeftOverflowButtons .sapMBtn.sapMBtnBase {
-	background : #3f5161; 
+	background : #785cbc; 
 }
 
 .sapMMenuBtn.sapMMenuBtnRegular .sapMBtnInner {
@@ -108,7 +127,8 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .toolBoxText {
-	color: white;
+	color: #000000 !important;
+    font-size: 1rem;
 }
 
 .stateDescriptionHBox {
@@ -122,7 +142,6 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 #outputStateDialog-scroll {
 	width: auto !important;
 }
-
 
 #outputStateDialog-scrollCont {
 	padding:0rem;
@@ -138,14 +157,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	width:200px;
 	border-style:solid;
 	border-width:2px;
-	border-color:#3f5161;
+	border-color:#785cbc;
 	border-top-style:none;
 	border-left-style:none;
 	border-bottom-style:none;
 }
 
 [class*='close-'] {
-  color: #777;
+  color: #bbbbbb;
   font: 14px/100% arial, sans-serif;
   position: absolute;
   right: 8px;
@@ -159,12 +178,12 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .close-thik:hover {
-    box-shadow: 0px 0px 15px #BB0000;
+    box-shadow: 0px 0px 15px #ff6442;
     border-radius : 50%;
 }
 
 [class*='close2-'] {
-  color: #777;
+  color: #bbbbbb;
   font: 14px/100% arial, sans-serif;
   position: absolute;
   right: 4px;
@@ -178,7 +197,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .close2-thik:hover {
-    box-shadow: 0px 0px 15px #BB0000;
+    box-shadow: 0px 0px 15px #ff6442;
     border-radius : 50%;
 }
 
@@ -194,7 +213,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     width: 80px;
     float: left;
     position: absolute;
-    background-color: #5E696E;
+    background-color: #785cbc;
     border-radius : 15px 15px 15px 15px;
 }
 
@@ -225,7 +244,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 
 /* State */
 .stateBorderShadow:hover {
-    box-shadow: 0px 0px 50px #427CAC;
+    box-shadow: 0px 0px 50px #0496ff;
     border-radius : 15px;
 }
 
@@ -239,7 +258,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
  
  /* State */
 .startStateBorderShadow:hover {
-    box-shadow: 0px 0px 50px #427CAC;
+    box-shadow: 0px 0px 50px #0496ff;
     border-radius : 50px;
 }
 
@@ -256,6 +275,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	margin-left: -75px;
 }
 
+
 /* .centerStateText {
 	text-align:center;
   	display: block;
@@ -267,13 +287,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	word-wrap : break-word;
 } */
 
+
 .centerStateText {
     text-align: center;
     display: block;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    color: #3F5161;
+    color: #785cbc;
     white-space: normal;
     word-wrap: break-word;
     font-weight: bold;
@@ -281,17 +302,18 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 
 /* Start State */
 /* .startStateTopColor {
-	height : 100px;
-	width : 150px;
-	background-color: #D3D7D9;
-	border-radius : 15px 15px 0px 0px;
+    height : 100px;
+    width : 150px;
+    background-color: #D3D7D9;
+    border-radius : 15px 15px 0px 0px;
 }
 
+
 .startStateBottomColor {
-	height : 25px;
-	width : 150px;
-	background-color: #ABE2AB;
-	border-radius : 0px 0px 15px 15px;
+    height : 25px;
+    width : 150px;
+    background-color: #ABE2AB;
+    border-radius : 0px 0px 15px 15px;
 } */
 
 
@@ -299,7 +321,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .startStateTopColor {
 	height: 90px;
 	width: 90px;
-	background-color: #ABE2AB; /*#D3D7D9;*/
+	background-color: #20bf55;
 	border-radius: 50px 50px 50px 50px;
 }
 
@@ -314,14 +336,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .toolboxOutputStateTopColor {
 	height : 100px;
 	width : 150px;
-	background-color: #D3D7D9;
+	background-color: #bbbbbb;
 	border-radius : 15px 15px 0px 0px;
 }
 
 .toolboxOutputStateBottomColor {
 	height : 25px;
 	width : 150px;
-	background-color: #678BC7;
+	background-color: #0496ff;
 	border-radius : 0px 0px 15px 15px;
 }
 
@@ -329,14 +351,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .toolboxButtonPressStateTopColor {
 	height : 100px;
 	width : 150px;
-	background-color: #D3D7D9;
+	background-color: #bbbbbb;
 	border-radius : 15px 15px 0px 0px;
 }
 
 .toolboxButtonPressStateBottomColor {
 	height : 25px;
 	width : 150px;
-	background-color: #0092D1;
+	background-color: #0496ff;
 	border-radius : 0px 0px 15px 15px;
 }
 
@@ -360,19 +382,19 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .sequenceButtonRed {
-	background: red;
+	background: #ff6442;
 }
 
 .sequenceButtonGreen {
-	background: green;
+	background: #20bf55;
 }
 
 .sequenceButtonBlue {
-	background: blue;
+	background: #0496ff;
 }
 
 .sequenceButtonBlack {
-	background: black;
+	background: #333333;
 }
 
 .sequenceDeleteButton {
@@ -386,3 +408,27 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     padding: 5px;
 }
 
+.sapTntToolHeader {
+    background-color: #785cbc !important;
+    color: #333333 !important; 
+}
+
+.sapTntToolHeader .sapMBtnInner,
+.sapTntToolHeader .sapMText,
+.sapTntToolHeader .sapMLabel {
+    color: white !important;
+}
+#container-wlcp-ui---gameEditor--toolbox.sapMScrollCont {
+    background-color: #d8b7f8 !important;
+}
+
+#container-wlcp-ui---gameEditor--padPage-intHeader-BarPH {
+    background-color: #efe2fc !important;
+}
+.sapTntToolHeader * {
+    color: white !important;
+}
+#container-wlcp-ui---gameEditor--toolbox .sapMBtn .sapMBtnInner {
+    color: #000000 !important; 
+    font-weight: bold;          
+}
