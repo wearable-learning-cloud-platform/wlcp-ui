@@ -53,6 +53,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.transitionConfigs.push(new TransitionConfigSingleButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigSequenceButtonPress(this));
 		this.transitionConfigs.push(new TransitionConfigKeyboardInput(this));
+		this.transitionConfigs.push(new TransitionConfigPhotoCheck(this));
 		this.transitionConfigs.push(new TransitionConfigTimer(this));
 		this.transitionConfigs.push(new TransitionConfigRandom(this));
 		this.transitionConfigs.push(new TransitionConfigGlobalVariable(this));

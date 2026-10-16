@@ -197,6 +197,10 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 						if(iconTabs[i].navigationContainerPages[n].items.length > 0) {
 							return TransitionConfigType.GLOBAL_VARIABLE;
 						}
+					} else if(iconTabs[i].navigationContainerPages[n].type == TransitionConfigType.PHOTO_CHECK) {
+						if(TransitionConfigPhotoCheck.isPageActive(iconTabs[i].navigationContainerPages[n])) {
+							return TransitionConfigType.PHOTO_CHECK;
+						}
 					}
 				}
 			}

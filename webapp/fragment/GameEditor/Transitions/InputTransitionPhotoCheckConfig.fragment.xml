@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.inputTransition.photoCheck.help}" class="sapUiSmallMarginBottom"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Center" justifyContent="Center">
+		<items>
+			<Input width="22em" value="{modelUrl}" placeholder="{i18n>gameEditor.inputTransition.photoCheck.modelUrlPlaceholder}" liveChange="onModelUrlChange" valueLiveUpdate="true"/>
+			<Button text="{i18n>gameEditor.inputTransition.photoCheck.loadClasses}" press="loadClasses" class="sapUiTinyMarginBegin"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{loadStatus}" class="sapUiTinyMarginTop sapUiSmallMarginBottom"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Center" justifyContent="Center" wrap="Wrap">
+		<items>
+			<Label text="{i18n>gameEditor.inputTransition.photoCheck.targetClass}" class="sapUiTinyMarginEnd"/>
+			<Select width="14em" selectedKey="{targetClass}" enabled="{= !${anyOther} &amp;&amp; ${classNames}.length > 0}" change="onChange"
+				items="{path:'classNames', templateShareable:false}">
+				<core:Item key="{name}" text="{name}"/>
+			</Select>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Center" justifyContent="Center" wrap="Wrap" class="sapUiSmallMarginTop">
+		<items>
+			<Label text="{i18n>gameEditor.inputTransition.photoCheck.threshold}" class="sapUiTinyMarginEnd"/>
+			<StepInput value="{thresholdPercent}" min="50" max="100" step="5" displayValuePrecision="0" description="%" width="8em" enabled="{= !${anyOther}}" change="onChange"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+		<items>
+			<CheckBox text="{i18n>gameEditor.inputTransition.photoCheck.anyOther}" selected="{anyOther}" select="onChange"/>
+		</items>
+	</FlexBox>
+	<FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<Text text="{i18n>gameEditor.inputTransition.photoCheck.anyOtherHelp}"/>
+		</items>
+	</FlexBox>
+
+</core:FragmentDefinition>

@@ -5,6 +5,7 @@ var TransitionConfigType = {
     TIMER : 3,
     RANDOM : 4,
     GLOBAL_VARIABLE : 5,
+    PHOTO_CHECK : 6,
 
     toString : function(transitionConfigType) {
         switch(transitionConfigType) {
@@ -20,6 +21,8 @@ var TransitionConfigType = {
                 return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.random");
             case this.GLOBAL_VARIABLE:
                 return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.globalVariable");
+            case this.PHOTO_CHECK:
+                return sap.ui.getCore().getModel("i18n").getResourceBundle().getText("gameEditor.inputTransition.photoCheck");
             default:
                 break;
         }
