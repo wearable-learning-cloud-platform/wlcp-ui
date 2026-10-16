@@ -72,7 +72,8 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 							page.modelUrl = saved.modelUrl || "";
 							page.targetClass = saved.targetClass || "";
 							page.anyOther = page.targetClass === "";
-							page.thresholdPercent = Math.round((saved.threshold === null || saved.threshold === undefined ? 0.8 : saved.threshold) * 100);
+							// The no-match branch is saved with threshold 0; show the default so unticking the box leaves a sane value.
+							page.thresholdPercent = page.anyOther || saved.threshold === null || saved.threshold === undefined ? 80 : Math.round(saved.threshold * 100);
 							// Show the saved class in the dropdown before the model is fetched again.
 							page.classNames = page.targetClass !== "" ? [{name : page.targetClass}] : [];
 						}
