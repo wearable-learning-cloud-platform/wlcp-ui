@@ -203,6 +203,16 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="photoCheck" showHeader="false" enableScrolling="true">
+						<FlexBox direction="Column" alignItems="Center" justifyContent="Center">
+							<items>
+								<Text id="photoCheckStatus" class="sapUiSmallMargin photoCheckText" textAlign="Center" text="Loading the photo checker..."/>
+								<Button id="photoCheckButton" text="Take a photo" type="Emphasized" enabled="false" press="takePhotoForCheck"/>
+								<Image id="photoCheckPreview" class="sapUiSmallMarginTop" width="160px" visible="false"/>
+								<Text id="photoCheckResult" class="sapUiSmallMargin photoCheckText" textAlign="Center" text=""/>
+							</items>
+						</FlexBox>
+					</Page>
 					<Page id="randomInput" showHeader="false" enableScrolling="false">
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>

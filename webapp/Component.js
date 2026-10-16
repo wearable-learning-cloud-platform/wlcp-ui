@@ -97,6 +97,7 @@ sap.ui.define([
 			jQuery.sap.require("javascript/SessionHelper");
 			jQuery.sap.require("javascript/MetricsHelper");
 			jQuery.sap.require("javascript/Logger");
+			jQuery.sap.require("javascript/PhotoCheckHelper");
 			
 			jQuery.sap.require("javascript/jsplumb-2-13-1");
 			jQuery.sap.require("javascript/path-data-polyfill");

@@ -21,6 +21,11 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	socket : null,
 	stompClient : null,
+
+	photoCheckModelUrl : null,
+	photoCheckModel : null,
+	photoCheckLastResult : null,
+	photoCheckFailedUrl : null,
 	
 	redButtonPressed : function() {
 		this.resetStateDisplayTypes();
@@ -73,6 +78,110 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		this.stompClient.publish({destination: "/app/gameInstance/" + this.gameInstanceId + "/keyboardInput/" + this.username + "/" + this.team + "/" + this.player, body : JSON.stringify({keyboardInput : keyboardInput})});
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
 		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, JSON.stringify({keyboardInput : keyboardInput})));
+	},
+
+	/**
+	 * Photo check transition. The server sent {modelUrl}. Load the Teachable Machine model on the phone
+	 * (cached per URL), then let the player take a photo. Only the class scores go back to the server.
+	 */
+	onPhotoCheckRequest : function(request) {
+		var that = this;
+		var sameModel = this.photoCheckModelUrl === request.modelUrl;
+		this.photoCheckModelUrl = request.modelUrl;
+		this.switchToTransitionType("PhotoCheck");
+
+		// The server re-sends the request when the last photo did not match. Keep that photo's result on
+		// screen so the player can see what the model saw; the whole point is to make false negatives visible.
+		if(sameModel && this.photoCheckModel !== null) {
+			var last = this.photoCheckLastResult;
+			this.setPhotoCheckUi("That photo did not match. Try again.", true, last ? last.text : "", last ? last.preview : null, "Take a photo");
+			return;
+		}
+		// A model that failed to load once must not be retried on every re-request, or the phone and server
+		// would bounce error replies back and forth without end. The player retries with the button instead.
+		if(sameModel && this.photoCheckFailedUrl === request.modelUrl) {
+			this.setPhotoCheckUi("Could not load the photo checker. Check the connection, then press Try again.", true, "", null, "Try again");
+			return;
+		}
+		this.loadPhotoCheckModel(request.modelUrl);
+	},
+
+	loadPhotoCheckModel : function(modelUrl) {
+		var that = this;
+		this.photoCheckModel = null;
+		this.photoCheckLastResult = null;
+		this.setPhotoCheckUi("Loading the photo checker...", false, "", null, "Take a photo");
+		PhotoCheckHelper.loadModel(modelUrl).then(function(model) {
+			if(that.photoCheckModelUrl !== modelUrl) { return; }
+			that.photoCheckModel = model;
+			that.photoCheckFailedUrl = null;
+			that.setPhotoCheckUi("Take a photo of the object.", true, "", null, "Take a photo");
+		}).catch(function(e) {
+			Logger.error("PhotoCheck model load failed: " + e.message);
+			if(that.photoCheckModelUrl !== modelUrl) { return; }
+			that.photoCheckFailedUrl = modelUrl;
+			that.setPhotoCheckUi("Could not load the photo checker. Check the connection, then press Try again.", true, "", null, "Try again");
+			that.publishPhotoCheck({error : "MODEL_LOAD_FAILED"});
+		});
+	},
+
+	takePhotoForCheck : function() {
+		var that = this;
+		if(this.photoCheckModel === null) {
+			if(this.photoCheckModelUrl !== null) { this.loadPhotoCheckModel(this.photoCheckModelUrl); }
+			return;
+		}
+		// A file input with capture opens the camera directly on phones. Created on each press so the
+		// same photo can be retaken, and clicked inside the press handler so browsers allow it.
+		var input = document.createElement("input");
+		input.type = "file";
+		input.accept = "image/*";
+		input.setAttribute("capture", "environment");
+		input.style.display = "none";
+		input.addEventListener("change", function() {
+			var file = input.files && input.files[0];
+			document.body.removeChild(input);
+			if(!file) { return; }
+			that.setPhotoCheckUi("Checking the photo...", false, "", null, "Take a photo");
+			PhotoCheckHelper.scoreFile(that.photoCheckModel, file).then(function(result) {
+				var text = result.top ? (result.top.className + ": " + (result.top.probability * 100).toFixed(1) + "%") : "No result";
+				that.photoCheckLastResult = {text : text, preview : result.previewDataUrl};
+				that.setPhotoCheckUi("Photo checked in " + result.ms + " ms.", false, text, result.previewDataUrl, "Take a photo");
+				that.publishPhotoCheck({scores : result.scores});
+			}).catch(function(e) {
+				Logger.error("PhotoCheck prediction failed: " + e.message);
+				that.setPhotoCheckUi("The photo could not be checked. Try again.", true, "", null, "Take a photo");
+				that.publishPhotoCheck({error : "PREDICT_FAILED"});
+			});
+		});
+		document.body.appendChild(input);
+		input.click();
+	},
+
+	publishPhotoCheck : function(body) {
+		var json = JSON.stringify(body);
+		this.stompClient.publish({destination : "/app/gameInstance/" + this.gameInstanceId + "/photoCheck/" + this.username + "/" + this.team + "/" + this.player, body : json});
+		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, this.team, this.player, MetricsHelper.DataDirection.CLIENT_SEND, MetricsHelper.Output.NONE, MetricsHelper.Input.PHOTO_CHECK, json));
+	},
+
+	setPhotoCheckUi : function(status, buttonEnabled, resultText, previewDataUrl, buttonText) {
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheckStatus").setText(status);
+		var button = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheckButton");
+		button.setEnabled(buttonEnabled);
+		button.setText(buttonText || "Take a photo");
+		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheckResult").setText(resultText);
+		var preview = sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheckPreview");
+		if(previewDataUrl) { preview.setSrc(previewDataUrl); preview.setVisible(true); } else { preview.setVisible(false); }
+	},
+
+	resetPhotoCheck : function() {
+		this.photoCheckModelUrl = null;
+		this.photoCheckModel = null;
+		this.photoCheckLastResult = null;
+		this.photoCheckFailedUrl = null;
+		if(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheckStatus")) {
+			this.setPhotoCheckUi("Loading the photo checker...", false, "", null);
+		}
 	},
 
 	submitRandomInput : function() {
@@ -446,6 +555,10 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.switchToTransitionType("KeyboardInput");
 			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.KEYBOARD_INPUT, response.body));
 		});
+		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/photoCheckRequest/" + this.username + "/" + team + "/" + player, function(response) {
+			that.onPhotoCheckRequest(JSON.parse(response.body));
+			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.PHOTO_CHECK, response.body));
+		});
 		this.stompClient.subscribe("/subscription/gameInstance/" + gameInstanceId + "/randomInputRequest/" + this.username + "/" + team + "/" + player, function(response) {
 			that.switchToTransitionType("RandomInput");
 			MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerCommunication(MetricsHelper.logEventGameInstanceId, that.team, that.player, MetricsHelper.DataDirection.CLIENT_RECEIVE, MetricsHelper.Output.NONE, MetricsHelper.Input.RANDOM, response.body));
@@ -561,6 +674,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 		case "KeyboardInput":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInput"));
 			break;
+		case "PhotoCheck":
+			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--photoCheck"));
+			break;
 		case "RandomInput":
 			navContainer.to(sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--randomInput"));
 			break;
@@ -589,6 +705,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			this.clearButtonPressSequence();
 		}
 		sap.ui.getCore().byId("container-wlcp-ui---virtualDevice--keyboardInputField").setValue("");
+		this.resetPhotoCheck();
 		this.guestPlayer = undefined;
 	},
 	

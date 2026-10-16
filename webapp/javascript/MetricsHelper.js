@@ -100,7 +100,8 @@ var MetricsHelper = {
 		SEQUENCE_BUTTON_PRESS : "SEQUENCE_BUTTON_PRESS",
 	    KEYBOARD_INPUT : "KEYBOARD_INPUT",
 	    TIMER : "TIMER",
-	    RANDOM : "RANDOM"
+	    RANDOM : "RANDOM",
+	    PHOTO_CHECK : "PHOTO_CHECK"
 	},
 
 	LogEventGamePlayerClientMessage : {
