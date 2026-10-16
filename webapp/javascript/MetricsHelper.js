@@ -129,7 +129,10 @@ var MetricsHelper = {
 
 	saveLogEventGamePlayer : function(saveJSON, logSuccess = this.logSuccess, logError = this.logError) {
 		if(this.playerLoggingEnabled) {
-			
+			// Until the player knows its log_event_game_instance id (fetched after joining) the id is 0,
+			// and the metrics service rejects the insert with a foreign key error that pops up on the
+			// phone. Skip those events instead of sending them.
+			if(!saveJSON || !saveJSON.logEventGameInstance || !saveJSON.logEventGameInstance.id) { return; }
 			RestAPIHelper.postAbsolute("/wlcp-metrics/logEventGameInstanceController/logEventGamePlayer", saveJSON, true, logSuccess, logError, this, false);
 
 		}

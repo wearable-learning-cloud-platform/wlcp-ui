@@ -413,6 +413,13 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 	
 	onTeamPlayerSelected : function(oEvent) {
 		this.requestBusyDialog();
+		// Guest and debug players never fetched the metrics logging id (only the PIN path did), so
+		// every event they logged failed. Fetch it here, once, for whoever is joining.
+		if(!MetricsHelper.logEventGameInstanceId && this.gameInstanceId) {
+			MetricsHelper.getStartLoggingGameInstance(this.gameInstanceId, function success(data) {
+				if(data && data.id) { MetricsHelper.logEventGameInstanceId = data.id; }
+			}, function error() {});
+		}
 		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 		MetricsHelper.saveLogEventGamePlayer(MetricsHelper.logEventGamePlayerClientMessage(MetricsHelper.logEventGameInstanceId, selectedTeamPlayer.team, selectedTeamPlayer.player, MetricsHelper.LogEventGamePlayerClientMessage.CHOOSE_TEAM_AND_PLAYER, "Selecting  Team " + selectedTeamPlayer.team + " and Player " + selectedTeamPlayer.player + " as user " + this.username));
