@@ -11,8 +11,9 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 		super(transition);
 	}
 
+	/** A class only counts once it is known to belong to the link: changing the link empties classNames until it loads again. */
 	static isPageActive(page) {
-		return page.modelUrl !== "" && (page.anyOther || page.targetClass !== "");
+		return page.modelUrl !== "" && (page.anyOther || (page.targetClass !== "" && page.classNames.length > 0));
 	}
 
 	getNavigationListItem() {
@@ -105,10 +106,14 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 
 	/** Reads metadata.json from the pasted link and fills the class dropdown. Runs in the creator's browser. */
 	loadClasses(oEvent) {
-		var path = oEvent.getSource().getBindingContext().getPath();
+		this.loadClassesAt(oEvent.getSource().getBindingContext().getPath());
+	}
+
+	loadClassesAt(path) {
 		var model = this.transition.model;
 		var page = model.getProperty(path);
-		var base = (page.modelUrl || "").trim();
+		var typed = page.modelUrl;
+		var base = (typed || "").trim();
 		if(base === "") { return; }
 		if(!base.endsWith("/")) { base += "/"; }
 		var bundle = sap.ui.getCore().getModel("i18n").getResourceBundle();
@@ -118,6 +123,8 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 			if(!response.ok) { throw new Error("HTTP " + response.status); }
 			return response.json();
 		}).then(function(metadata) {
+			// The link was edited again while this one loaded; its own load will fill the list.
+			if(model.getProperty(path + "/modelUrl") !== typed) { return; }
 			if(!metadata || !Array.isArray(metadata.labels) || metadata.labels.length === 0) { throw new Error("no labels"); }
 			var names = metadata.labels.map(function(label) { return {name : label}; });
 			model.setProperty(path + "/modelUrl", base);
@@ -130,6 +137,7 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 			that.onChange();
 		}).catch(function(e) {
 			Logger.error("Photo check: could not load model metadata: " + e.message);
+			if(model.getProperty(path + "/modelUrl") !== typed) { return; }
 			model.setProperty(path + "/classNames", []);
 			model.setProperty(path + "/loadStatus", bundle.getText("gameEditor.inputTransition.photoCheck.loadFailed"));
 			that.onChange();
@@ -137,10 +145,12 @@ var TransitionConfigPhotoCheck = class TransitionConfigPhotoCheck extends Transi
 	}
 
 	onModelUrlChange(oEvent) {
-		// A new link invalidates the class list until it is loaded again.
+		// A new link invalidates the class list until it is loaded again, which happens once typing stops.
 		var path = oEvent.getSource().getBindingContext().getPath();
 		this.transition.model.setProperty(path + "/classNames", []);
 		this.transition.model.setProperty(path + "/loadStatus", "");
 		this.onChange(oEvent);
+		clearTimeout(this.loadClassesTimer);
+		this.loadClassesTimer = setTimeout(this.loadClassesAt.bind(this, path), 600);
 	}
 }
