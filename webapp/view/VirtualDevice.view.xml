@@ -206,10 +206,9 @@
 					<Page id="photoCheck" showHeader="false" enableScrolling="true">
 						<FlexBox direction="Column" alignItems="Center" justifyContent="Center">
 							<items>
-								<Text id="photoCheckStatus" class="sapUiSmallMargin photoCheckText" textAlign="Center" text="Loading the photo checker..."/>
-								<Text id="photoCheckResult" class="sapUiSmallMarginBottom photoCheckText" textAlign="Center" text=""/>
-								<Button id="photoCheckButton" text="Take a photo" type="Emphasized" enabled="false" press="takePhotoForCheck"/>
-								<Image id="photoCheckPreview" class="sapUiSmallMarginTop" width="160px" visible="false"/>
+								<Text id="photoCheckStatus" class="sapUiSmallMargin photoCheckText" textAlign="Center" text="{i18n>gamePlayer.photoCheck.loading}"/>
+								<core:HTML id="photoCheckResult" preferDOM="false" visible="false"/>
+								<Button id="photoCheckButton" class="sapUiSmallMarginTop sapUiSmallMarginBottom" text="{i18n>gamePlayer.photoCheck.takePhoto}" type="Emphasized" enabled="false" press="onPhotoCheckButtonPress"/>
 							</items>
 						</FlexBox>
 					</Page>

@@ -92,3 +92,77 @@
 	color: white;
 	font-size: medium;
 }
+
+.photoCheckResultCard {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	width: 340px;
+	max-width: calc(100vw - 32px);
+	box-sizing: border-box;
+	color: white;
+}
+
+.photoCheckSaw {
+	flex: none;
+	width: 96px;
+	font-size: small;
+	text-align: center;
+}
+
+.photoCheckSaw img {
+	display: block;
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	margin-bottom: 4px;
+}
+
+.photoCheckBars {
+	flex: 1;
+	min-width: 0;
+}
+
+.photoCheckBarLabel {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	font-size: small;
+}
+
+.photoCheckBarName {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.photoCheckBarTrack {
+	position: relative;
+	height: 12px;
+	margin: 2px 0 8px;
+	background: #5a5a5a;
+	border-radius: 2px;
+}
+
+.photoCheckBarFill {
+	height: 100%;
+	background: #7fb2e5;
+	border-radius: 2px;
+}
+
+.photoCheckBarFillPassed {
+	background: #5fc27e;
+}
+
+.photoCheckBarLine {
+	position: absolute;
+	top: -3px;
+	bottom: -3px;
+	width: 2px;
+	margin-left: -1px;
+	background: white;
+}
+
+.photoCheckBarsNote {
+	font-size: small;
+}
