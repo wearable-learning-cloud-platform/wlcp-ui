@@ -92,9 +92,16 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 
 		// The server re-sends the request when the last photo did not match. Keep that photo's result on
 		// screen so the player can see what the model saw; the whole point is to make false negatives visible.
+		// A result from an earlier game instance does not count: the model is cached per page, so a player
+		// who starts a new game on the same page gets a fresh "Take a photo", not the old score.
+		var last = this.photoCheckLastResult;
+		if(sameModel && this.photoCheckModel !== null && last && last.gameInstanceId === this.gameInstanceId) {
+			this.setPhotoCheckUi("That photo did not match. Try again.", true, last.text, last.preview, "Take a photo");
+			return;
+		}
 		if(sameModel && this.photoCheckModel !== null) {
-			var last = this.photoCheckLastResult;
-			this.setPhotoCheckUi("That photo did not match. Try again.", true, last ? last.text : "", last ? last.preview : null, "Take a photo");
+			this.photoCheckLastResult = null;
+			this.setPhotoCheckUi("Take a photo of the object.", true, "", null, "Take a photo");
 			return;
 		}
 		// A model that failed to load once must not be retried on every re-request, or the phone and server
@@ -145,7 +152,7 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.VirtualDevice", {
 			that.setPhotoCheckUi("Checking the photo...", false, "", null, "Take a photo");
 			PhotoCheckHelper.scoreFile(that.photoCheckModel, file).then(function(result) {
 				var text = result.top ? (result.top.className + ": " + (result.top.probability * 100).toFixed(1) + "%") : "No result";
-				that.photoCheckLastResult = {text : text, preview : result.previewDataUrl};
+				that.photoCheckLastResult = {text : text, preview : result.previewDataUrl, gameInstanceId : that.gameInstanceId};
 				that.setPhotoCheckUi("Photo checked in " + result.ms + " ms.", false, text, result.previewDataUrl, "Take a photo");
 				that.publishPhotoCheck({scores : result.scores});
 			}).catch(function(e) {
