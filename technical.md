@@ -1,6 +1,6 @@
 # Technical notes: WearableLearning photo check
 
-How to run WearableLearning (WL) from source on a Mac, and exactly what the photo check code does in each repo. Written 23 Oct 2026 and updated 4 Nov 2026 for the independent study with Prof. Ivon Arroyo. A copy of this file lives on branch `feature/photo-check` in `wlcp-ui`. `scripts/`, `logs/` and `trace/`, and the day-by-day log in the project `README.md`, are in the author's project folder, one level above `repos/`, and are not in any WL repo.
+How to run WearableLearning (WL) from source on a Mac, and exactly what the photo check code does in each repo. A copy of this file lives on branch `feature/photo-check` in `wlcp-ui`. `scripts/`, `logs/` and `trace/`, and the day-by-day log in the project `README.md`, are in the author's project folder, one level above `repos/`, and are not in any WL repo.
 
 Contents
 
@@ -16,7 +16,7 @@ Contents
 
 ## 1. Why from source and not Docker
 
-The lab's `wlcp-docker` repo was not usable here. Its compose file pulls prebuilt images from the lab's private AWS registry and the README expects AWS credentials from a Drive link. Its last commit is March 2022, before the summer 2025 move to JDK 17 and Spring Boot 3.5.4, so the images may not match the current `dev` branch. Docker was also not installed on this Mac.
+The lab's `wlcp-docker` repo was not usable here. Its compose file pulls prebuilt images from the lab's private AWS registry and the README expects AWS credentials from a Drive link. Its last commit predates the move to JDK 17 and Spring Boot 3.5.4, so the images may not match the current `dev` branch. Docker was also not installed on this Mac.
 
 Building from source runs exactly the code being edited, which is what the lab's own README recommends for development anyway. The wiring is identical: the Docker profile uses container names such as `wlcp-db-dev`, and the default Spring profile already says `localhost` everywhere. No configuration in any Java repo was changed. The result is the same URL, http://localhost:8050, the same login, editor and player.
 
@@ -141,7 +141,7 @@ To play from a phone: phone and Mac on the same Wi-Fi, open `http://<Mac IP>:805
 | The phone shows HTTP 500 popups on every screen | Pre-existing bug: guest players logged metrics with id 0 | Fixed on the feature branch |
 | The game freezes after the camera closes on an iPhone | Pre-existing bug: a Nashorn class cast on reconnect killed the player thread | Fixed on the feature branch |
 | A game edited through the API reverts | Run and Debug saves the editor's in-memory copy first | Reload the editor after any API edit |
-| "Game Instance N is full" on a game nobody has joined | On 3 Nov a leftover client on the Mac, retrying about every 2 minutes as `wltest`, took the only slot. Which page it was was not pinned down | Close old player pages and start a new instance |
+| "Game Instance N is full" on a game nobody has joined | A leftover client on the Mac, retrying about every 2 minutes as `wltest`, took the only slot. Which page it was was not pinned down | Close old player pages and start a new instance |
 | A PIN looks free but the game does not run | An instance with no connected players stops at its next 5-minute timer tick, but it stays in the game server's in-memory list, so `playersAvaliable` still answers for it. Pre-existing | Start a new instance and join within 5 minutes |
 | A debug player stays on "Reconnecting" | `GameInstanceService.userConnect` only runs the reconnect path when the instance is not a debug instance. Pre-existing | Test reconnects in a normal game with a PIN |
 
@@ -224,7 +224,7 @@ Phone to server, destination `/app/gameInstance/{id}/photoCheck/{user}/{team}/{p
 
 or `{"error": "MODEL_LOAD_FAILED"}`. Team and player are zero-based on the wire and one-based in the UI. The complete frame logs from the real runs are in `trace/`.
 
-Timings measured: prediction 34 to 57 ms on the laptop and 27 ms on the iPhone, phone send to next-state text 78 ms, server no-match to re-sent request 46 ms, first library and model load about 3 MB then cached. In an iPhone run on 3 Nov the camera dropped the connection, and the waiting scores reached the server about 120 ms after the reconnect.
+Timings measured: prediction 34 to 57 ms on the laptop and 27 ms on the iPhone, phone send to next-state text 78 ms, server no-match to re-sent request 46 ms, first library and model load about 3 MB then cached. In one iPhone run the camera dropped the connection, and the waiting scores reached the server about 120 ms after the reconnect.
 
 ## 8. Testing without a phone
 
@@ -257,12 +257,12 @@ To watch the WebSocket traffic, wrap `window.WebSocket` in the player page befor
 
 ## 9. Branch and commits
 
-Branch `feature/photo-check`, cut from `dev`, in five repos under `repos/`, with collaborator access to the `wearable-learning-cloud-platform` organisation. Twelve commits were pushed on 2 Nov as new remote branches. `dev` is untouched and no pull request is open. Four newer commits are local only as of 4 Nov: `a29851c` in `wlcp-gameserver`, and `4306d57`, `1cdd833` and the commit that adds this file in `wlcp-ui`.
+Branch `feature/photo-check`, cut from `dev`, in five repos under `repos/`, with collaborator access to the `wearable-learning-cloud-platform` organisation. All commits are pushed. `dev` is untouched and no pull request is open.
 
 | Repo | Commits | Files changed |
 | --- | --- | --- |
-| wlcp-ui | 9 (3 local) | 14 |
-| wlcp-gameserver | 4 (1 local) | 6 |
+| wlcp-ui | 10 | 14 |
+| wlcp-gameserver | 4 | 6 |
 | wlcp-api | 1 | 4 |
 | wlcp-transpiler | 1 | 5 |
 | wlcp-metrics | 1 | 1 |
