@@ -5,7 +5,7 @@
     width: 360px;
     height: 640px;
     margin: auto;
-    border: 16px black solid;
+    border: 16px #333333;
     border-top-width: 60px;
     border-bottom-width: 60px;
     border-radius: 36px;
@@ -21,7 +21,7 @@
     top: -30px;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #333;
+    background: #333333;
     border-radius: 10px;
   }
   
@@ -35,7 +35,7 @@
     left: 50%;
     bottom: -65px;
     transform: translate(-50%, -50%);
-    background: #333;
+    background: #333333;
     border-radius: 50%;
   }
   
@@ -43,5 +43,5 @@
   .smartphone .content {
     width: 360px;
     height: 640px;
-    background: white;
+    background: #efe2fc;
   }
