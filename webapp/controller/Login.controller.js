@@ -165,6 +165,14 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.Login", {
         });
 	},
 
+	navigateToGamePlayerV2() {
+        if(window.location.origin.includes("localhost:8050")) {
+            window.open("http://localhost:4200/", '_blank');
+        } else {
+            window.open(window.location.origin + "/wlcp-vd/", '_blank');
+        }   
+    },
+
 	changeToMainPage() {
 		this.resetDataModel();
 		sap.ui.getCore().byId("__xmlview0--loginNavContainer").to("__xmlview0--mainMenu");

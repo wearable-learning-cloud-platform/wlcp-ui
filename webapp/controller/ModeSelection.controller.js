@@ -68,6 +68,14 @@ return Controller.extend("org.wlcp.wlcp-ui.controller.ModeSelection", {
 
     },
 
+    navigateToGamePlayerV2() {
+        if(window.location.origin.includes("localhost:8050")) {
+            window.location.replace("http://localhost:4200/");
+        } else {
+            window.location.replace(window.location.origin + "/wlcp-vd/");
+        }   
+    },
+
     logout() {
 
         RestAPIHelper.get("/logout", true, function() {

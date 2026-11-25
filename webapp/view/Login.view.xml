@@ -10,7 +10,7 @@
 					<items>
 						<Text text="{i18n>name}" class="sapUiSmallMarginBottom"/>
 						<Button width="12em" text="{i18n>login.loginButton}!" type="Emphasized" press="changeToLogin"/>
-						<Button width="12em" text="{i18n>login.play}!" type="Emphasized" press="changeToPlayAGame"/>
+						<Button width="12em" text="{i18n>login.play}!" type="Emphasized" press="navigateToGamePlayerV2"/>
 					</items>
 				</VBox>
 			</content>
