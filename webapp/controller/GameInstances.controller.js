@@ -14,7 +14,9 @@ sap.ui.controller("org.wlcp.wlcp-ui.controller.GameInstances", {
 			function(data) {
 				loadGameDialogModel.publicGames = data;
 				var fragment = sap.ui.xmlfragment("org.wlcp.wlcp-ui.fragment.GameInstances.StartGameInstance", this);
-				fragment.setModel(new sap.ui.model.json.JSONModel(loadGameDialogModel));
+				var dataModel = new sap.ui.model.json.JSONModel(loadGameDialogModel);
+				dataModel.setSizeLimit(10000);
+				fragment.setModel(dataModel);
 				fragment.open();
 				this.dialog = fragment;
 			}, 

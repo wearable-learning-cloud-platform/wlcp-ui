@@ -9,6 +9,12 @@
 					<tnt:layoutData>
 						<l:SplitterLayoutData size="48px" resizable="false"/>
 					</tnt:layoutData>
+					<Image
+    src="resources/img/logotransparent.png"
+    width="40px"
+    height="40px"
+    alt="Wearable Learning"
+/>
 					<Label class="noselect titleText" text = "{i18n>gameEditor.title}"/>
 					<ToolbarSpacer width="20px"/>
 					<Button id="newButton" text="{i18n>gameEditor.new}" type="Transparent" icon="sap-icon://create" press="newGame">
