@@ -60,7 +60,7 @@
 var MetricsHelper = {
 		
 	loggingEnabled : true,
-	playerLoggingEnabled : true,
+	playerLoggingEnabled : false,
 	logEventGameInstanceId : 0,
     
     LogEventType : {
